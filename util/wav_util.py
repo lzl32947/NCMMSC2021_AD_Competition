@@ -2,9 +2,6 @@ import numpy as np
 from scipy.io import wavfile
 
 
-
-
-
 ##################################################################
 ##########################  Attention!  ##########################
 # The following functions are not used in the main files
@@ -57,9 +54,10 @@ def enframe(x, win_len, hop_len):
     """
     receives a 1D numpy array and divides it into frames.
     outputs a numpy matrix with the frames on the rows.
-    :param x:
-    :param win_len
-    :param hop_len
+    :param x: the input data
+    :param win_len: int, the length of windows
+    :param hop_len: int, the length of windows interval
+    :return np.ndarray, in shape (samples, win_len)
     """
     x = np.squeeze(x)
     if x.ndim != 1:
@@ -72,14 +70,15 @@ def enframe(x, win_len, hop_len):
 
 
 def deframe(x_framed, win_len, hop_len):
-    '''
-    interpolates 1D data with framed alignments into persample values.
+    """
+    interpolates 1D data with framed alignments into per-sampled values.
     This function helps as a visual aid and can also be used to change
     frame-rate for features, e.g. energy, zero-crossing, etc.
-    :param x_framed
-    :param win_len
-    :param hop_len
-    '''
+    :param x_framed: np.ndarray, the input data
+    :param win_len: int, the length of windows
+    :param hop_len: int, the length of windows interval
+    :return np.ndarray, in shape (audio_length,)
+    """
     n_frames = len(x_framed)
     n_samples = (n_frames - 1) * hop_len + win_len
     x_samples = np.zeros((n_samples, 1))
@@ -98,7 +97,7 @@ def compute_energy(xframes):
     return np.diagonal(np.dot(xframes, xframes.T)) / float(n_frames)
 
 
-def compute_log_nrg(xframes):
+def compute_log_energy(xframes):
     """
 
     :param xframes:
@@ -111,8 +110,9 @@ def compute_log_nrg(xframes):
 
 def power_spectrum(xframes):
     """
-
-    :param xframes: input signal, each row is one frame
+    calculate the fast Fourier transform(FFT) for the given data
+    :param xframes: np.ndarray, in shape (samples, win_len),represent the input signal, each row is one frame
+    :return np.ndarray, with shape (samples, win_len)
     """
     X = np.fft.fft(xframes, axis=1)
     X = np.abs(X[:, :X.shape[1] / 2]) ** 2
@@ -149,7 +149,7 @@ def energy_vad(xframes, percent_thr, nrg_thr=0., context=5):
     n_frames = xframes.shape[0]
 
     # Compute per frame energies:
-    xnrgs = compute_log_nrg(xframes)
+    xnrgs = compute_log_energy(xframes)
     xvad = np.zeros((n_frames, 1))
     for i in range(n_frames):
         start = max(i - context, 0)
