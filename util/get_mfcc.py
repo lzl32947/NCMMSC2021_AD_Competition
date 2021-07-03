@@ -1,5 +1,4 @@
 from python_speech_features import *
-import numpy as np
 from matplotlib import pyplot as plt
 
 # 对音频信号处理程序
@@ -320,8 +319,9 @@ def lifter(cepstra, L=22):
         return cepstra
 
 if __name__=='__main__':
-    (rate, sig) = wavfile.read("/dataset/merge/AD/AD_F_030807.wav")
+    (rate, sig) = wavfile.read("../dataset/merge/AD/AD_F_030807.wav")
     mfcc_feat = calcMFCC_delta_delta(sig, rate)
+    print(mfcc_feat)
     plt.plot(mfcc_feat)
     plt.show()
     print(mfcc_feat.shape)
