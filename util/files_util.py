@@ -11,7 +11,7 @@ def create_dir(target: str) -> bool:
         return True
     else:
         try:
-            #
+            # git_commit
             os.mkdir(target)
             return True
         except:
