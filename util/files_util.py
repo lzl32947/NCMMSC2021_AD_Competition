@@ -25,6 +25,3 @@ def set_working_dir(target: str):
     :return: None
     """
     os.chdir(target)
-
-
-

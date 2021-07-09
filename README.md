@@ -23,3 +23,5 @@ NCMMSC2021
 
 ## Updates
 * 2021.06.30 Init commit
+
+## Target Approach 
