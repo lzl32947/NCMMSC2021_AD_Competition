@@ -7,6 +7,7 @@ from configs.types import AudioFeatures
 from util.data_loader import AldsDataset
 from util.files_util import set_working_dir, read_config
 import time
+import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     set_working_dir("./..")
@@ -25,8 +26,23 @@ if __name__ == '__main__':
     now_time = time.time()
     for item in dataloader:
         current_time = time.time()
-        print("mfcc->{}\tspec->{}\tmelspec->{}\tlabel:{}\ttime use:{:<.2f}s".format(item[0].shape, item[1].shape,
-                                                                                    item[2].shape, item[3],
-                                                                                    current_time - now_time))
-        now_time = current_time
-        print(item[0].numpy().mean(), item[0].numpy().std())
+        for index, features in enumerate(use_features):
+            print("{}->{}".format(use_features[index].value, item[index].shape), end="\t")
+        print("label: {}".format(item[-1]), end="\t")
+        print("time use: {:<.2f}".format(current_time - now_time))
+
+        batch_size = item[0].shape[0]
+        for batch_num in range(batch_size):
+            fig = plt.figure()
+            plot_position = 1
+            for index, features in enumerate(use_features):
+                ax = fig.add_subplot(len(use_features), 1, plot_position)
+                plot_position += 1
+
+                ax.matshow(item[index][batch_num])
+                ax.set_title("{}".format(use_features[index].value))
+            plt.tight_layout()
+            fig.show()
+            plt.close(fig)
+
+        now_time = time.time()
