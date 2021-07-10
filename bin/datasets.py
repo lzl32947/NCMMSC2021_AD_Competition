@@ -21,7 +21,7 @@ if __name__ == '__main__':
                           crop_count=5, sample_length=15, sr=16000, configs=configs['process'])
     print("Using config:")
     print(json.dumps(configs['process'], indent=1, separators=(', ', ': '), ensure_ascii=False))
-    dataloader = DataLoader(dataset, batch_size=2)
+    dataloader = DataLoader(dataset, batch_size=1)
     now_time = time.time()
     for item in dataloader:
         current_time = time.time()
@@ -29,3 +29,4 @@ if __name__ == '__main__':
                                                                                     item[2].shape, item[3],
                                                                                     current_time - now_time))
         now_time = current_time
+        print(item[0].numpy().mean(), item[0].numpy().std())

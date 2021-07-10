@@ -84,14 +84,16 @@ class AldsDataset(Dataset):
         pre = np.append(signal[0], signal[1:] - self.configs['coefficient'] * signal[:-1])
         return pre
 
-    def spec(self, input_wav: np.ndarray) -> np.ndarray:
+    def spec(self, input_wav: np.ndarray, normalized: bool = True) -> np.ndarray:
         n_fft = self.configs['n_fft']
         hop_length = self.configs['hop_length']
         spec = librosa.core.stft(input_wav, n_fft=n_fft, hop_length=hop_length)
         spec = librosa.amplitude_to_db(np.abs(spec), ref=np.max)
+        if normalized:
+            spec = (spec - spec.mean()) / spec.std()
         return spec
 
-    def melspec(self, input_wav: np.ndarray, sr: int) -> np.ndarray:
+    def melspec(self, input_wav: np.ndarray, sr: int, normalized: bool = True) -> np.ndarray:
         n_fft = self.configs['n_fft']
         n_mels = self.configs['n_mels']
         hop_length = self.configs['hop_length']
@@ -102,9 +104,11 @@ class AldsDataset(Dataset):
                                                  n_mels=n_mels)
 
         melspec = librosa.power_to_db(melspec, ref=np.max)
+        if normalized:
+            melspec = (melspec - melspec.mean()) / melspec.std()
         return melspec
 
-    def mfcc(self, input_wav: np.ndarray, sr: int) -> np.ndarray:
+    def mfcc(self, input_wav: np.ndarray, sr: int, normalized: bool = True) -> np.ndarray:
         n_fft = self.configs['n_fft']
         n_mfcc = self.configs['n_mfcc']
         hop_length = self.configs['hop_length']
@@ -113,6 +117,8 @@ class AldsDataset(Dataset):
                                     n_fft=n_fft,
                                     n_mfcc=n_mfcc,
                                     hop_length=hop_length)
+        if normalized:
+            mfcc = (mfcc - mfcc.mean()) / mfcc.std()
         return mfcc
 
     def __getitem__(self, item):
@@ -123,13 +129,13 @@ class AldsDataset(Dataset):
         output_list = []
 
         if AudioFeatures.MFCC in self.use_features:
-            mfcc_out = self.mfcc(output_wav, self.sr)
+            mfcc_out = self.mfcc(output_wav, self.sr,normalized=self.configs['normalized'])
             output_list.append(mfcc_out)
         if AudioFeatures.SPECS in self.use_features:
-            spec_out = self.spec(output_wav)
+            spec_out = self.spec(output_wav,normalized=self.configs['normalized'])
             output_list.append(spec_out)
         if AudioFeatures.MELSPECS in self.use_features:
-            melspec_out = self.melspec(output_wav, self.sr)
+            melspec_out = self.melspec(output_wav, self.sr,normalized=self.configs['normalized'])
             output_list.append(melspec_out)
         output_list.append(label)
         return output_list
