@@ -1,5 +1,5 @@
 import random
-from typing import List
+from typing import List, Optional, Dict
 
 import numpy as np
 import torch
@@ -13,7 +13,8 @@ from configs.types import ADType, OutputType
 
 class AldsDataset(Dataset):
     def __init__(self, output_type: List[OutputType], use_merge: bool = True, crop_count: int = 1,
-                 sample_length: int = 30, sr: int = 22050):
+                 random_disruption: bool = False, sample_length: int = 15, sr: int = 16000,
+                 configs: Optional[Dict] = None):
         torchaudio.set_audio_backend("soundfile")
         self.target_dic = {}
         for t in ADType:
@@ -25,10 +26,13 @@ class AldsDataset(Dataset):
         self.use_merge = use_merge
         self.sample_length = sample_length
         data, label = self.dict2list(self.count)
+        if random_disruption:
+            data, label = self.random_disruption(data, label)
         self.train_list = data
         self.label_list = label
         self.sr = sr
         self.output_type = output_type
+        self.configs = configs
 
     def init_files(self, use_merge: bool):
         if use_merge:
@@ -58,7 +62,14 @@ class AldsDataset(Dataset):
         assert len(label) == count
         return target_file_list, label
 
-    def __len__(self):
+    def random_disruption(self, data: List, label: List) -> (List, List):
+        fix_list = [(i, j) for (i, j) in zip(data, label)]
+        random.shuffle(fix_list)
+        data = [i[0] for i in fix_list]
+        label = [i[1] for i in fix_list]
+        return data, label
+
+    def __len__(self) -> int:
         return self.count * self.crop_count
 
     def resample_wav(self, file_path: str, sample_length: int, sr: int) -> np.float32:
@@ -69,17 +80,17 @@ class AldsDataset(Dataset):
 
         return cropped
 
-    def spec(self, input_wav: np.ndarray):
-        n_fft = 1024
-        hop_length = 512
+    def spec(self, input_wav: np.ndarray) -> np.ndarray:
+        n_fft = self.configs['n_fft']
+        hop_length = self.configs['hop_length']
         spec = librosa.core.stft(input_wav, n_fft=n_fft, hop_length=hop_length)
         spec = librosa.amplitude_to_db(np.abs(spec), ref=np.max)
         return spec
 
-    def melspec(self, input_wav: np.ndarray, sr: int):
-        n_fft = 1024
-        hop_length = 512
-        n_mels = 128
+    def melspec(self, input_wav: np.ndarray, sr: int) -> np.ndarray:
+        n_fft = self.configs['n_fft']
+        n_mels = self.configs['n_mels']
+        hop_length = self.configs['hop_length']
         melspec = librosa.feature.melspectrogram(y=input_wav,
                                                  sr=sr,
                                                  n_fft=n_fft,
@@ -89,10 +100,10 @@ class AldsDataset(Dataset):
         melspec = librosa.power_to_db(melspec, ref=np.max)
         return melspec
 
-    def mfcc(self, input_wav: np.ndarray, sr: int):
-        n_fft = 1024
-        n_mfcc = 20
-        hop_length = 512
+    def mfcc(self, input_wav: np.ndarray, sr: int) -> np.ndarray:
+        n_fft = self.configs['n_fft']
+        n_mfcc = self.configs['n_mfcc']
+        hop_length = self.configs['hop_length']
         mfcc = librosa.feature.mfcc(input_wav,
                                     sr=sr,
                                     n_fft=n_fft,
