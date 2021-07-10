@@ -5,10 +5,15 @@ import contextlib
 import wave
 
 from configs.types import ADType
-from util.files import set_working_dir
+from util.files_util import set_working_dir
 
 
-def plot_distribution(data_dir):
+def plot_distribution(data_dir: str):
+    """
+
+    :param data_dir:
+    :return:
+    """
     return_tuple = []
     for t in ADType:
         item = t.value
