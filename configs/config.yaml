@@ -1,3 +1,5 @@
+features: [ "MFCC","Spectrogram","MelSpectrogram" ]
+
 process:
   n_fft: 1024
   hop_length: 512

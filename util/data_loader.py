@@ -80,12 +80,6 @@ class AldsDataset(Dataset):
 
         return cropped
 
-    def pre_emphasis(self, signal, coefficient=0.95):
-
-        pre = np.append(signal[0], signal[1:] - coefficient * signal[:-1])
-
-        return pre
-
     def spec(self, input_wav: np.ndarray) -> np.ndarray:
         n_fft = self.configs['n_fft']
         hop_length = self.configs['hop_length']
@@ -121,17 +115,16 @@ class AldsDataset(Dataset):
         file = self.train_list[item % self.count]
         label = self.label_list[item % self.count]
         cropped_wav: np.ndarray = self.resample_wav(file, self.sample_length, self.sr)
-        pre_wav: np.ndarray = self.pre_emphasis(cropped_wav)
         output_list = []
 
         if OutputType.MFCC in self.output_type:
-            mfcc_out = self.mfcc(pre_wav, self.sr)
+            mfcc_out = self.mfcc(cropped_wav, self.sr)
             output_list.append(mfcc_out)
         if OutputType.SPECS in self.output_type:
-            spec_out = self.spec(pre_wav)
+            spec_out = self.spec(cropped_wav)
             output_list.append(spec_out)
         if OutputType.MELSPECS in self.output_type:
-            melspec_out = self.melspec(pre_wav, self.sr)
+            melspec_out = self.melspec(cropped_wav, self.sr)
             output_list.append(melspec_out)
         output_list.append(label)
         return output_list

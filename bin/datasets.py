@@ -1,8 +1,9 @@
+import json
 import os.path
 
 from torch.utils.data.dataloader import DataLoader
 
-from configs.types import OutputType
+from configs.types import AudioFeatures
 from util.data_loader import AldsDataset
 from util.files_util import set_working_dir, read_config
 import time
@@ -10,11 +11,17 @@ import time
 if __name__ == '__main__':
     set_working_dir("./..")
     configs = read_config(os.path.join("configs", "config.yaml"))
-    dataset = AldsDataset(output_type=[OutputType.MFCC, OutputType.SPECS, OutputType.MELSPECS], use_merge=True,
-                          crop_count=5, configs=configs['process'])
+
+    use_features = []
+    for item in AudioFeatures:
+        if item.value in configs['features']:
+            use_features.append(item)
+
+    dataset = AldsDataset(use_features=use_features, use_merge=True,
+                          crop_count=5, sample_length=15, sr=16000, configs=configs['process'])
     print("Using config:")
-    print(configs['process'])
-    dataloader = DataLoader(dataset)
+    print(json.dumps(configs['process'], indent=1, separators=(', ', ': '), ensure_ascii=False))
+    dataloader = DataLoader(dataset, batch_size=2)
     now_time = time.time()
     for item in dataloader:
         current_time = time.time()

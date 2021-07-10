@@ -13,7 +13,7 @@ class VoiceType(Enum):
     FTL = "free_talk"
 
 
-class OutputType(Enum):
+class AudioFeatures(Enum):
     MFCC = "MFCC"
     SPECS = "Spectrogram"
     MELSPECS = "MelSpectrogram"
