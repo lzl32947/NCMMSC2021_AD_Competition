@@ -5,3 +5,4 @@ process:
   hop_length: 512
   n_mels: 128
   n_mfcc: 20
+  coefficient: 0.95
