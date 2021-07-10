@@ -8,11 +8,11 @@ from torch.utils.data.dataset import Dataset
 import os
 import librosa
 
-from configs.types import ADType, OutputType
+from configs.types import ADType, AudioFeatures
 
 
 class AldsDataset(Dataset):
-    def __init__(self, output_type: List[OutputType], use_merge: bool = True, crop_count: int = 1,
+    def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, crop_count: int = 1,
                  random_disruption: bool = False, sample_length: int = 15, sr: int = 16000,
                  configs: Optional[Dict] = None):
         torchaudio.set_audio_backend("soundfile")
@@ -31,7 +31,7 @@ class AldsDataset(Dataset):
         self.train_list = data
         self.label_list = label
         self.sr = sr
-        self.output_type = output_type
+        self.use_features = use_features
         self.configs = configs
 
     def init_files(self, use_merge: bool):
@@ -117,14 +117,22 @@ class AldsDataset(Dataset):
         cropped_wav: np.ndarray = self.resample_wav(file, self.sample_length, self.sr)
         output_list = []
 
-        if OutputType.MFCC in self.output_type:
+        if AudioFeatures.MFCC in self.use_features:
             mfcc_out = self.mfcc(cropped_wav, self.sr)
             output_list.append(mfcc_out)
-        if OutputType.SPECS in self.output_type:
+        if AudioFeatures.SPECS in self.use_features:
             spec_out = self.spec(cropped_wav)
             output_list.append(spec_out)
-        if OutputType.MELSPECS in self.output_type:
+        if AudioFeatures.MELSPECS in self.use_features:
             melspec_out = self.melspec(cropped_wav, self.sr)
             output_list.append(melspec_out)
         output_list.append(label)
         return output_list
+
+
+def audio_collate_fn(batch):
+    sizes = len(batch)
+    collate_list = [[] for i in range(sizes)]
+    for index, item in enumerate(batch):
+        collate_list[index].append(item[index])
+    return collate_list
