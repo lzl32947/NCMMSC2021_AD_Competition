@@ -78,6 +78,7 @@ class AldsDataset(Dataset):
         start = int(random.random() * (len(waveform) - sample_length * sample_rate))
         cropped = waveform[start: start + sample_length * sample_rate]
 
+
         return cropped
 
     def spec(self, input_wav: np.ndarray) -> np.ndarray:
