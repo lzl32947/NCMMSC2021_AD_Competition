@@ -1,4 +1,5 @@
 import random
+from typing import List
 
 import numpy as np
 import torch
@@ -6,13 +7,12 @@ import torchaudio
 from torch.utils.data.dataset import Dataset
 import os
 import librosa
-from torchaudio.transforms import MFCC
 
 from configs.types import ADType, OutputType
 
 
 class AldsDataset(Dataset):
-    def __init__(self, output_type: [OutputType, ...], use_merge: bool = True, crop_count: int = 1,
+    def __init__(self, output_type: List[OutputType], use_merge: bool = True, crop_count: int = 1,
                  sample_length: int = 30, sr: int = 22050):
         torchaudio.set_audio_backend("soundfile")
         self.target_dic = {}
@@ -104,9 +104,16 @@ class AldsDataset(Dataset):
         file = self.train_list[item % self.count]
         label = self.label_list[item % self.count]
         cropped_wav: np.ndarray = self.resample_wav(file, self.sample_length, self.sr)
+        output_list = []
 
-        mfcc_out = self.mfcc(cropped_wav, self.sr)
-        spec_out = self.spec(cropped_wav)
-        melspec_out = self.melspec(cropped_wav, self.sr)
-
-        return mfcc_out, spec_out, melspec_out, label
+        if OutputType.MFCC in self.output_type:
+            mfcc_out = self.mfcc(cropped_wav, self.sr)
+            output_list.append(mfcc_out)
+        if OutputType.SPECS in self.output_type:
+            spec_out = self.spec(cropped_wav)
+            output_list.append(spec_out)
+        if OutputType.MELSPECS in self.output_type:
+            melspec_out = self.melspec(cropped_wav, self.sr)
+            output_list.append(melspec_out)
+        output_list.append(label)
+        return output_list

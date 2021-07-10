@@ -14,6 +14,6 @@ class VoiceType(Enum):
 
 
 class OutputType(Enum):
-    FMCC = "FMCC"
+    MFCC = "MFCC"
     SPECS = "Spectrogram"
     MELSPECS = "MelSpectrogram"
