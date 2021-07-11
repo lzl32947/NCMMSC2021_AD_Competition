@@ -13,8 +13,7 @@ from configs.types import ADType, AudioFeatures
 
 class AldsDataset(Dataset):
     def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, crop_count: int = 1,
-                 random_disruption: bool = False, sample_length: int = 15, sr: int = 16000,
-                 configs: Optional[Dict] = None):
+                 random_disruption: bool = False, configs: Dict = None):
         torchaudio.set_audio_backend("soundfile")
         self.target_dic = {}
         for t in ADType:
@@ -24,13 +23,13 @@ class AldsDataset(Dataset):
         assert crop_count > 0
         self.crop_count = crop_count
         self.use_merge = use_merge
-        self.sample_length = sample_length
+        self.sample_length = configs['crop_length']
         data, label = self.dict2list(self.count)
         if random_disruption:
             data, label = self.random_disruption(data, label)
         self.train_list = data
         self.label_list = label
-        self.sr = sr
+        self.sr = configs['sr']
         self.use_features = use_features
         self.configs = configs
 
@@ -93,12 +92,12 @@ class AldsDataset(Dataset):
             spec = (spec - spec.mean()) / spec.std()
         return spec
 
-    def melspec(self, input_wav: np.ndarray, sr: int, normalized: bool = True) -> np.ndarray:
+    def melspec(self, input_wav: np.ndarray, normalized: bool = True) -> np.ndarray:
         n_fft = self.configs['n_fft']
         n_mels = self.configs['n_mels']
         hop_length = self.configs['hop_length']
         melspec = librosa.feature.melspectrogram(y=input_wav,
-                                                 sr=sr,
+                                                 sr=self.configs['sr'],
                                                  n_fft=n_fft,
                                                  hop_length=hop_length,
                                                  n_mels=n_mels)
@@ -108,12 +107,12 @@ class AldsDataset(Dataset):
             melspec = (melspec - melspec.mean()) / melspec.std()
         return melspec
 
-    def mfcc(self, input_wav: np.ndarray, sr: int, normalized: bool = True) -> np.ndarray:
+    def mfcc(self, input_wav: np.ndarray, normalized: bool = True) -> np.ndarray:
         n_fft = self.configs['n_fft']
         n_mfcc = self.configs['n_mfcc']
         hop_length = self.configs['hop_length']
         mfcc = librosa.feature.mfcc(input_wav,
-                                    sr=sr,
+                                    sr=self.configs['sr'],
                                     n_fft=n_fft,
                                     n_mfcc=n_mfcc,
                                     hop_length=hop_length)
@@ -129,13 +128,13 @@ class AldsDataset(Dataset):
         output_list = []
 
         if AudioFeatures.MFCC in self.use_features:
-            mfcc_out = self.mfcc(output_wav, self.sr,normalized=self.configs['normalized'])
+            mfcc_out = self.mfcc(output_wav,  normalized=self.configs['normalized'])
             output_list.append(mfcc_out)
         if AudioFeatures.SPECS in self.use_features:
-            spec_out = self.spec(output_wav,normalized=self.configs['normalized'])
+            spec_out = self.spec(output_wav, normalized=self.configs['normalized'])
             output_list.append(spec_out)
         if AudioFeatures.MELSPECS in self.use_features:
-            melspec_out = self.melspec(output_wav, self.sr,normalized=self.configs['normalized'])
+            melspec_out = self.melspec(output_wav, normalized=self.configs['normalized'])
             output_list.append(melspec_out)
         output_list.append(label)
         return output_list

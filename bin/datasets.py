@@ -19,7 +19,7 @@ if __name__ == '__main__':
             use_features.append(item)
 
     dataset = AldsDataset(use_features=use_features, use_merge=True,
-                          crop_count=5, sample_length=15, sr=16000, configs=configs['process'])
+                          crop_count=5, configs=configs['process'])
     print("Using config:")
     print(json.dumps(configs['process'], indent=1, separators=(', ', ': '), ensure_ascii=False))
     dataloader = DataLoader(dataset, batch_size=1)

@@ -14,6 +14,7 @@ import math
 from scipy.fftpack import dct
 import scipy.io.wavfile as wavfile
 
+
 def audio2frame(signal, frame_length, frame_step, winfunc=lambda x: numpy.ones((x,))):
     '''将音频信号转化为帧。
 	参数含义：
@@ -114,8 +115,6 @@ def pre_emphasis(signal, coefficient=0.95):
     coefficient:加重系数，默认为0.95
     '''
     return numpy.append(signal[0], signal[1:] - coefficient * signal[:-1])
-
-
 
 
 def calcMFCC_delta_delta(signal, samplerate=16000, win_length=0.025, win_step=0.01, cep_num=13, filters_num=26,
@@ -318,7 +317,8 @@ def lifter(cepstra, L=22):
     else:
         return cepstra
 
-if __name__=='__main__':
+
+if __name__ == '__main__':
     (rate, sig) = wavfile.read("../dataset/merge/AD/AD_F_030807.wav")
     mfcc_feat = calcMFCC_delta_delta(sig, rate)
     print(mfcc_feat)

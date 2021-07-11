@@ -1,6 +1,8 @@
 features: [ "MFCC","Spectrogram","MelSpectrogram" ]
 
 process:
+  sr: 16000
+  crop_length: 5
   n_fft: 1024
   hop_length: 512
   n_mels: 128
