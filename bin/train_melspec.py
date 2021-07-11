@@ -9,6 +9,7 @@ import torch
 from util.data_loader import AldsDataset
 from util.files_util import set_working_dir, read_config
 from tqdm import tqdm
+import torch.nn.functional as func
 
 if __name__ == '__main__':
     set_working_dir("./..")
@@ -26,7 +27,6 @@ if __name__ == '__main__':
     for current_fold in range(k_fold):
         model = MelSpecModel()
         model.cuda()
-        model.train()
 
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
@@ -46,6 +46,7 @@ if __name__ == '__main__':
         test_dataloader = DataLoader(test_dataset, batch_size=16)
 
         for epoch in range(10):
+            model.train()
             length = len(train_dataloader)
             running_loss = 0.0
             bar = tqdm(range(length))
@@ -54,14 +55,20 @@ if __name__ == '__main__':
                 melspec, label = data[use_features.index(AudioFeatures.MELSPECS)], data[-1]
                 melspec = melspec.cuda()
                 label = label.cuda()
-                output = model(melspec)
-                loss = criterion(output, label)
+
                 optimizer.zero_grad()
-                bar.set_postfix(loss=loss.item())
-                bar.update(1)
+
+                output = model(melspec)
+
+                loss = criterion(output, label)
                 loss.backward()
                 optimizer.step()
+
                 running_loss += loss.item()
+
+                bar.set_postfix(loss=running_loss / (iteration + 1))
+                bar.update(1)
+
             bar.close()
 
             correct = 0
@@ -69,13 +76,14 @@ if __name__ == '__main__':
             length = len(test_dataloader)
             bar_test = tqdm(range(length))
             bar_test.set_description("Testing for epoch {}".format(epoch))
+            model.eval()
             with torch.no_grad():
                 for data in test_dataloader:
                     melspec, label = data[use_features.index(AudioFeatures.MELSPECS)], data[-1]
                     melspec = melspec.cuda()
                     label = label.cuda()
                     outputs = model(melspec)
-                    _, predicted = torch.max(outputs.data, 1)
+                    _, predicted = torch.max(func.softmax(outputs,dim=1), 1)
                     total += label.size(0)
                     correct += (predicted == label).sum().item()
                     acc = correct / total
@@ -84,4 +92,6 @@ if __name__ == '__main__':
             final = correct / total
             acc_list[current_fold].append(final)
             bar_test.close()
+
+            torch.save(model.state_dict(), os.path.join("weight", "{}-{}-{}-spec.pth".format(k_fold, current_fold, epoch)))
     print(acc_list)

@@ -23,6 +23,8 @@ class ExtractionModel(nn.Module):
         self._normal_init(self.conv_layer_4, 0, 0.01)
         self._normal_init(self.conv_layer_5, 0, 0.01)
         self._normal_init(self.conv_layer_6, 0, 0.01)
+        self._normal_init(self.batch_norm1, 0, 0.01)
+        self._normal_init(self.batch_norm2, 0, 0.01)
 
     def forward(self, input_tensor: torch.Tensor):
         batch_size = input_tensor.shape[0]
