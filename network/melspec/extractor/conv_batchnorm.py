@@ -17,6 +17,13 @@ class ExtractionModel(nn.Module):
         self.conv_layer_5 = nn.Conv2d(128, 256, (3, 3))
         self.conv_layer_6 = nn.Conv2d(256, 512, (5, 5))
 
+        self._normal_init(self.conv_layer_1, 0, 0.01)
+        self._normal_init(self.conv_layer_2, 0, 0.01)
+        self._normal_init(self.conv_layer_3, 0, 0.01)
+        self._normal_init(self.conv_layer_4, 0, 0.01)
+        self._normal_init(self.conv_layer_5, 0, 0.01)
+        self._normal_init(self.conv_layer_6, 0, 0.01)
+
     def forward(self, input_tensor: torch.Tensor):
         batch_size = input_tensor.shape[0]
 
@@ -50,6 +57,12 @@ class ExtractionModel(nn.Module):
 
         output = output.permute((0, 1, 3, 2))
         output = output.squeeze(dim=3)
-        print(output.shape)
         return output
 
+    @staticmethod
+    def _normal_init(m, mean, stddev, truncated=False):
+        if truncated:
+            m.weight.data.normal_().fmod_(2).mul_(stddev).add_(mean)
+        else:
+            m.weight.data.normal_(mean, stddev)
+            m.bias.data.zero_()

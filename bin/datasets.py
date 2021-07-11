@@ -1,6 +1,7 @@
 import json
 import os.path
 
+import numpy as np
 from torch.utils.data.dataloader import DataLoader
 
 from configs.types import AudioFeatures, DatasetMode
@@ -19,7 +20,7 @@ if __name__ == '__main__':
             use_features.append(item)
 
     dataset = AldsDataset(use_features=use_features, use_merge=True,
-                          crop_count=5, configs=configs['process'])
+                          repeat_times=5, configs=configs['process'])
     print("Using config:")
     print(json.dumps(configs['process'], indent=1, separators=(', ', ': '), ensure_ascii=False))
     dataloader = DataLoader(dataset, batch_size=1)
@@ -38,8 +39,11 @@ if __name__ == '__main__':
             for index, features in enumerate(use_features):
                 ax = fig.add_subplot(len(use_features), 1, plot_position)
                 plot_position += 1
-
-                ax.matshow(item[index][batch_num])
+                if len(item[index][batch_num].shape) == 2:
+                    ax.matshow(item[index][batch_num])
+                else:
+                    img = np.transpose(item[index][batch_num], (1, 2, 0))
+                    ax.imshow(img)
                 ax.set_title("{}".format(use_features[index].value))
             plt.tight_layout()
             fig.show()

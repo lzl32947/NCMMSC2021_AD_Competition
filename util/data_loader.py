@@ -12,7 +12,7 @@ from configs.types import ADType, AudioFeatures, DatasetMode
 
 
 class AldsDataset(Dataset):
-    def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, crop_count: int = 1,
+    def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, repeat_times: int = 1,
                  random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
                  current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN):
         torchaudio.set_audio_backend("soundfile")
@@ -21,8 +21,8 @@ class AldsDataset(Dataset):
             item = t.value
             self.target_dic[item] = []
         self.count = self.init_files(use_merge)
-        assert crop_count > 0
-        self.crop_count = crop_count
+        assert repeat_times > 0
+        self.repeat_times = repeat_times
         self.use_merge = use_merge
         self.sample_length = configs['crop_length']
         self.count, data, label = self.dict2list(self.count, k_fold, current_fold, run_for)
@@ -89,7 +89,7 @@ class AldsDataset(Dataset):
         return data, label
 
     def __len__(self) -> int:
-        return self.count * self.crop_count
+        return self.count * self.repeat_times
 
     def resample_wav(self, file_path: str, sample_length: int, sr: int) -> np.float32:
 
@@ -125,6 +125,7 @@ class AldsDataset(Dataset):
         melspec = librosa.power_to_db(melspec, ref=np.max)
         if normalized:
             melspec = (melspec - melspec.mean()) / melspec.std()
+        melspec = np.expand_dims(melspec, axis=0)
         return melspec
 
     def mfcc(self, input_wav: np.ndarray, configs: Dict, normalized: bool = True) -> np.ndarray:

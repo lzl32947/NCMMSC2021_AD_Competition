@@ -7,7 +7,7 @@ from network.melspec.stand_alone.denses import DenseModel
 
 
 class MelSpecModel(nn.Module):
-    def __init__(self, input_size):
+    def __init__(self):
         super().__init__()
 
         self.extractor = ExtractionModel()
