@@ -3,7 +3,7 @@ import os.path
 
 from torch.utils.data.dataloader import DataLoader
 
-from configs.types import AudioFeatures
+from configs.types import AudioFeatures, DatasetMode
 from util.data_loader import AldsDataset
 from util.files_util import set_working_dir, read_config
 import time

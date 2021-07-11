@@ -8,12 +8,13 @@ from torch.utils.data.dataset import Dataset
 import os
 import librosa
 
-from configs.types import ADType, AudioFeatures
+from configs.types import ADType, AudioFeatures, DatasetMode
 
 
 class AldsDataset(Dataset):
     def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, crop_count: int = 1,
-                 random_disruption: bool = False, configs: Dict = None):
+                 random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
+                 current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN):
         torchaudio.set_audio_backend("soundfile")
         self.target_dic = {}
         for t in ADType:
@@ -24,7 +25,7 @@ class AldsDataset(Dataset):
         self.crop_count = crop_count
         self.use_merge = use_merge
         self.sample_length = configs['crop_length']
-        data, label = self.dict2list(self.count)
+        self.count, data, label = self.dict2list(self.count, k_fold, current_fold, run_for)
         if random_disruption:
             data, label = self.random_disruption(data, label)
         self.train_list = data
@@ -47,7 +48,7 @@ class AldsDataset(Dataset):
                 count += 1
         return count
 
-    def dict2list(self, count: int):
+    def dict2list(self, count: int, k_fold: int, current_fold: Optional[int], run_for: DatasetMode):
         target_file_list = []
         label = []
         current_label = 0
@@ -59,7 +60,26 @@ class AldsDataset(Dataset):
             current_label += 1
         assert len(target_file_list) == len(label)
         assert len(label) == count
-        return target_file_list, label
+
+        if k_fold != 0:
+            assert current_fold is not None
+            assert current_fold < k_fold
+            assert run_for is not None
+            if run_for == DatasetMode.TRAIN:
+                target_file_list = [item for index, item in enumerate(target_file_list) if
+                                    index % k_fold != current_fold]
+                label = [item for index, item in enumerate(label) if
+                         index % k_fold != current_fold]
+                assert len(target_file_list) == len(label)
+                count = len(label)
+            elif run_for == DatasetMode.TEST:
+                target_file_list = [item for index, item in enumerate(target_file_list) if
+                                    index % k_fold == current_fold]
+                label = [item for index, item in enumerate(label) if
+                         index % k_fold == current_fold]
+                assert len(target_file_list) == len(label)
+                count = len(label)
+        return count, target_file_list, label
 
     def random_disruption(self, data: List, label: List) -> (List, List):
         fix_list = [(i, j) for (i, j) in zip(data, label)]
@@ -79,23 +99,23 @@ class AldsDataset(Dataset):
 
         return cropped
 
-    def pre_emphasis(self, signal: np.ndarray) -> np.ndarray:
-        pre = np.append(signal[0], signal[1:] - self.configs['coefficient'] * signal[:-1])
+    def pre_emphasis(self, signal: np.ndarray, configs: Dict) -> np.ndarray:
+        pre = np.append(signal[0], signal[1:] - configs['coefficient'] * signal[:-1])
         return pre
 
-    def spec(self, input_wav: np.ndarray, normalized: bool = True) -> np.ndarray:
-        n_fft = self.configs['n_fft']
-        hop_length = self.configs['hop_length']
+    def spec(self, input_wav: np.ndarray, configs: Dict, normalized: bool = True) -> np.ndarray:
+        n_fft = configs['n_fft']
+        hop_length = configs['hop_length']
         spec = librosa.core.stft(input_wav, n_fft=n_fft, hop_length=hop_length)
         spec = librosa.amplitude_to_db(np.abs(spec), ref=np.max)
         if normalized:
             spec = (spec - spec.mean()) / spec.std()
         return spec
 
-    def melspec(self, input_wav: np.ndarray, normalized: bool = True) -> np.ndarray:
-        n_fft = self.configs['n_fft']
-        n_mels = self.configs['n_mels']
-        hop_length = self.configs['hop_length']
+    def melspec(self, input_wav: np.ndarray, configs: Dict, normalized: bool = True) -> np.ndarray:
+        n_fft = configs['n_fft']
+        n_mels = configs['n_mels']
+        hop_length = configs['hop_length']
         melspec = librosa.feature.melspectrogram(y=input_wav,
                                                  sr=self.configs['sr'],
                                                  n_fft=n_fft,
@@ -107,10 +127,10 @@ class AldsDataset(Dataset):
             melspec = (melspec - melspec.mean()) / melspec.std()
         return melspec
 
-    def mfcc(self, input_wav: np.ndarray, normalized: bool = True) -> np.ndarray:
-        n_fft = self.configs['n_fft']
-        n_mfcc = self.configs['n_mfcc']
-        hop_length = self.configs['hop_length']
+    def mfcc(self, input_wav: np.ndarray, configs: Dict, normalized: bool = True) -> np.ndarray:
+        n_fft = configs['n_fft']
+        n_mfcc = configs['n_mfcc']
+        hop_length = configs['hop_length']
         mfcc = librosa.feature.mfcc(input_wav,
                                     sr=self.configs['sr'],
                                     n_fft=n_fft,
@@ -124,17 +144,17 @@ class AldsDataset(Dataset):
         file = self.train_list[item % self.count]
         label = self.label_list[item % self.count]
         cropped_wav: np.ndarray = self.resample_wav(file, self.sample_length, self.sr)
-        output_wav = self.pre_emphasis(cropped_wav)
+        output_wav = self.pre_emphasis(cropped_wav, self.configs['pre_emphasis'])
         output_list = []
 
         if AudioFeatures.MFCC in self.use_features:
-            mfcc_out = self.mfcc(output_wav,  normalized=self.configs['normalized'])
+            mfcc_out = self.mfcc(output_wav, self.configs['mfcc'], normalized=self.configs['normalized'])
             output_list.append(mfcc_out)
         if AudioFeatures.SPECS in self.use_features:
-            spec_out = self.spec(output_wav, normalized=self.configs['normalized'])
+            spec_out = self.spec(output_wav, self.configs['specs'], normalized=self.configs['normalized'])
             output_list.append(spec_out)
         if AudioFeatures.MELSPECS in self.use_features:
-            melspec_out = self.melspec(output_wav, normalized=self.configs['normalized'])
+            melspec_out = self.melspec(output_wav, self.configs['melspecs'], normalized=self.configs['normalized'])
             output_list.append(melspec_out)
         output_list.append(label)
         return output_list

@@ -3,9 +3,17 @@ features: [ "MFCC","Spectrogram","MelSpectrogram" ]
 process:
   sr: 16000
   crop_length: 5
-  n_fft: 1024
-  hop_length: 512
-  n_mels: 128
-  n_mfcc: 20
-  coefficient: 0.95
   normalized: true
+  pre_emphasis:
+    coefficient: 0.95
+  mfcc:
+    n_fft: 1024
+    n_mfcc: 20
+    hop_length: 512
+  specs:
+    n_fft: 1024
+    hop_length: 512
+  melspecs:
+    n_fft: 1024
+    n_mels: 128
+    hop_length: 512
