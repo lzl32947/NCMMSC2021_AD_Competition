@@ -23,7 +23,7 @@ if __name__ == '__main__':
     k_fold = 5
 
     logger.info("Using config:")
-    logger.info(json.dumps(configs['process'], indent=1, separators=(', ', ': '), ensure_ascii=False))
+    logger.info(json.dumps(configs['process'], ensure_ascii=False))
     acc_list = [[] for i in range(k_fold)]
     for current_fold in range(k_fold):
         model = SpecModel()

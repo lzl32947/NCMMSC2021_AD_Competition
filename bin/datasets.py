@@ -23,7 +23,7 @@ if __name__ == '__main__':
     dataset = AldsDataset(use_features=use_features, use_merge=True,
                           repeat_times=5, configs=configs['process'])
     logger.info("Using config:")
-    logger.info(json.dumps(configs['process'], indent=1, separators=(', ', ': '), ensure_ascii=False))
+    logger.info(json.dumps(configs['process'], ensure_ascii=False))
     dataloader = DataLoader(dataset, batch_size=1)
     now_time = time.time()
     for item in dataloader:

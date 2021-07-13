@@ -34,6 +34,7 @@ class GlobalLogger(object):
 
     def init_config(self, config, store_name):
         self.log = logging.getLogger("main")
+        self.log.setLevel(logging.DEBUG)
         self.config = config
         self.log_name = store_name
 
