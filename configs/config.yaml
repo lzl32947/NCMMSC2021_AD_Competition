@@ -7,14 +7,23 @@ process:
   pre_emphasis:
     coefficient: 0.95
   mfcc:
+    resize: false
+    resize_height: 128
+    resize_width: -1
     n_fft: 1024
     n_mfcc: 20
     n_mels: 128
     hop_length: 512
   specs:
+    resize: false
+    resize_height: 128
+    resize_width: -1
     n_fft: 1024
     hop_length: 512
   melspecs:
+    resize: false
+    resize_height: 128
+    resize_width: -1
     n_fft: 1024
     n_mels: 128
     hop_length: 512

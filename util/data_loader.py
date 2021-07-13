@@ -1,6 +1,6 @@
 import random
-from typing import List, Optional, Dict
-
+from typing import List, Optional, Dict, Union
+from PIL import Image
 import numpy as np
 import torch
 import torchaudio
@@ -32,6 +32,7 @@ class AldsDataset(Dataset):
         self.label_list = label
         self.sr = configs['sr']
         self.use_features = use_features
+
         self.configs = configs
 
     def init_files(self, use_merge: bool):
@@ -111,6 +112,15 @@ class AldsDataset(Dataset):
         if normalized:
             spec = (spec - spec.mean()) / spec.std()
 
+        if configs['resize']:
+            resize_height = spec.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
+            resize_width = spec.shape[1] if configs['resize_width'] < 0 else configs['resize_width']
+            resize_shape = (resize_width, resize_height)
+            image = Image.fromarray(spec)
+
+            image = image.resize(resize_shape, Image.ANTIALIAS)
+            spec = np.array(image)
+
         spec = np.expand_dims(spec, axis=0)
         return spec
 
@@ -127,6 +137,14 @@ class AldsDataset(Dataset):
         melspec = librosa.power_to_db(melspec, ref=np.max)
         if normalized:
             melspec = (melspec - melspec.mean()) / melspec.std()
+        if configs['resize']:
+            resize_height = melspec.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
+            resize_width = melspec.shape[1] if configs['resize_width'] < 0 else configs['resize_width']
+            resize_shape = (resize_width, resize_height)
+            image = Image.fromarray(melspec)
+
+            image = image.resize(resize_shape, Image.ANTIALIAS)
+            melspec = np.array(image)
         melspec = np.expand_dims(melspec, axis=0)
         return melspec
 
@@ -143,6 +161,14 @@ class AldsDataset(Dataset):
                                     hop_length=hop_length)
         if normalized:
             mfcc = (mfcc - mfcc.mean()) / mfcc.std()
+        if configs['resize']:
+            resize_height = mfcc.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
+            resize_width = mfcc.shape[1] if configs['resize_width'] < 0 else configs['resize_width']
+            resize_shape = (resize_width, resize_height)
+            image = Image.fromarray(mfcc)
+
+            image = image.resize(resize_shape, Image.ANTIALIAS)
+            mfcc = np.array(image)
         mfcc = np.expand_dims(mfcc, axis=0)
         return mfcc
 
