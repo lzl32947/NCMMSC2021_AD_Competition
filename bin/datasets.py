@@ -6,15 +6,15 @@ from torch.utils.data.dataloader import DataLoader
 
 from configs.types import AudioFeatures, DatasetMode
 from util.data_loader import AldsDataset
-from util.files_util import set_working_dir, read_config, check_dir
+from util.files_util import global_init
 import time
 import matplotlib.pyplot as plt
 
-if __name__ == '__main__':
-    set_working_dir("./..")
-    check_dir()
-    configs = read_config(os.path.join("configs", "config.yaml"))
+from util.logger import GlobalLogger
 
+if __name__ == '__main__':
+    time_identifier, configs = global_init()
+    logger = GlobalLogger().get_logger()
     use_features = []
     for item in AudioFeatures:
         if item.value in configs['features']:
@@ -22,16 +22,18 @@ if __name__ == '__main__':
 
     dataset = AldsDataset(use_features=use_features, use_merge=True,
                           repeat_times=5, configs=configs['process'])
-    print("Using config:")
-    print(json.dumps(configs['process'], indent=1, separators=(', ', ': '), ensure_ascii=False))
+    logger.info("Using config:")
+    logger.info(json.dumps(configs['process'], indent=1, separators=(', ', ': '), ensure_ascii=False))
     dataloader = DataLoader(dataset, batch_size=1)
     now_time = time.time()
     for item in dataloader:
         current_time = time.time()
+        logging_str = ""
         for index, features in enumerate(use_features):
-            print("{}->{}".format(use_features[index].value, item[index].shape), end="\t")
-        print("label: {}".format(item[-1]), end="\t")
-        print("time use: {:<.2f}".format(current_time - now_time))
+            logging_str = logging_str + ("{}->{}\t".format(use_features[index].value, item[index].shape))
+        logging_str = logging_str + "label: {}\t".format(item[-1])
+        logging_str = logging_str + "time use: {:<.2f}".format(current_time - now_time)
+        logger.warning(logging_str)
 
         batch_size = item[0].shape[0]
         for batch_num in range(batch_size):

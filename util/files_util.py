@@ -1,6 +1,8 @@
 import os
-
+import time
 import yaml
+
+from util.logger import GlobalLogger
 
 
 def create_dir(target: str) -> bool:
@@ -47,3 +49,17 @@ def check_dir():
     """
     create_dir("weight")
     create_dir("log")
+
+
+def global_init():
+    """
+    NOTICE: THIS FUNCTION SHOULD BE RUNNING AS THE FIRST FUNCTION FOR EACH RUNNABLE.
+    :return: tuple(str, Dict): time string and the configs read from config.yaml
+    """
+    set_working_dir("./..")
+    check_dir()
+    run_time = time.strftime("%Y%m%d_%H%M%S", time.localtime())
+    config = read_config(os.path.join("configs", "config.yaml"))
+    logger = GlobalLogger()
+    logger.init_config(config['log'], run_time)
+    return run_time, config

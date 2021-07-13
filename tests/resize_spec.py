@@ -9,22 +9,23 @@ from torch import optim
 from torch.utils.data.dataloader import DataLoader
 import torch
 from util.data_loader import AldsDataset
-from util.files_util import set_working_dir, read_config
+from util.files_util import global_init
 from tqdm import tqdm
 import torch.nn.functional as func
 
-if __name__ == '__main__':
-    set_working_dir("./..")
-    configs = read_config(os.path.join("configs", "config.yaml"))
+from util.logger import GlobalLogger
 
+if __name__ == '__main__':
+    time_identifier, configs = global_init()
+    logger = GlobalLogger().get_logger()
     use_features = []
     for item in AudioFeatures:
         if item.value in configs['features']:
             use_features.append(item)
     k_fold = 5
 
-    print("Using config:")
-    print(json.dumps(configs['process'], indent=1, separators=(', ', ': '), ensure_ascii=False))
+    logger.info("Using config:")
+    logger.info(json.dumps(configs['process'], indent=1, separators=(', ', ': '), ensure_ascii=False))
     acc_list = [[] for i in range(k_fold)]
     for current_fold in range(k_fold):
         model = SpecModel()
@@ -98,4 +99,4 @@ if __name__ == '__main__':
             bar_test.close()
 
             torch.save(model.state_dict(), os.path.join("weight", "{}-{}-{}-spec.pth".format(k_fold, current_fold, epoch)))
-    print(acc_list)
+    logger.info(acc_list)
