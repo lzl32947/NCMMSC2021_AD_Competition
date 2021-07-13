@@ -38,7 +38,7 @@ class GlobalLogger(object):
         self.log_name = store_name
 
         ch = logging.StreamHandler()
-        ch.setLevel(logging.WARNING)
+        ch.setLevel(logging.DEBUG)
         formatter = logging.Formatter("%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s")
         ch.setFormatter(formatter)
         self.log.addHandler(ch)
@@ -46,7 +46,7 @@ class GlobalLogger(object):
         if not os.path.exists(os.path.join(self.config["log_dir"], self.log_name)):
             os.mkdir(os.path.join(self.config["log_dir"], self.log_name))
         fh = logging.FileHandler(os.path.join(self.config['log_dir'], self.log_name, "run.log"), mode="w")
-        fh.setLevel(logging.DEBUG)
+        fh.setLevel(logging.INFO)
         formatter = logging.Formatter("%(asctime)s - %(filename)s[line:%(lineno)d] - %(levelname)s: %(message)s")
         fh.setFormatter(formatter)
         self.log.addHandler(fh)

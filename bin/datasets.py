@@ -33,7 +33,7 @@ if __name__ == '__main__':
             logging_str = logging_str + ("{}->{}\t".format(use_features[index].value, item[index].shape))
         logging_str = logging_str + "label: {}\t".format(item[-1])
         logging_str = logging_str + "time use: {:<.2f}".format(current_time - now_time)
-        logger.warning(logging_str)
+        logger.info(logging_str)
 
         batch_size = item[0].shape[0]
         for batch_num in range(batch_size):
