@@ -1,6 +1,8 @@
 import torch
 from torch import nn
 import torch.nn.functional as func
+import torchinfo
+from torch.autograd import Variable
 
 
 class ExtractionModel(nn.Module):
@@ -17,8 +19,8 @@ class ExtractionModel(nn.Module):
         self.conv_layer_5 = nn.Conv2d(128, 256, (3, 3))
         self.conv_layer_6 = nn.Conv2d(256, 512, (5, 5))
 
-        self.bilstm_layer_1 = nn.LSTM(input_size=10, hidden_size=30, num_layers=1, bidirectional=True)
-        self.bilstm_layer_2= nn.LSTM(input_size=10, hidden_size=20, num_layers=1, bidirectional=True)
+        self.bilstm_layer_1 = nn.LSTM(input_size=512, hidden_size=300, num_layers=2, bidirectional=True, batch_first=True)
+
 
         self._normal_init(self.conv_layer_1, 0, 0.01)
         self._normal_init(self.conv_layer_2, 0, 0.01)
@@ -26,8 +28,15 @@ class ExtractionModel(nn.Module):
         self._normal_init(self.conv_layer_4, 0, 0.01)
         self._normal_init(self.conv_layer_5, 0, 0.01)
         self._normal_init(self.conv_layer_6, 0, 0.01)
-        self._normal_init(self.bilstm_layer_1, 0, 0.01)
-        self._normal_init(self.bilstm_layer_2, 0, 0.01)
+        # self._lstm_init(self.bilstm_layer_1, 512, 13, 30)
+        # self._lstm_init(self.bilstm_layer_2, 512, 13, 20)
+        for name, param in self.bilstm_layer_1.named_parameters():
+            if name.startswith("weight"):
+                nn.init.xavier_normal_(param)
+            else:
+                nn.init.zeros_(param)
+
+
 
 
     def forward(self, input_tensor: torch.Tensor):
@@ -60,17 +69,22 @@ class ExtractionModel(nn.Module):
 
         output = self.conv_layer_6(output)
         output = func.relu(output, inplace=True)
+        print(output.size())
+        output = output.permute((0, 2, 3, 1))
 
-        h0 = torch.randn(2, 30)  # [bidirection*num_layers,batch_size,hidden_size]
-        c0 = torch.randn(2, 30)  # [bidirection*num_layers,batch_size,hidden_size]
-        output, (hn, cn) = self.bilstm_layer_1(output, (h0, c0))
+        # h0 = torch.randn(2, 300)  # [bidirection*num_layers,batch_size,hidden_size]
+        # c0 = torch.randn(2, 300)  # [bidirection*num_layers,batch_size,hidden_size]
+        # output, (hn, cn) = self.bilstm_layer_1(output, (h0, c0))
+        output = output.view(batch_size, 13, 512)
+        print(output.size())
+        hidden = Variable(torch.zeros(2 * 2, batch_size, 300))
+        cell = Variable(torch.zeros(2 * 2, batch_size, 300))
+        output ,(hidden_n, cell_n)= self.bilstm_layer_1(output, (hidden, cell))
 
-        h0 = torch.randn(2, 20)  # [bidirection*num_layers,hidden_size]
-        c0 = torch.randn(2, 20)  # [bidirection*num_layers,hidden_size]
-        output, (hn, cn) = self.bilstm_layer_2(output, (h0, c0))
 
-        output = output.permute((0, 1, 3, 2))
-        output = output.squeeze(dim=3)
+
+        # output = output.permute((0, 1, 3, 2))
+        # output = output.squeeze(dim=3)
         return output
 
     @staticmethod
@@ -80,3 +94,16 @@ class ExtractionModel(nn.Module):
         else:
             m.weight.data.normal_(mean, stddev)
             m.bias.data.zero_()
+
+    @staticmethod
+    def _lstm_init(m, Embedding, s_len,hidden_size):
+
+        input = torch.randn(s_len,Embedding)
+        h0 = torch.randn(2, hidden_size)  # [bidirection*num_layers,batch_size,hidden_size]
+        c0 = torch.randn(2, hidden_size)  # [bidirection*num_layers,batch_size,hidden_size]
+        return input, h0, c0
+
+
+
+if __name__=="__main__":
+    torchinfo.summary(ExtractionModel().cuda(), (4, 1, 128, 157))
