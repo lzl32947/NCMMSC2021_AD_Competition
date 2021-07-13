@@ -5,7 +5,7 @@ import torchinfo
 from torch.autograd import Variable
 import os
 
-DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 class ExtractionModel(nn.Module):
     def __init__(self):
         super().__init__()
