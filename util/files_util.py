@@ -38,3 +38,12 @@ def read_config(config_path: str):
     fin = open(config_path, encoding="utf-8")
     data = yaml.load(fin, Loader=yaml.FullLoader)
     return data
+
+
+def check_dir():
+    """
+    Create necessary directories for program
+    :return: None.
+    """
+    create_dir("weight")
+    create_dir("log")
