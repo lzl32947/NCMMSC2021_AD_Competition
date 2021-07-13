@@ -3,7 +3,7 @@ import soundfile
 import numpy as np
 
 from configs.types import ADType
-from util.files_util import create_dir, set_working_dir
+from util.files_util import create_dir, set_working_dir, check_dir
 from tqdm import tqdm
 
 if __name__ == '__main__':
@@ -12,6 +12,7 @@ if __name__ == '__main__':
 
     # when loading this files, the working dir should be set to the upper directory.
     set_working_dir("./..")
+    check_dir()
 
     if not create_dir(target_dir):
         raise RuntimeError("Target dir not created!")

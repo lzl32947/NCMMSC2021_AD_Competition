@@ -6,12 +6,13 @@ from torch.utils.data.dataloader import DataLoader
 
 from configs.types import AudioFeatures, DatasetMode
 from util.data_loader import AldsDataset
-from util.files_util import set_working_dir, read_config
+from util.files_util import set_working_dir, read_config, check_dir
 import time
 import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     set_working_dir("./..")
+    check_dir()
     configs = read_config(os.path.join("configs", "config.yaml"))
 
     use_features = []
