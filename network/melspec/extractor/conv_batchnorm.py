@@ -17,14 +17,18 @@ class ExtractionModel(nn.Module):
         self.conv_layer_5 = nn.Conv2d(128, 256, (3, 3))
         self.conv_layer_6 = nn.Conv2d(256, 512, (5, 5))
 
+        self.bilstm_layer_1 = nn.LSTM(input_size=10, hidden_size=30, num_layers=1, bidirectional=True)
+        self.bilstm_layer_2= nn.LSTM(input_size=10, hidden_size=20, num_layers=1, bidirectional=True)
+
         self._normal_init(self.conv_layer_1, 0, 0.01)
         self._normal_init(self.conv_layer_2, 0, 0.01)
         self._normal_init(self.conv_layer_3, 0, 0.01)
         self._normal_init(self.conv_layer_4, 0, 0.01)
         self._normal_init(self.conv_layer_5, 0, 0.01)
         self._normal_init(self.conv_layer_6, 0, 0.01)
-        self._normal_init(self.batch_norm1, 0, 0.01)
-        self._normal_init(self.batch_norm2, 0, 0.01)
+        self._normal_init(self.bilstm_layer_1, 0, 0.01)
+        self._normal_init(self.bilstm_layer_2, 0, 0.01)
+
 
     def forward(self, input_tensor: torch.Tensor):
         batch_size = input_tensor.shape[0]
@@ -56,6 +60,14 @@ class ExtractionModel(nn.Module):
 
         output = self.conv_layer_6(output)
         output = func.relu(output, inplace=True)
+
+        h0 = torch.randn(2, 30)  # [bidirection*num_layers,batch_size,hidden_size]
+        c0 = torch.randn(2, 30)  # [bidirection*num_layers,batch_size,hidden_size]
+        output, (hn, cn) = self.bilstm_layer_1(output, (h0, c0))
+
+        h0 = torch.randn(2, 20)  # [bidirection*num_layers,hidden_size]
+        c0 = torch.randn(2, 20)  # [bidirection*num_layers,hidden_size]
+        output, (hn, cn) = self.bilstm_layer_2(output, (h0, c0))
 
         output = output.permute((0, 1, 3, 2))
         output = output.squeeze(dim=3)
