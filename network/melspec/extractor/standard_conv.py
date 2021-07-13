@@ -19,17 +19,12 @@ class ExtractionModel(nn.Module):
         self.maxpooling_3 = nn.MaxPool2d((2, 5), stride=2)
         self.batchnorm_3 = nn.BatchNorm2d(32)
 
-        self.linear_1 = nn.Linear(6240, 64)
-        self.dropout = nn.Dropout(0.3)
-        self.linear_2 = nn.Linear(64, 3)
-
         self._normal_init(self.conv_layer_1, 0, 0.1)
         self._normal_init(self.batchnorm_1, 0, 0.1)
         self._normal_init(self.conv_layer_2, 0, 0.1)
+        self._normal_init(self.batchnorm_2, 0, 0.1)
         self._normal_init(self.conv_layer_3, 0, 0.1)
         self._normal_init(self.batchnorm_3, 0, 0.1)
-        self._normal_init(self.linear_1, 0, 0.1)
-        self._normal_init(self.linear_2, 0, 0.1)
 
     def forward(self, input_tensor: torch.Tensor):
         batch_size = input_tensor.shape[0]
@@ -48,14 +43,6 @@ class ExtractionModel(nn.Module):
         output = func.relu(output, inplace=True)
         output = self.maxpooling_3(output)
         output = self.batchnorm_3(output)
-
-        output = output.view((batch_size, -1))
-
-        output = self.linear_1(output)
-        output = func.relu(output, inplace=True)
-        output = self.dropout(output)
-
-        output = self.linear_2(output)
 
         return output
 
