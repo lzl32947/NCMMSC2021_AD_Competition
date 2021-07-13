@@ -9,6 +9,7 @@ process:
   mfcc:
     n_fft: 1024
     n_mfcc: 20
+    n_mels: 128
     hop_length: 512
   specs:
     n_fft: 1024
