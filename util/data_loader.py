@@ -110,6 +110,8 @@ class AldsDataset(Dataset):
         spec = librosa.amplitude_to_db(np.abs(spec), ref=np.max)
         if normalized:
             spec = (spec - spec.mean()) / spec.std()
+
+        spec = np.expand_dims(spec, axis=0)
         return spec
 
     def melspec(self, input_wav: np.ndarray, configs: Dict, normalized: bool = True) -> np.ndarray:
@@ -131,14 +133,17 @@ class AldsDataset(Dataset):
     def mfcc(self, input_wav: np.ndarray, configs: Dict, normalized: bool = True) -> np.ndarray:
         n_fft = configs['n_fft']
         n_mfcc = configs['n_mfcc']
+        n_mels = configs['n_mels']
         hop_length = configs['hop_length']
         mfcc = librosa.feature.mfcc(input_wav,
                                     sr=self.configs['sr'],
                                     n_fft=n_fft,
                                     n_mfcc=n_mfcc,
+                                    n_mels=n_mels,
                                     hop_length=hop_length)
         if normalized:
             mfcc = (mfcc - mfcc.mean()) / mfcc.std()
+        mfcc = np.expand_dims(mfcc, axis=0)
         return mfcc
 
     def __getitem__(self, item):
