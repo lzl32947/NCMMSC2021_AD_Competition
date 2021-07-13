@@ -3,8 +3,9 @@ from torch import nn
 import torch.nn.functional as func
 import torchinfo
 from torch.autograd import Variable
+import os
 
-
+DEVICE = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 class ExtractionModel(nn.Module):
     def __init__(self):
         super().__init__()
@@ -78,7 +79,9 @@ class ExtractionModel(nn.Module):
         output = output.view(batch_size, 13, 512)
         print(output.size())
         hidden = Variable(torch.zeros(2 * 2, batch_size, 300))
+        hidden =hidden.cuda()
         cell = Variable(torch.zeros(2 * 2, batch_size, 300))
+        cell =cell.cuda()
         output ,(hidden_n, cell_n)= self.bilstm_layer_1(output, (hidden, cell))
 
 
