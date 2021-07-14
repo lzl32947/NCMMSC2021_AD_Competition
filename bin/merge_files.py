@@ -3,12 +3,12 @@ import soundfile
 import numpy as np
 
 from configs.types import ADType
-from util.files_util import create_dir, set_working_dir, check_dir, global_init
+from util.tools.files_util import create_dir, global_init
 from tqdm import tqdm
 
 if __name__ == '__main__':
-    base_dir = "dataset/raw"
-    target_dir = "dataset/merge"
+    base_dir = os.path.join("dataset", "raw")
+    target_dir = os.path.join("dataset", "merge")
 
     time_identifier, config = global_init()
 
