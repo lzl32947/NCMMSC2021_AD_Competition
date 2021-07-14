@@ -2,7 +2,7 @@ import os
 import time
 import yaml
 
-from util.logger import GlobalLogger
+from util.log_util.logger import GlobalLogger
 
 
 def create_dir(target: str) -> bool:
