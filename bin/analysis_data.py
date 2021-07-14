@@ -5,7 +5,7 @@ import contextlib
 import wave
 
 from configs.types import ADType
-from util.files_util import set_working_dir
+from util.tools.files_util import set_working_dir
 
 
 def plot_distribution(data_dir: str):
