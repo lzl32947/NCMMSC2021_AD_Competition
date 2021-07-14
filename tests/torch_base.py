@@ -1,8 +1,8 @@
-import torch, torchaudio
+import torchaudio
 
 from configs.types import ADType
-from util.draw_util import draw_sound
-from util.files_util import *
+from util.tools.draw_util import draw_sound
+from util.tools.files_util import *
 import os
 
 

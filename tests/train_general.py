@@ -1,5 +1,5 @@
 from configs.types import AudioFeatures, DatasetMode
-from network.spec.spec import SpecModel
+from network.general_model import GeneralModel
 import json
 import os.path
 from torch import nn
@@ -12,38 +12,27 @@ from tqdm import tqdm
 import torch.nn.functional as func
 
 from util.log_util.logger import GlobalLogger
+from util.train_util.trainer_util import prepare_feature, prepare_dataloader
 
 if __name__ == '__main__':
     time_identifier, configs = global_init()
     logger = GlobalLogger().get_logger()
-    use_features = []
-    for item in AudioFeatures:
-        if item.value in configs['features']:
-            use_features.append(item)
-    k_fold = 5
+    use_features = prepare_feature(configs['features'])
 
-    logger.info("Using config:" + json.dumps(configs['process'], ensure_ascii=False))
-    acc_list = [[] for i in range(k_fold)]
-    for current_fold in range(k_fold):
-        model = SpecModel()
+    # logger.info("Using config:" + json.dumps(configs['process'], ensure_ascii=False))
+
+    acc_list = []
+    for current_fold, (train_dataloader, test_dataloader) in enumerate(
+            zip(prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN),
+                prepare_dataloader(use_features, configs["dataset"], DatasetMode.TEST))):
+
+
+        model = GeneralModel()
         model.cuda()
 
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
-        train_dataset = AldsDataset(use_features=use_features, use_merge=True,
-                                    repeat_times=32, configs=configs['process'], k_fold=k_fold,
-                                    current_fold=current_fold, random_disruption=True,
-                                    run_for=DatasetMode.TRAIN)
-
-        train_dataloader = DataLoader(train_dataset, batch_size=16)
-
-        test_dataset = AldsDataset(use_features=use_features, use_merge=True,
-                                   repeat_times=32, configs=configs['process'], k_fold=k_fold,
-                                   current_fold=current_fold, random_disruption=True,
-                                   run_for=DatasetMode.TEST)
-
-        test_dataloader = DataLoader(test_dataset, batch_size=16)
 
         for epoch in range(10):
             model.train()
@@ -52,13 +41,16 @@ if __name__ == '__main__':
             bar = tqdm(range(length))
             bar.set_description("Training for epoch {}".format(epoch))
             for iteration, data in enumerate(train_dataloader):
-                spec, label = data[use_features.index(AudioFeatures.SPECS)], data[-1]
+                spec, mel, mfcc, label = data[use_features.index(AudioFeatures.SPECS)], data[
+                    use_features.index(AudioFeatures.MELSPECS)], data[use_features.index(AudioFeatures.MFCC)], data[-1]
                 spec = spec.cuda()
+                mel = mel.cuda()
+                mfcc = mfcc.cuda()
                 label = label.cuda()
 
                 optimizer.zero_grad()
 
-                output = model(spec)
+                output = model(spec, mel, mfcc)
 
                 loss = criterion(output, label)
                 loss.backward()
@@ -79,11 +71,16 @@ if __name__ == '__main__':
             model.eval()
             with torch.no_grad():
                 for data in test_dataloader:
-                    spec, label = data[use_features.index(AudioFeatures.SPECS)], data[-1]
+                    spec, mel, mfcc, label = data[use_features.index(AudioFeatures.SPECS)], data[
+                        use_features.index(AudioFeatures.MELSPECS)], data[use_features.index(AudioFeatures.MFCC)], data[
+                                                 -1]
                     spec = spec.cuda()
+                    mel = mel.cuda()
+                    mfcc = mfcc.cuda()
                     label = label.cuda()
-                    outputs = model(spec)
-                    _, predicted = torch.max(func.softmax(outputs, dim=1), 1)
+
+                    output = model(spec, mel, mfcc)
+                    _, predicted = torch.max(func.softmax(output, dim=1), 1)
                     total += label.size(0)
                     correct += (predicted == label).sum().item()
                     acc = correct / total
