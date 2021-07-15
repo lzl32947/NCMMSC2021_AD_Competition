@@ -15,11 +15,12 @@ def draw_sound(wav: Union[torch.Tensor, np.ndarray, List], use_second: bool = Tr
     :param rate: int, the sample rate.
     :return: None
     """
+    # Transform the format ot np.ndarray if torch.Tensor is given
     if isinstance(wav, torch.Tensor):
         if wav.is_cuda:
             wav = wav.cpu()
         wav = wav.numpy()
-
+    # The input wav should be in format of ndarray, or list and should be reshape into (-1, 1)
     if not isinstance(wav, (np.ndarray, list)):
         raise RuntimeError(
             "wav instance can not be drawn, get type {} instead of np.ndarray and list.".format(type(wav)))
@@ -28,9 +29,9 @@ def draw_sound(wav: Union[torch.Tensor, np.ndarray, List], use_second: bool = Tr
             wav = np.array(wav)
     if len(wav.shape) == 2:
         wav = np.reshape(wav, (-1,))
-
+    # _max is here to get the maximum of the wav in abs()
     _max = np.abs(wav).max()
-
+    # Draw the figure
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
     x = [i for i in range(len(wav))]
@@ -38,6 +39,7 @@ def draw_sound(wav: Union[torch.Tensor, np.ndarray, List], use_second: bool = Tr
         x = [i / rate for i in x]
     ax.plot(x, wav, color="blue")
     ax.set_title("Wav sound files")
+    # If the sep is used, which is used in drawing the VAD
     if sep:
         if isinstance(sep, np.ndarray):
             sep = sep.squeeze()
