@@ -42,7 +42,7 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
             dataset = AldsDataset(use_features=use_features, use_merge=use_merge,
                                   repeat_times=repeat_times, configs=configs['process'], k_fold=k_fold,
                                   current_fold=fold, random_disruption=random_disruption,
-                                  run_for=DatasetMode.TRAIN)
+                                  run_for=run_for)
 
             dataloader = DataLoader(dataset, batch_size=batch_size)
             yield dataloader
@@ -52,7 +52,7 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
             dataset = AldsDataset(use_features=use_features, use_merge=use_merge,
                                   repeat_times=repeat_times, configs=configs['process'],
                                   random_disruption=random_disruption,
-                                  run_for=DatasetMode.TRAIN)
+                                  run_for=run_for)
 
             dataloader = DataLoader(dataset, batch_size=batch_size)
             yield dataloader
