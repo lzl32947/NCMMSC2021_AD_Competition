@@ -1,5 +1,5 @@
 from configs.types import AudioFeatures, DatasetMode
-from network.general_model import GeneralModel
+from network.lstm_model import GeneralModel
 import json
 import os.path
 from torch import nn
@@ -26,7 +26,7 @@ if __name__ == '__main__':
             zip(prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN),
                 prepare_dataloader(use_features, configs["dataset"], DatasetMode.TEST))):
 
-
+        acc_list.append([])
         model = GeneralModel()
         model.cuda()
 
@@ -90,6 +90,6 @@ if __name__ == '__main__':
             acc_list[current_fold].append(final)
             bar_test.close()
 
-            torch.save(model.state_dict(),
-                       os.path.join("weight", "{}-{}-{}-spec.pth".format(k_fold, current_fold, epoch)))
+            # torch.save(model.state_dict(),
+            #            os.path.join("weight", "{}-{}-{}-spec.pth".format(current_fold, epoch)))
     logger.info(acc_list)
