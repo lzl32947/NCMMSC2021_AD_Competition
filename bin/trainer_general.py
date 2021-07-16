@@ -23,4 +23,4 @@ if __name__ == '__main__':
 
     total_fold = configs['dataset']['k_fold']
 
-    train_general(configs, time_identifier, use_features, False, "20210716_153049")
+    train_general(configs, time_identifier, use_features, True, "20210716_193130")

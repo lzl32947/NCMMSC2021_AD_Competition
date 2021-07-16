@@ -79,7 +79,7 @@ def read_weight(weight_dir: str, specific_feature: Union[AudioFeatures, str]):
     file_list, current_list, total_list, epoch_list, loss_list, acc_list = [], [], [], [], [], []
 
     for files in os.listdir(directory):
-        file_list.append(os.path.join(weight_dir, specific_feature.value, files))
+        file_list.append(os.path.join(directory, files))
         filename = files.split(".pth")[0]
         fold, epoch, loss, acc = filename.split("-")
         current_fold = int(fold[4:].split("_")[0])
