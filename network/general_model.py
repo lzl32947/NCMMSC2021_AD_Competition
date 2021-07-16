@@ -2,7 +2,7 @@ import torch
 import torchinfo
 from torch import nn
 import torch.nn.functional as func
-
+from torch.autograd import Variable
 
 class DenseModel(nn.Module):
     def __init__(self):
@@ -85,6 +85,61 @@ class ExtractionModel(nn.Module):
             m.weight.data.normal_(mean, stddev)
             m.bias.data.zero_()
 
+class lstm_model(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.conv_layer_1 = nn.Conv2d(32, 32, (3, 1), (2, 1))
+        self.conv_layer_2 = nn.Conv2d(32, 32, (3, 1), (2, 1))
+
+        self.conv_layer_3 = nn.Conv2d(32, 32, (3, 1), (2, 1))
+
+        self.conv_layer_4 = nn.Conv2d(32, 32, (3, 1), (2, 1))
+        self.conv_layer_5 = nn.Conv2d(32, 32, (2, 1), (2, 1))
+        self.bilstm_layer_1 = nn.LSTM(input_size=32, hidden_size=300, num_layers=2, bidirectional=True,
+                                      batch_first=True)
+
+        self._normal_init(self.conv_layer_1, 0, 0.1)
+        self._normal_init(self.conv_layer_2, 0, 0.1)
+        self._normal_init(self.conv_layer_3, 0, 0.1)
+        self._normal_init(self.conv_layer_4, 0, 0.1)
+        self._normal_init(self.conv_layer_5, 0, 0.1)
+        for name, param in self.bilstm_layer_1.named_parameters():
+            if name.startswith("weight"):
+                nn.init.xavier_normal_(param)
+            else:
+                nn.init.zeros_(param)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.conv_layer_1(input_tensor)
+        output = self.conv_layer_2(output)
+        output = self.conv_layer_3(output)
+        output = self.conv_layer_4(output)
+        output = self.conv_layer_5(output)
+        print(output.size())
+
+
+        length = output.shape[3]
+        channel = output.shape[1]
+        output = output.permute((0, 3, 1, 2))
+
+        output = output.view(batch_size, length, channel)
+        print(output.size())
+        hidden = Variable(torch.zeros(2 * 2, batch_size, 300))
+        hidden = hidden.cuda()
+        cell = Variable(torch.zeros(2 * 2, batch_size, 300))
+        cell = cell.cuda()
+        output, (hidden_n, cell_n) = self.bilstm_layer_1(output, (hidden, cell))
+
+        return output
+
+    @staticmethod
+    def _normal_init(m, mean, stddev, truncated=False):
+        if truncated:
+            m.weight.data.normal_().fmod_(2).mul_(stddev).add_(mean)
+        else:
+            m.weight.data.normal_(mean, stddev)
+            m.bias.data.zero_()
 
 class ConcatModel(nn.Module):
     def __init__(self):
@@ -153,4 +208,6 @@ class GeneralModel(nn.Module):
         output = self.dense(concat_output)
         return output
 
-
+if __name__ == '__main__':
+    torchinfo.summary(ExtractionModel(), (4, 1, 513, 157))
+    torchinfo.summary(lstm_model(), (4, 32, 61, 15))
