@@ -75,5 +75,5 @@ def global_init() -> (str, Dict):
     # Create the specific weight dir
     create_dir(os.path.join(config['weight']['weight_dir'], run_time))
     # return the runtime identifier and the configs
-    shutil.copy(os.path.join("configs", "config.yaml"), os.path.join(config['log'], run_time, "config.yaml"))
+    shutil.copy(os.path.join("configs", "config.yaml"), os.path.join(config['log']["log_dir"], run_time, "config.yaml"))
     return run_time, config
