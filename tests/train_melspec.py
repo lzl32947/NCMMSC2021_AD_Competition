@@ -11,7 +11,7 @@ from util.tools.files_util import global_init
 from tqdm import tqdm
 import torch.nn.functional as func
 
-from util.log_util.logger import GlobalLogger
+from util.logger import GlobalLogger
 
 if __name__ == '__main__':
     time_identifier, configs = global_init()
