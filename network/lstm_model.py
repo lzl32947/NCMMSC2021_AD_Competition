@@ -110,7 +110,6 @@ class lstm_model(nn.Module):
         output = self.conv_layer_1(input_tensor)
         output = self.conv_layer_2(output)
         output = self.conv_layer_3(output)
-        print(output.size())
 
 
         length = output.shape[3]
