@@ -1,4 +1,5 @@
 import os
+import shutil
 import time
 from typing import Dict
 
@@ -71,5 +72,8 @@ def global_init() -> (str, Dict):
     # Create the global logger and init the log with the previous config
     logger = GlobalLogger()
     logger.init_config(config['log'], run_time)
+    # Create the specific weight dir
+    create_dir(os.path.join(config['weight']['weight_dir'], run_time))
     # return the runtime identifier and the configs
+    shutil.copy(os.path.join("configs", "config.yaml"), os.path.join(config['log'], run_time, "config.yaml"))
     return run_time, config

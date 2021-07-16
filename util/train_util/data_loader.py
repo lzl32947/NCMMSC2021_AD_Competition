@@ -289,18 +289,20 @@ class AldsDataset(Dataset):
         output_wav = self.pre_emphasis(cropped_wav, self.configs['pre_emphasis'])
         output_list = []
 
-        # Add the MFCC feature to output if used
-        if AudioFeatures.MFCC in self.use_features:
-            mfcc_out = self.mfcc(output_wav, self.configs['mfcc'], normalized=self.configs['normalized'])
-            output_list.append(mfcc_out)
-        # Add the Spectrogram feature to output if used
-        if AudioFeatures.SPECS in self.use_features:
-            spec_out = self.spec(output_wav, self.configs['specs'], normalized=self.configs['normalized'])
-            output_list.append(spec_out)
-        # Add the Mel-Spectrogram feature to output if used
-        if AudioFeatures.MELSPECS in self.use_features:
-            melspec_out = self.melspec(output_wav, self.configs['melspecs'], normalized=self.configs['normalized'])
-            output_list.append(melspec_out)
+        for item in self.use_features:
+
+            # Add the MFCC feature to output if used
+            if AudioFeatures.MFCC == item:
+                mfcc_out = self.mfcc(output_wav, self.configs['mfcc'], normalized=self.configs['normalized'])
+                output_list.append(mfcc_out)
+            # Add the Spectrogram feature to output if used
+            if AudioFeatures.SPECS == item:
+                spec_out = self.spec(output_wav, self.configs['specs'], normalized=self.configs['normalized'])
+                output_list.append(spec_out)
+            # Add the Mel-Spectrogram feature to output if used
+            if AudioFeatures.MELSPECS == item:
+                melspec_out = self.melspec(output_wav, self.configs['melspecs'], normalized=self.configs['normalized'])
+                output_list.append(melspec_out)
         # Add the label to output
         output_list.append(label)
         return output_list

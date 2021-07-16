@@ -2,6 +2,7 @@ import torch
 import torchinfo
 from torch import nn
 import torch.nn.functional as func
+from torchinfo import summary
 
 
 class DenseModel(nn.Module):
@@ -154,3 +155,13 @@ class GeneralModel(nn.Module):
         return output
 
 
+class ConvModel(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.extractor = ExtractionModel()
+        self.dense = DenseModel()
+
+    def forward(self, input_tensor: torch.Tensor):
+        output = self.extractor(input_tensor)
+        output = self.dense(output)
+        return output

@@ -2,6 +2,7 @@ features: [ "MFCC","Spectrogram","MelSpectrogram" ]
 
 train:
   epoch: 10
+  save_best: true
 
 dataset:
   k_fold: 4
@@ -41,3 +42,6 @@ dataset:
 
 log:
   log_dir: "log"
+
+weight:
+  weight_dir: "weight"
