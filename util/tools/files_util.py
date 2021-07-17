@@ -2,7 +2,7 @@ import os
 import shutil
 import time
 from typing import Dict
-
+import warnings
 import yaml
 
 from util.log_util.logger import GlobalLogger
@@ -45,6 +45,16 @@ def read_config(config_path: str) -> Dict:
     return data
 
 
+def set_ignore_warning(close: bool) -> None:
+    """
+    Close the UserWarning by Python
+    :param close: bool, whether to close the UserWarning
+    :return: None
+    """
+    if close:
+        warnings.filterwarnings("ignore")
+
+
 def check_dir() -> None:
     """
     Create necessary directories for program
@@ -72,6 +82,9 @@ def global_init() -> (str, Dict):
     # Create the global logger and init the log with the previous config
     logger = GlobalLogger()
     logger.init_config(config['log'], run_time)
+    # Check the warnings
+    if 'warning' in config.keys():
+        set_ignore_warning(config['warning']['ignore'])
     # Create the specific weight dir
     create_dir(os.path.join(config['weight']['weight_dir'], run_time))
     # return the runtime identifier and the configs

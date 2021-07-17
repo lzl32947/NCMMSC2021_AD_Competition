@@ -4,6 +4,9 @@ train:
   epoch: 10
   save_best: true
 
+warning:
+  ignore: true
+
 dataset:
   k_fold: 4
   repeat_times: 32
