@@ -187,7 +187,7 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
         epoch = configs['train']['epoch']
 
         # If not running on GPU
-        if not model.cuda:
+        if not next(model.parameters()).is_cuda:
             model = model.cuda()
 
         # Init the criterion, CE by default
