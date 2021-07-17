@@ -1,4 +1,6 @@
 import os
+from typing import List
+
 import numpy as np
 import matplotlib.pyplot as plt
 import contextlib
@@ -8,11 +10,11 @@ from configs.types import ADType
 from util.tools.files_util import set_working_dir
 
 
-def plot_distribution(data_dir: str):
+def plot_distribution(data_dir: str) -> List[str]:
     """
-
-    :param data_dir:
-    :return:
+    Plot the distribution of the different AD type
+    :param data_dir: str, the path to data directory
+    :return: List, the wav files
     """
     return_tuple = []
     for t in ADType:
@@ -24,7 +26,7 @@ def plot_distribution(data_dir: str):
     return return_tuple
 
 
-def plot_males(input_tuple, total=False):
+def plot_males(input_tuple, total=False) -> None:
     map_dict = {}
     v = 0
     for t in ADType:
@@ -73,7 +75,14 @@ def plot_males(input_tuple, total=False):
     plt.close(fig)
 
 
-def plot_length(input_tuple, data_dir, use_merge=True):
+def plot_length(input_tuple: List[str], data_dir: str, use_merge: bool = True) -> None:
+    """
+    Plot the length of the audios.
+    :param input_tuple: List[str], the list contains the file paths
+    :param data_dir: str, the path to the data directory
+    :param use_merge: bool, whether to use the merged files
+    :return: None
+    """
     for t in ADType:
         item = t.value
         F_list = []
