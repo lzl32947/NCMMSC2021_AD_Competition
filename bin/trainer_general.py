@@ -17,10 +17,14 @@ from util.train_util.trainer_util import prepare_feature, prepare_dataloader, re
     train_general
 
 if __name__ == '__main__':
+    """
+    This is a template for joint-features training
+    """
+    # Init the global environment
     time_identifier, configs = global_init()
     logger = GlobalLogger().get_logger()
     use_features = prepare_feature(configs['features'])
-
+    # Read the fold from config
     total_fold = configs['dataset']['k_fold']
-
-    train_general(configs, time_identifier, use_features, False, "20210716_153049")
+    # Train the general model
+    train_general(configs, time_identifier, use_features, True, "20210716_193130")
