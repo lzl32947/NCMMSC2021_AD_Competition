@@ -11,8 +11,8 @@ if __name__ == '__main__':
     This file is used to merge all the audios that from the same person to the same audio file
     """
     # Default directory are 'dataset/raw' and 'dataset/merge'
-    base_dir = os.path.join("dataset", "raw")
-    target_dir = os.path.join("dataset", "merge")
+    base_dir = os.path.join("dataset", "merge_vad")
+    target_dir = os.path.join("dataset", "merge_vad")
 
     # Read config and init the global identifier
     time_identifier, config = global_init()

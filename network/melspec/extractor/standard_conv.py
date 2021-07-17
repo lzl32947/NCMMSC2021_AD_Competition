@@ -56,4 +56,4 @@ class ExtractionModel(nn.Module):
 
 
 if __name__ == '__main__':
-    torchinfo.summary(ExtractionModel().cuda(), (4, 1, 128, 157))
+    torchinfo.summary(ExtractionModel(), (4, 1, 128, 157))

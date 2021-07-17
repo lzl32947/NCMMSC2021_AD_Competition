@@ -63,7 +63,7 @@ class AldsDataset(Dataset):
         """
         # Merge files should be set to 'dataset/merge' by default and original files should be set to 'dataset/raw'
         if use_merge:
-            data_dir = os.path.join("dataset", "merge")
+            data_dir = os.path.join("dataset", "merge_vad")
         else:
             data_dir = os.path.join("dataset", "raw")
         count = 0

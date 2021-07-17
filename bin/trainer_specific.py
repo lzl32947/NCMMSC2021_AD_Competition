@@ -1,5 +1,6 @@
 from configs.types import AudioFeatures
 from network.melspec.melspec import MelSpecModel
+from network.melspec.lstm.lstm import MelSpecModel_lstm
 from util.log_util.logger import GlobalLogger
 from util.tools.files_util import global_init
 from util.train_util.trainer_util import prepare_feature, prepare_dataloader, read_weight, get_best_acc_weight, \
