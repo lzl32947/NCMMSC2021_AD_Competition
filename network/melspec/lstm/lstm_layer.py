@@ -4,6 +4,7 @@ import torch.nn.functional as func
 import torchinfo
 from torch.autograd import Variable
 
+
 class ExtractionModel(nn.Module):
     def __init__(self):
         super().__init__()
@@ -54,6 +55,7 @@ class ExtractionModel(nn.Module):
             m.weight.data.normal_(mean, stddev)
             m.bias.data.zero_()
 
+
 class LstmModel(nn.Module):
     def __init__(self):
         super().__init__()
@@ -73,16 +75,14 @@ class LstmModel(nn.Module):
                 nn.init.xavier_normal_(param)
             else:
                 nn.init.zeros_(param)
-        self.hidden = torch.randn((2*2,4,30))
-        self.cell = torch.randn((2*2,4,30))
+        self.hidden = torch.randn((2 * 2, 4, 30)).cuda()
+        self.cell = torch.randn((2 * 2, 4, 30)).cuda()
 
     def forward(self, input_tensor: torch.Tensor):
         batch_size = input_tensor.shape[0]
         output = self.conv_layer_1(input_tensor)
         output = self.conv_layer_2(output)
         output = self.conv_layer_3(output)
-
-
 
         length = output.shape[3]
         channel = output.shape[1]
@@ -133,6 +133,7 @@ class DenseModel(nn.Module):
         else:
             m.weight.data.normal_(mean, stddev)
             m.bias.data.zero_()
+
 
 if __name__ == '__main__':
     torchinfo.summary(ExtractionModel(), (4, 1, 128, 157))
