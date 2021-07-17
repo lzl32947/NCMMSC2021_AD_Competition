@@ -5,7 +5,7 @@ from tqdm import tqdm
 from util.tools.files_util import set_working_dir, read_config
 
 
-def clear_weight(configs: Dict, **kwargs):
+def clear_weight(configs: Dict, **kwargs) -> None:
     """
     Clear the weight directory
     :param configs: Dict, the configs
