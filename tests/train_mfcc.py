@@ -1,9 +1,12 @@
 from configs.types import AudioFeatures, DatasetMode
-from network.general.general_model import GeneralModel
+from network.melspec.melspec import MelSpecModel
+import json
 import os.path
 from torch import nn
 from torch import optim
+from torch.utils.data.dataloader import DataLoader
 import torch
+from util.train_util.data_loader import AldsDataset
 from util.tools.files_util import global_init
 from tqdm import tqdm
 import torch.nn.functional as func
@@ -16,14 +19,12 @@ if __name__ == '__main__':
     logger = GlobalLogger().get_logger()
     use_features = prepare_feature(configs['features'])
 
-    # logger.info("Using config:" + json.dumps(configs['process'], ensure_ascii=False))
-
     acc_list = []
     for current_fold, (train_dataloader, test_dataloader) in enumerate(
             zip(prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN),
                 prepare_dataloader(use_features, configs["dataset"], DatasetMode.TEST))):
-
-        model = GeneralModel()
+        acc_list.append([])
+        model = MelSpecModel()
         model.cuda()
 
         criterion = nn.CrossEntropyLoss()
@@ -36,16 +37,13 @@ if __name__ == '__main__':
             bar = tqdm(range(length))
             bar.set_description("Training for epoch {}".format(epoch))
             for iteration, data in enumerate(train_dataloader):
-                spec, mel, mfcc, label = data[use_features.index(AudioFeatures.SPECS)], data[
-                    use_features.index(AudioFeatures.MELSPECS)], data[use_features.index(AudioFeatures.MFCC)], data[-1]
-                spec = spec.cuda()
-                mel = mel.cuda()
-                mfcc = mfcc.cuda()
+                melspec, label = data[use_features.index(AudioFeatures.MFCC)], data[-1]
+                melspec = melspec.cuda()
                 label = label.cuda()
 
                 optimizer.zero_grad()
 
-                output = model(spec, mel, mfcc)
+                output = model(melspec)
 
                 loss = criterion(output, label)
                 loss.backward()
@@ -66,16 +64,11 @@ if __name__ == '__main__':
             model.eval()
             with torch.no_grad():
                 for data in test_dataloader:
-                    spec, mel, mfcc, label = data[use_features.index(AudioFeatures.SPECS)], data[
-                        use_features.index(AudioFeatures.MELSPECS)], data[use_features.index(AudioFeatures.MFCC)], data[
-                                                 -1]
-                    spec = spec.cuda()
-                    mel = mel.cuda()
-                    mfcc = mfcc.cuda()
+                    melspec, label = data[use_features.index(AudioFeatures.MFCC)], data[-1]
+                    melspec = melspec.cuda()
                     label = label.cuda()
-
-                    output = model(spec, mel, mfcc)
-                    _, predicted = torch.max(func.softmax(output, dim=1), 1)
+                    outputs = model(melspec)
+                    _, predicted = torch.max(func.softmax(outputs, dim=1), 1)
                     total += label.size(0)
                     correct += (predicted == label).sum().item()
                     acc = correct / total
