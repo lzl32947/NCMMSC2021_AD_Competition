@@ -6,10 +6,16 @@ from util.train_util.trainer_util import prepare_feature, prepare_dataloader, re
     train_general, train_specific_feature
 
 if __name__ == '__main__':
+    """
+    This is a template for joint-features training
+    """
+    # Init the global environment
     time_identifier, configs = global_init()
     logger = GlobalLogger().get_logger()
     use_features = prepare_feature(configs['features'])
-
+    # Read the fold from config
     total_fold = configs['dataset']['k_fold']
+    # Init the model
     model = MelSpecModel()
+    # Train the general model
     train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS, model)
