@@ -15,7 +15,5 @@ if __name__ == '__main__':
     use_features = prepare_feature(configs['features'])
     # Read the fold from config
     total_fold = configs['dataset']['k_fold']
-    # Init the model
-    model = MelSpecModel()
     # Train the general model
-    train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS, model)
+    train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS, MelSpecModel)

@@ -162,13 +162,13 @@ def get_best_loss_weight(weight_dir: str, fold: int, current_fold: int,
 
 
 def train_specific_feature(configs: Dict, time_identifier: str, specific_feature: AudioFeatures,
-                           model: nn.Module) -> None:
+                           model_func: callable, **kwargs) -> None:
     """
     This is the trainer of training only with one specific features.
     :param configs: Dict, the configs
     :param time_identifier: str, the global identifier
     :param specific_feature: AudioFeatures, the feature to use
-    :param model: nn.Module, the custom model
+    :param model_func: function call, the custom model
     :return: None
     """
     # Init the saving directory
@@ -187,8 +187,8 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
         epoch = configs['train']['epoch']
 
         # If not running on GPU
-        if not next(model.parameters()).is_cuda:
-            model = model.cuda()
+        model = model_func()
+        model = model.cuda()
 
         # Init the criterion, CE by default
         criterion = nn.CrossEntropyLoss()
