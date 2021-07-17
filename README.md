@@ -1,7 +1,9 @@
 # NCMMSC2021
 
 ## Introduction
-This is the repo for NCMMSC2021 competition
+This is the repo for NCMMSC2021 competition.
+
+Notice that the ```master``` branch is for development, for stable release, please switch to the ```stable``` branch.
 
 ## Project Structure
 ```
