@@ -270,6 +270,7 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
                 for data in test_dataloader:
                     # Get the features
                     feature, label = data[0], data[-1]
+                    feature = feature.view(-1, sequence_length, input_size)
                     feature = feature.cuda()
                     label = label.cuda()
                     # Running the model
