@@ -14,7 +14,8 @@ import time
 import torch
 import torch.nn.functional as func
 
-
+sequence_length = 157  # 序列长度，将图像的每一列作为一个序列
+input_size = 128  # 输入数据的维度
 def prepare_feature(feature_list: List[str]) -> List[AudioFeatures]:
     """
     This function is to get which features are used in dataset.
@@ -213,6 +214,7 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
             # Running one batch
             for iteration, data in enumerate(train_dataloader):
                 feature, label = data[0], data[-1]
+                feature = feature.view(-1, sequence_length, input_size)
                 # Get features and set them to cuda
                 feature = feature.cuda()
                 label = label.cuda()

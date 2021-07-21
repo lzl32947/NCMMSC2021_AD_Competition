@@ -14,10 +14,10 @@ class MelSpecModel_lstm(nn.Module):
 
         self.extractor = ExtractionModel()
         self.lstm = LstmModel()
-        self.dense = DenseModel()
+        # self.dense = DenseModel()
 
     def forward(self, input_tensor: torch.Tensor):
         output = self.extractor(input_tensor)
         output = self.lstm(output)
-        output = self.dense(output)
+        # output = self.dense(output)
         return output
