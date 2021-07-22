@@ -1,7 +1,7 @@
 features: [ "MFCC","Spectrogram","MelSpectrogram" ]
 
 train:
-  epoch: 100
+  epoch: 15
   save_best: true
 
 warning:
