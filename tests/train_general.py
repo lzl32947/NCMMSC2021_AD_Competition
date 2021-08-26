@@ -12,7 +12,7 @@ from util.log_util.logger import GlobalLogger
 from util.train_util.trainer_util import prepare_feature, prepare_dataloader
 
 if __name__ == '__main__':
-    time_identifier, configs = global_init()
+    time_identifier, configs = global_init("config")
     logger = GlobalLogger().get_logger()
     use_features = prepare_feature(configs['features'])
 

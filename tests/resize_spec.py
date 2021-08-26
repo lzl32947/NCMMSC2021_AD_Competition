@@ -14,7 +14,7 @@ import torch.nn.functional as func
 from util.log_util.logger import GlobalLogger
 
 if __name__ == '__main__':
-    time_identifier, configs = global_init()
+    time_identifier, configs = global_init("config")
     logger = GlobalLogger().get_logger()
     use_features = []
     for item in AudioFeatures:

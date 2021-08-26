@@ -17,7 +17,7 @@ if __name__ == '__main__':
     This file is used to test the datasets(dataloader), and be stored in directory 'bin'
     """
     # Get the global identifier and the configs
-    time_identifier, configs = global_init()
+    time_identifier, configs = global_init("config")
     # Get the logger
     logger = GlobalLogger().get_logger()
     # Init the features to use

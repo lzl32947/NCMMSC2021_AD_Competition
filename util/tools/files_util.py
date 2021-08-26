@@ -66,7 +66,7 @@ def check_dir() -> None:
     create_dir("log")
 
 
-def global_init() -> (str, Dict):
+def global_init(config_name: str) -> (str, Dict):
     """
     NOTICE: THIS FUNCTION SHOULD BE RUNNING AS THE FIRST FUNCTION FOR EACH RUNNABLE.
     :return: tuple(str, Dict): time string and the configs read from config.yaml
@@ -77,16 +77,21 @@ def global_init() -> (str, Dict):
     check_dir()
     # Generate the runtime identifier, mainly used for recording the log and weights
     run_time = time.strftime("%Y%m%d_%H%M%S", time.localtime())
-    # Read the configs from the config directories, and should be in directory 'configs/config.yaml'
-    config = read_config(os.path.join("configs", "config.yaml"))
+    # Check config_name by adding ".yaml"
+    if ".yaml" not in config_name:
+        config_name += ".yaml"
+    # Read the configs from the config directories, and should be in directory 'configs/config.yaml' as example
+    config = read_config(os.path.join("configs", config_name))
     # Create the global logger and init the log with the previous config
     logger = GlobalLogger()
     logger.init_config(config['log'], run_time)
+    # Info config
+    GlobalLogger().get_logger().info("Using config: {}".format(config_name))
     # Check the warnings
     if 'warning' in config.keys():
         set_ignore_warning(config['warning']['ignore'])
     # Create the specific weight dir
     create_dir(os.path.join(config['weight']['weight_dir'], run_time))
     # return the runtime identifier and the configs
-    shutil.copy(os.path.join("configs", "config.yaml"), os.path.join(config['log']["log_dir"], run_time, "config.yaml"))
+    shutil.copy(os.path.join("configs", config_name), os.path.join(config['log']["log_dir"], run_time, config_name))
     return run_time, config
