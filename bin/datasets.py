@@ -4,7 +4,7 @@ import numpy as np
 from torch.utils.data.dataloader import DataLoader
 
 from configs.types import AudioFeatures, DatasetMode
-from util.train_util.data_loader import AldsDataset
+from util.train_util.data_loader import AldsDataset2D
 from util.tools.files_util import global_init
 import time
 import matplotlib.pyplot as plt
@@ -24,7 +24,7 @@ if __name__ == '__main__':
     use_features = prepare_feature(configs['features'])
 
     # Get the dataloader from the generator
-    for dataloader in prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN, k_fold=0):
+    for dataloader in prepare_dataloader(use_features,AldsDataset2D, configs["dataset"], DatasetMode.TRAIN, k_fold=0):
         logger.info("Using config:" + json.dumps(configs['dataset']['process'], ensure_ascii=False))
         # Calculate the process time
         now_time = time.time()

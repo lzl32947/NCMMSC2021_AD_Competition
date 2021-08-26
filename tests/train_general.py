@@ -20,8 +20,8 @@ if __name__ == '__main__':
 
     acc_list = []
     for current_fold, (train_dataloader, test_dataloader) in enumerate(
-            zip(prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN),
-                prepare_dataloader(use_features, configs["dataset"], DatasetMode.TEST))):
+            zip(prepare_dataloader(use_features,AldsDataset2D, configs["dataset"], DatasetMode.TRAIN),
+                prepare_dataloader(use_features,AldsDataset2D, configs["dataset"], DatasetMode.TEST))):
 
         model = GeneralModel()
         model.cuda()

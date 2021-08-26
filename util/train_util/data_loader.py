@@ -1,4 +1,5 @@
 import random
+from abc import ABC
 from typing import List, Optional, Dict, Union
 from PIL import Image
 import numpy as np
@@ -11,10 +12,10 @@ import librosa
 from configs.types import ADType, AudioFeatures, DatasetMode
 
 
-class AldsDataset(Dataset):
+class BasicDataset(Dataset, ABC):
     """
-    This is the dataset overwrite the torch.utils.data.dataset.Dataset and create the dataset for this program
-    """
+        This is the dataset overwrite the torch.utils.data.dataset.Dataset and create the dataset for this program
+        """
 
     def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, repeat_times: int = 1,
                  random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
@@ -174,6 +175,15 @@ class AldsDataset(Dataset):
         pre = np.append(signal[0], signal[1:] - configs['coefficient'] * signal[:-1])
         return pre
 
+
+class AldsDataset2D(BasicDataset):
+    def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, repeat_times: int = 1,
+                 random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
+                 current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN) -> None:
+
+        super().__init__(use_features, use_merge, repeat_times, random_disruption, configs, k_fold, current_fold,
+                         run_for)
+
     def spec(self, input_wav: np.ndarray, configs: Dict, normalized: bool = True) -> np.ndarray:
         """
         Generate the Spectrogram of the given audio
@@ -308,7 +318,7 @@ class AldsDataset(Dataset):
         return output_list
 
 
-def audio_collate_fn(batch):
+def audio_collate_fn_2d(batch):
     # The custom the collate_fn function
     # NOTICE: this function is not used in program and not been test
     sizes = len(batch)
@@ -316,3 +326,144 @@ def audio_collate_fn(batch):
     for index, item in enumerate(batch):
         collate_list[index].append(item[index])
     return collate_list
+
+
+class AldsDataset1D(Dataset):
+    def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, repeat_times: int = 1,
+                 random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
+                 current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN) -> None:
+        super().__init__(use_features, use_merge, repeat_times, random_disruption, configs, k_fold, current_fold,
+                         run_for)
+
+    def spec(self, input_wav: np.ndarray, configs: Dict, normalized: bool = True) -> np.ndarray:
+        """
+        Generate the Spectrogram of the given audio
+        :param input_wav: np.ndarray, the audio files
+        :param configs: Dict, the configs
+        :param normalized: bool, whether to normalized the audio with mean equals 0 and std equals 1
+        :return: np.ndarray, the Spectrogram data
+        """
+        n_fft = configs['n_fft']
+        hop_length = configs['hop_length']
+        # Perform the Short-time Fourier transform (STFT)
+        spec = librosa.core.stft(input_wav, n_fft=n_fft, hop_length=hop_length)
+        # Convert an amplitude spectrogram to dB-scaled spectrogram
+        spec = librosa.amplitude_to_db(np.abs(spec), ref=np.max)
+        # Normalize the data
+        if normalized:
+            spec = (spec - spec.mean()) / spec.std()
+        # Resize the data to the target shape with the help of PIL.Image
+        if configs['resize']:
+            resize_height = spec.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
+            resize_width = spec.shape[1] if configs['resize_width'] < 0 else configs['resize_width']
+            resize_shape = (resize_width, resize_height)
+            image = Image.fromarray(spec)
+
+            image = image.resize(resize_shape, Image.ANTIALIAS)
+            spec = np.array(image)
+        # Expand dimension to 3 to process it as the image
+        spec = np.expand_dims(spec, axis=0)
+        return spec
+
+    def melspec(self, input_wav: np.ndarray, configs: Dict, normalized: bool = True) -> np.ndarray:
+        """
+        Generate the Mel-Spectrogram of the given audio
+        :param input_wav: np.ndarray, the audio files
+        :param configs: Dict, the configs
+        :param normalized: bool, whether to normalized the audio with mean equals 0 and std equals 1
+        :return: np.ndarray, the Mel-Spectrogram data
+        """
+        n_fft = configs['n_fft']
+        n_mels = configs['n_mels']
+        hop_length = configs['hop_length']
+        # Compute a mel-scaled spectrogram
+        melspec = librosa.feature.melspectrogram(y=input_wav,
+                                                 sr=self.configs['sr'],
+                                                 n_fft=n_fft,
+                                                 hop_length=hop_length,
+                                                 n_mels=n_mels)
+        # Convert a power spectrogram (amplitude squared) to decibel (dB) units
+        melspec = librosa.power_to_db(melspec, ref=np.max)
+        # Normalize the data
+        if normalized:
+            melspec = (melspec - melspec.mean()) / melspec.std()
+        # Resize the data to the target shape with the help of PIL.Image
+        if configs['resize']:
+            resize_height = melspec.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
+            resize_width = melspec.shape[1] if configs['resize_width'] < 0 else configs['resize_width']
+            resize_shape = (resize_width, resize_height)
+            image = Image.fromarray(melspec)
+
+            image = image.resize(resize_shape, Image.ANTIALIAS)
+            melspec = np.array(image)
+        # Expand dimension to 3 to process it as the image
+        melspec = np.expand_dims(melspec, axis=0)
+        return melspec
+
+    def mfcc(self, input_wav: np.ndarray, configs: Dict, normalized: bool = True) -> np.ndarray:
+        """
+        Generate the MFCC features of the given audio
+        :param input_wav: np.ndarray, the audio files
+        :param configs: Dict, the configs
+        :param normalized: bool, whether to normalized the audio with mean equals 0 and std equals 1
+        :return: np.ndarray, the MFCC features
+        """
+        n_fft = configs['n_fft']
+        n_mfcc = configs['n_mfcc']
+        n_mels = configs['n_mels']
+        hop_length = configs['hop_length']
+        # Calculate the Mel-frequency cepstral coefficients (MFCCs)
+        mfcc = librosa.feature.mfcc(input_wav,
+                                    sr=self.configs['sr'],
+                                    n_fft=n_fft,
+                                    n_mfcc=n_mfcc,
+                                    n_mels=n_mels,
+                                    hop_length=hop_length)
+        # Normalize the data
+        if normalized:
+            mfcc = (mfcc - mfcc.mean()) / mfcc.std()
+        # Resize the data to the target shape with the help of PIL.Image
+        if configs['resize']:
+            resize_height = mfcc.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
+            resize_width = mfcc.shape[1] if configs['resize_width'] < 0 else configs['resize_width']
+            resize_shape = (resize_width, resize_height)
+            image = Image.fromarray(mfcc)
+
+            image = image.resize(resize_shape, Image.ANTIALIAS)
+            mfcc = np.array(image)
+        # Expand dimension to 3 to process it as the image
+        mfcc = np.expand_dims(mfcc, axis=0)
+        return mfcc
+
+    def __getitem__(self, item: int):
+        """
+        Get one item from the dataset
+        :param item: int, the order of the given data
+        :return: List, the data
+        """
+        # Get the file and the label
+        file = self.train_list[item % self.count]
+        label = self.label_list[item % self.count]
+        # Read and crop the audio
+        cropped_wav: np.ndarray = self.resample_wav(file, self.sample_length, self.sr)
+        # Pre-emphasis the audio
+        output_wav = self.pre_emphasis(cropped_wav, self.configs['pre_emphasis'])
+        output_list = []
+
+        for item in self.use_features:
+
+            # Add the MFCC feature to output if used
+            if AudioFeatures.MFCC == item:
+                mfcc_out = self.mfcc(output_wav, self.configs['mfcc'], normalized=self.configs['normalized'])
+                output_list.append(mfcc_out)
+            # Add the Spectrogram feature to output if used
+            if AudioFeatures.SPECS == item:
+                spec_out = self.spec(output_wav, self.configs['specs'], normalized=self.configs['normalized'])
+                output_list.append(spec_out)
+            # Add the Mel-Spectrogram feature to output if used
+            if AudioFeatures.MELSPECS == item:
+                melspec_out = self.melspec(output_wav, self.configs['melspecs'], normalized=self.configs['normalized'])
+                output_list.append(melspec_out)
+        # Add the label to output
+        output_list.append(label)
+        return output_list

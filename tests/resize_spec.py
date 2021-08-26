@@ -6,7 +6,7 @@ from torch import nn
 from torch import optim
 from torch.utils.data.dataloader import DataLoader
 import torch
-from util.train_util.data_loader import AldsDataset
+from util.train_util.data_loader import AldsDataset2D
 from util.tools.files_util import global_init
 from tqdm import tqdm
 import torch.nn.functional as func
@@ -31,17 +31,17 @@ if __name__ == '__main__':
         criterion = nn.CrossEntropyLoss()
         optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
-        train_dataset = AldsDataset(use_features=use_features, use_merge=True,
-                                    repeat_times=32, configs=configs['process'], k_fold=k_fold,
-                                    current_fold=current_fold, random_disruption=True,
-                                    run_for=DatasetMode.TRAIN)
+        train_dataset = AldsDataset2D(use_features=use_features, use_merge=True,
+                                      repeat_times=32, configs=configs['process'], k_fold=k_fold,
+                                      current_fold=current_fold, random_disruption=True,
+                                      run_for=DatasetMode.TRAIN)
 
         train_dataloader = DataLoader(train_dataset, batch_size=16)
 
-        test_dataset = AldsDataset(use_features=use_features, use_merge=True,
-                                   repeat_times=32, configs=configs['process'], k_fold=k_fold,
-                                   current_fold=current_fold, random_disruption=True,
-                                   run_for=DatasetMode.TEST)
+        test_dataset = AldsDataset2D(use_features=use_features, use_merge=True,
+                                     repeat_times=32, configs=configs['process'], k_fold=k_fold,
+                                     current_fold=current_fold, random_disruption=True,
+                                     run_for=DatasetMode.TEST)
 
         test_dataloader = DataLoader(test_dataset, batch_size=16)
 

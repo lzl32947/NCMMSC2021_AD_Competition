@@ -1,10 +1,10 @@
 import os
-from typing import List, Dict, Generic, Union, Optional
+from typing import List, Dict, Generic, Union, Optional, Callable
 from torch.utils.data.dataloader import DataLoader
 from configs.types import AudioFeatures, DatasetMode
 from util.log_util.logger import GlobalLogger
 from util.tools.files_util import create_dir
-from util.train_util.data_loader import AldsDataset
+from util.train_util.data_loader import AldsDataset2D
 import numpy as np
 from torch import nn
 from torch import optim
@@ -30,12 +30,14 @@ def prepare_feature(feature_list: List[str]) -> List[AudioFeatures]:
     return use_features
 
 
-def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for: DatasetMode, **kwargs):
+def prepare_dataloader(use_features: List[AudioFeatures], dataset_fn: Callable, configs: Dict, run_for: DatasetMode,
+                       **kwargs):
     """
     This function returns the generator of dataloader.
     Considering the k-fold is used in the program so the function is design to be the generator.
     Notice that even the k-fold is not used the function will still return a dataloader generator with the only one dataloader.
     :param use_features: List[AudioFeatures], the list of AudioFeatures and determines which features are used in dataset.
+    :param dataset_fn: Callable function for Dataset instance.
     :param configs: Dict, and should be configs['dataset'] by default
     :param run_for: DatasetMode, this parameters in used to determine what the dataset aims to.
     :param kwargs: other parameters, notice that any given parameters will override the parameters in config
@@ -51,20 +53,20 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
     if k_fold != 0:
         # Generate the k_fold dataloader
         for fold in range(k_fold):
-            dataset = AldsDataset(use_features=use_features, use_merge=use_merge,
-                                  repeat_times=repeat_times, configs=configs['process'], k_fold=k_fold,
-                                  current_fold=fold, random_disruption=random_disruption,
-                                  run_for=run_for)
+            dataset = dataset_fn(use_features=use_features, use_merge=use_merge,
+                                 repeat_times=repeat_times, configs=configs['process'], k_fold=k_fold,
+                                 current_fold=fold, random_disruption=random_disruption,
+                                 run_for=run_for)
 
             dataloader = DataLoader(dataset, batch_size=batch_size)
             yield dataloader
     else:
         # Generate the single dataloader
         for fold in range(1):
-            dataset = AldsDataset(use_features=use_features, use_merge=use_merge,
-                                  repeat_times=repeat_times, configs=configs['process'],
-                                  random_disruption=random_disruption,
-                                  run_for=run_for)
+            dataset = dataset_fn(use_features=use_features, use_merge=use_merge,
+                                 repeat_times=repeat_times, configs=configs['process'],
+                                 random_disruption=random_disruption,
+                                 run_for=run_for)
 
             dataloader = DataLoader(dataset, batch_size=batch_size)
             yield dataloader
@@ -181,8 +183,8 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
 
     # Getting the dataloader from the generator
     for current_fold, (train_dataloader, test_dataloader) in enumerate(
-            zip(prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TRAIN),
-                prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TEST))):
+            zip(prepare_dataloader([specific_feature], AldsDataset2D, configs["dataset"], DatasetMode.TRAIN),
+                prepare_dataloader([specific_feature], AldsDataset2D, configs["dataset"], DatasetMode.TEST))):
         # Getting the epoch
         epoch = configs['train']['epoch']
 
@@ -335,8 +337,8 @@ def train_general(configs: Dict, time_identifier: str, use_features: List[AudioF
     total_fold = configs['dataset']['k_fold']
     # Getting the dataloader from the generator
     for current_fold, (train_dataloader, test_dataloader) in enumerate(
-            zip(prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN),
-                prepare_dataloader(use_features, configs["dataset"], DatasetMode.TEST))):
+            zip(prepare_dataloader(use_features, AldsDataset2D, configs["dataset"], DatasetMode.TRAIN),
+                prepare_dataloader(use_features, AldsDataset2D, configs["dataset"], DatasetMode.TEST))):
         # Getting the epoch
         epoch = configs['train']['epoch']
         # Send the model to GPU

@@ -4,7 +4,7 @@ import json
 import os.path
 from torch.utils.data.dataloader import DataLoader
 import torch
-from util.train_util.data_loader import AldsDataset
+from util.train_util.data_loader import AldsDataset2D
 from util.tools.files_util import global_init
 from tqdm import tqdm
 import torch.nn.functional as func
@@ -26,10 +26,10 @@ if __name__ == '__main__':
         model = MelSpecModel()
         model.cuda()
 
-        test_dataset = AldsDataset(use_features=use_features, use_merge=True,
-                                   repeat_times=32, configs=configs['process'], k_fold=k_fold,
-                                   current_fold=current_fold, random_disruption=True,
-                                   run_for=DatasetMode.TEST)
+        test_dataset = AldsDataset2D(use_features=use_features, use_merge=True,
+                                     repeat_times=32, configs=configs['process'], k_fold=k_fold,
+                                     current_fold=current_fold, random_disruption=True,
+                                     run_for=DatasetMode.TEST)
 
         test_dataloader = DataLoader(test_dataset, batch_size=16)
 

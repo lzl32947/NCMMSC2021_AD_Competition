@@ -6,7 +6,7 @@ from torch import nn
 from torch import optim
 from torch.utils.data.dataloader import DataLoader
 import torch
-from util.train_util.data_loader import AldsDataset
+from util.train_util.data_loader import AldsDataset2D
 from util.tools.files_util import global_init
 from tqdm import tqdm
 import torch.nn.functional as func
@@ -21,8 +21,8 @@ if __name__ == '__main__':
 
     acc_list = []
     for current_fold, (train_dataloader, test_dataloader) in enumerate(
-            zip(prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN),
-                prepare_dataloader(use_features, configs["dataset"], DatasetMode.TEST))):
+            zip(prepare_dataloader(use_features,AldsDataset2D, configs["dataset"], DatasetMode.TRAIN),
+                prepare_dataloader(use_features,AldsDataset2D, configs["dataset"], DatasetMode.TEST))):
         acc_list.append([])
         model = MelSpecModel()
         model.cuda()
