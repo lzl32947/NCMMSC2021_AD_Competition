@@ -7,7 +7,7 @@ import torchaudio
 from torch.utils.data.dataset import Dataset
 import os
 import librosa
-
+from util.wav_process.unsupervised_vad import *
 from configs.types import ADType, AudioFeatures, DatasetMode
 
 
@@ -63,7 +63,7 @@ class AldsDataset(Dataset):
         """
         # Merge files should be set to 'dataset/merge' by default and original files should be set to 'dataset/raw'
         if use_merge:
-            data_dir = os.path.join("dataset", "merge_vad")
+            data_dir = os.path.join("dataset", "merge")
         else:
             data_dir = os.path.join("dataset", "raw")
         count = 0
@@ -274,6 +274,20 @@ class AldsDataset(Dataset):
         mfcc = np.expand_dims(mfcc, axis=0)
         return mfcc
 
+    def pause(self, input_wav: np.ndarray, configs: Dict, normalized: bool = True) -> np.ndarray:
+
+        fs, s = read_wav(input_wav)
+        win_len = int(fs * 0.025)
+        hop_len = int(fs * 0.010)
+        sframes = enframe(s, win_len, hop_len)
+        percent_high_nrg = configs['percent_high_nrg']
+        vad = nrg_vad(sframes, percent_high_nrg)
+        s1 = np.array(deframe(vad, win_len, hop_len)).squeeze()
+        s1 = np.pad(s1, (0, len(s) - len(s1)), 'constant', constant_values=(0.))
+        pause = s1 * s
+
+        return pause
+
     def __getitem__(self, item: int):
         """
         Get one item from the dataset
@@ -303,6 +317,11 @@ class AldsDataset(Dataset):
             if AudioFeatures.MELSPECS == item:
                 melspec_out = self.melspec(output_wav, self.configs['melspecs'], normalized=self.configs['normalized'])
                 output_list.append(melspec_out)
+            # Add the Pause feature to output if used
+            if AudioFeatures.PAUSE == item:
+                pause_out = self.pause(output_wav, self.configs['pause'], normalized=self.configs['normalized'])
+                output_list.append(pause_out)
+                print(pause_out.shape)
         # Add the label to output
         output_list.append(label)
         return output_list

@@ -18,6 +18,7 @@ class AudioFeatures(Enum):
     MFCC = "MFCC"
     SPECS = "Spectrogram"
     MELSPECS = "MelSpectrogram"
+    PAUSE = "Pause"
 
 
 class DatasetMode(Enum):

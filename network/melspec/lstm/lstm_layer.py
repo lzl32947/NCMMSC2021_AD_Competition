@@ -3,6 +3,7 @@ from torch import nn
 import torch.nn.functional as func
 import torchinfo
 from torch.autograd import Variable
+import math
 
 class ExtractionModel(nn.Module):
     def __init__(self):
@@ -65,10 +66,21 @@ class LstmModel(nn.Module):
         self.bilstm_layer_1 = nn.LSTM(input_size=1024, hidden_size=1000, num_layers=2, bidirectional=True,
                                       batch_first=True)
         self.fc = nn.Linear(2000, 3)
+        self.dropout = nn.Dropout(0.5)
 
         self._normal_init(self.conv_layer_1, 0, 0.1)
         self._normal_init(self.conv_layer_2, 0, 0.1)
         self._normal_init(self.conv_layer_3, 0, 0.1)
+
+    def attention_net(self, x, query, mask=None):  # 软性注意力机制（key=value=x）
+
+        d_k = query.size(-1)
+        scores = torch.matmul(query, x.transpose(1, 2)) / math.sqrt(d_k)
+        p_attn = func.softmax(scores, dim=-1)
+        context = torch.matmul(p_attn, x).sum(1)
+        return context, p_attn
+
+
 
 
     def forward(self, input_tensor: torch.Tensor):
@@ -82,9 +94,16 @@ class LstmModel(nn.Module):
         output = output.permute((0, 3, 1, 2))
 
         output = output.view(batch_size, length, channel)
-        h0 = Variable(torch.zeros( 4, 4, 1000).cuda())
-        c0 = Variable(torch.zeros( 4, 4, 1000).cuda())
+        h0 = Variable(torch.randn( 4, 4, 1000).cuda())
+        c0 = Variable(torch.randn( 4, 4, 1000).cuda())
+
+
+
         output, (h_n, c_n) = self.bilstm_layer_1(output, (h0, c0))
+
+        # query = self.dropout(output)
+        # attn_output, attention = self.attention_net(output, query)
+        # logit = self.fc(attn_output)
 
 
         output = self.fc(output[:, -1, :])

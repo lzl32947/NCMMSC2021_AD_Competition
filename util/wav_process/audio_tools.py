@@ -2,14 +2,14 @@ import numpy as np
 from scipy.io import wavfile
 
 
-def add_wgn(s,var=1e-4):
+def add_wgn(s, var=1e-4):
     """
         Add white Gaussian noise to signal
         If no variance is given, simply add jitter. 
         Jitter helps eliminate all-zero values.
         """
     np.random.seed(0)
-    noise = np.random.normal(0,var,len(s))
+    noise = np.random.normal(0, var, len(s))
     return s + noise
 
 
@@ -18,14 +18,17 @@ def read_wav(filename):
         read wav file.
         Normalizes signal to values between -1 and 1.
         Also add some jitter to remove all-zero segments."""
-    fs, s = wavfile.read(filename) # scipy reads int
-    s = np.array(s)/float(max(abs(s)))
-    s = add_wgn(s) # Add jitter for numerical stability
-    return fs,s
+    fs, s = wavfile.read(filename)  # scipy reads int
+    s = np.array(s) / float(max(abs(s)))
+    s = add_wgn(s)  # Add jitter for numerical stability
+    return fs, s
+
 
 def write_wav(filename, data, rate=16000):
     wavfile.write(filename, rate, data)
-#===============================================================================
+
+
+# ===============================================================================
 def enframe(x, win_len, hop_len):
     """
         receives a 1D numpy array and divides it into frames.
@@ -37,7 +40,7 @@ def enframe(x, win_len, hop_len):
     n_frames = 1 + np.int(np.floor((len(x) - win_len) / float(hop_len)))
     x_framed = np.zeros((n_frames, win_len))
     for i in range(n_frames):
-        x_framed[i] = x[i * hop_len : i * hop_len + win_len]
+        x_framed[i] = x[i * hop_len: i * hop_len + win_len]
     return x_framed
 
 
@@ -48,15 +51,12 @@ def deframe(x_framed, win_len, hop_len):
         frame-rate for features, e.g. energy, zero-crossing, etc.
         '''
     n_frames = len(x_framed)
-    n_samples = (n_frames-1)*hop_len + win_len
-    x_samples = np.zeros((n_samples,1))
+    n_samples = (n_frames - 1) * hop_len + win_len
+    x_samples = np.zeros((n_samples, 1))
     for i in range(n_frames):
-        x_samples[i*hop_len : i*hop_len + win_len] = x_framed[i]
+        x_samples[i * hop_len: i * hop_len + win_len] = x_framed[i]
     return x_samples
 
 
-
-
-if __name__=='__main__':
+if __name__ == '__main__':
     pass
-

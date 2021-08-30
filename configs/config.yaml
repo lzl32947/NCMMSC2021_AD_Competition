@@ -1,4 +1,4 @@
-features: [ "MFCC","Spectrogram","MelSpectrogram" ]
+features: [ "MFCC","Spectrogram","MelSpectrogram","Pause" ]
 
 train:
   epoch: 15
@@ -41,6 +41,9 @@ dataset:
       n_fft: 1024
       n_mels: 128
       hop_length: 512
+    pause:
+      percent_high_nrg: 0.5
+
 
 
 log:
