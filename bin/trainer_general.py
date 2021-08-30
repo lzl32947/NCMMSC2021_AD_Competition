@@ -27,4 +27,4 @@ if __name__ == '__main__':
     # Read the fold from config
     total_fold = configs['dataset']['k_fold']
     # Train the general model
-    train_general(configs, time_identifier, use_features, True, "20210716_193130")
+    train_general(configs, time_identifier, use_features, False, "20210716_193130", cuda=1)

@@ -164,12 +164,13 @@ def get_best_loss_weight(weight_dir: str, fold: int, current_fold: int,
 
 
 def train_specific_feature(configs: Dict, time_identifier: str, specific_feature: AudioFeatures,
-                           model_func: callable, **kwargs) -> None:
+                           dataset_func: Callable, model_func: Callable, *args, **kwargs) -> None:
     """
     This is the trainer of training only with one specific features.
     :param configs: Dict, the configs
     :param time_identifier: str, the global identifier
     :param specific_feature: AudioFeatures, the feature to use
+    :param dataset_func: function call, the custom dataset
     :param model_func: function call, the custom model
     :return: None
     """
@@ -183,19 +184,19 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
 
     # Getting the dataloader from the generator
     for current_fold, (train_dataloader, test_dataloader) in enumerate(
-            zip(prepare_dataloader([specific_feature], AldsDataset2D, configs["dataset"], DatasetMode.TRAIN),
-                prepare_dataloader([specific_feature], AldsDataset2D, configs["dataset"], DatasetMode.TEST))):
+            zip(prepare_dataloader([specific_feature], dataset_func, configs["dataset"], DatasetMode.TRAIN),
+                prepare_dataloader([specific_feature], dataset_func, configs["dataset"], DatasetMode.TEST))):
         # Getting the epoch
         epoch = configs['train']['epoch']
 
         # If not running on GPU
-        model = model_func()
+        model = model_func(*args, **kwargs)
         model = model.cuda()
 
         # Init the criterion, CE by default
         criterion = nn.CrossEntropyLoss()
         # Init the optimizer, SGD by default
-        optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+        optimizer = optim.Adam(model.parameters(), lr=0.002)
 
         for current_epoch in range(1, epoch + 1):
             # Setting the model to train mode
@@ -313,7 +314,7 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
 
 def train_general(configs: Dict, time_identifier: str, use_features: List[AudioFeatures],
                   fine_tune: bool = False, load_weight_identifier: Optional[str] = None,
-                  weighted_dir: Optional[str] = None) -> None:
+                  weighted_dir: Optional[str] = None, *args, **kwargs) -> None:
     """
     This is the trainer of training with joint-features.
     :param configs: Dict, the configs
@@ -324,6 +325,8 @@ def train_general(configs: Dict, time_identifier: str, use_features: List[AudioF
     :param weighted_dir: str, the name of the directory to load weight from
     :return: None
     """
+    # Check GPU device
+    device = 0 if "cuda" not in kwargs.keys() else kwargs["cuda"]
     # Init the logger
     logger = GlobalLogger().get_logger()
     logger.info("Training the general model.")
@@ -343,7 +346,7 @@ def train_general(configs: Dict, time_identifier: str, use_features: List[AudioF
         epoch = configs['train']['epoch']
         # Send the model to GPU
         model = GeneralModel()
-        model.cuda()
+        model.cuda(device)
 
         # Init the criterion, CE by default
         criterion = nn.CrossEntropyLoss()
@@ -429,10 +432,10 @@ def train_general(configs: Dict, time_identifier: str, use_features: List[AudioF
                 # Get features and set them to cuda
                 spec, mel, mfcc, label = data[use_features.index(AudioFeatures.SPECS)], data[
                     use_features.index(AudioFeatures.MELSPECS)], data[use_features.index(AudioFeatures.MFCC)], data[-1]
-                spec = spec.cuda()
-                mel = mel.cuda()
-                mfcc = mfcc.cuda()
-                label = label.cuda()
+                spec = spec.cuda(device)
+                mel = mel.cuda(device)
+                mfcc = mfcc.cuda(device)
+                label = label.cuda(device)
                 # Set the optimizer to zero
                 optimizer.zero_grad()
                 # Go through one epoch
@@ -495,10 +498,10 @@ def train_general(configs: Dict, time_identifier: str, use_features: List[AudioF
                     spec, mel, mfcc, label = data[use_features.index(AudioFeatures.SPECS)], data[
                         use_features.index(AudioFeatures.MELSPECS)], data[use_features.index(AudioFeatures.MFCC)], data[
                                                  -1]
-                    spec = spec.cuda()
-                    mel = mel.cuda()
-                    mfcc = mfcc.cuda()
-                    label = label.cuda()
+                    spec = spec.cuda(device)
+                    mel = mel.cuda(device)
+                    mfcc = mfcc.cuda(device)
+                    label = label.cuda(device)
                     # Running the model
                     output = model(spec, mel, mfcc)
                     # Normalize the output to one-hot mode

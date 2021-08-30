@@ -1,0 +1,41 @@
+features: [ "MFCC","Spectrogram","MelSpectrogram" ]
+
+train:
+  epoch: 40
+  save_best: true
+
+warning:
+  ignore: true
+
+dataset:
+  k_fold: 4
+  repeat_times: 32
+  use_merge: true
+  random_disruption: true
+  batch_size: 64
+
+  process:
+    sr: 16000
+    crop_length: 5
+    normalized: true
+    pre_emphasis:
+      coefficient: 0.95
+    mfcc:
+      n_fft: 1024
+      n_mfcc: 20
+      n_mels: 128
+      hop_length: 512
+    specs:
+      n_fft: 1024
+      hop_length: 512
+    melspecs:
+      n_fft: 1024
+      n_mels: 128
+      hop_length: 512
+
+
+log:
+  log_dir: "log"
+
+weight:
+  weight_dir: "weight"
