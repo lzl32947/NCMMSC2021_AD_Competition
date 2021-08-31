@@ -4,6 +4,7 @@ from torch import nn
 import torch.nn.functional as func
 from torch.autograd import Variable
 
+
 class DenseModel(nn.Module):
     def __init__(self):
         super().__init__()
@@ -85,6 +86,7 @@ class ExtractionModel(nn.Module):
             m.weight.data.normal_(mean, stddev)
             m.bias.data.zero_()
 
+
 class lstm_model(nn.Module):
     def __init__(self):
         super().__init__()
@@ -112,7 +114,6 @@ class lstm_model(nn.Module):
         output = self.conv_layer_3(output)
         print(output.size())
 
-
         length = output.shape[3]
         channel = output.shape[1]
         output = output.permute((0, 3, 1, 2))
@@ -133,6 +134,7 @@ class lstm_model(nn.Module):
         else:
             m.weight.data.normal_(mean, stddev)
             m.bias.data.zero_()
+
 
 class ConcatModel(nn.Module):
     def __init__(self):
@@ -202,6 +204,7 @@ class GeneralModel(nn.Module):
         output_lstm = self.lstm(concat_output)
         output = self.dense(output_lstm)
         return output
+
 
 if __name__ == '__main__':
     torchinfo.summary(ExtractionModel(), (4, 1, 513, 157))
