@@ -168,7 +168,8 @@ class AldsDataset(Dataset):
         start = int(random.random() * (len(waveform) - sample_length * sample_rate))
         cropped = waveform[start: start + sample_length * sample_rate]
         if use_vad:
-            vad_out = self.pause(waveform, sample_rate, self.configs['vad'])
+            directory = file_path.split("/")[-3] if "/" in file_path else file_path.split("\\")[-3]
+            vad_out, sample_rate = librosa.load(file_path.replace(directory, directory + "_vad"), sr=sr)
             vad_cropped = vad_out[start: start + sample_length * sample_rate]
             return cropped, vad_cropped
         else:
