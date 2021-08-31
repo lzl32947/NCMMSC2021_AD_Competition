@@ -1,13 +1,11 @@
 import random
-from typing import List, Optional, Dict, Union
+from typing import List, Optional, Dict
 from PIL import Image
-import numpy as np
-import torch
 import torchaudio
 from torch.utils.data.dataset import Dataset
 import os
 import librosa
-from util.wav_process.unsupervised_vad import *
+from wav_process.unsupervised_vad import *
 from configs.types import ADType, AudioFeatures, DatasetMode
 
 
@@ -274,21 +272,61 @@ class AldsDataset(Dataset):
         mfcc = np.expand_dims(mfcc, axis=0)
         return mfcc
 
-    def pause(self, input_wav: np.ndarray, configs: Dict, normalized: bool = True) -> np.ndarray:
+    def pause(self, input_wav: np.ndarray, sr: int, configs: Dict, normalized: bool = True) -> np.ndarray:
+        """
+        Generate the pause features of the given audio
+        :param sr: int, sample rate
+        :param input_wav: np.ndarray, the audio files
+        :param configs: Dict, the configs
+        :param normalized: bool, whether to normalized the audio with mean equals 0 and std equals 1
+        :return: np.ndarray, the pause features
+        """
+        window_length = int(sr * 0.025)
+        hop_length = int(sr * 0.010)
+        # En-frame the data
+        en_frame = np.squeeze(input_wav)
+        n_frames = 1 + int(np.floor((len(en_frame) - window_length) / float(hop_length)))
+        data_frame = np.zeros((n_frames, window_length))
+        for i in range(n_frames):
+            data_frame[i] = en_frame[i * hop_length: i * hop_length + window_length]
 
-        fs, s = read_wav(input_wav)
-        win_len = int(fs * 0.025)
-        hop_len = int(fs * 0.010)
-        sframes = enframe(s, win_len, hop_len)
         percent_high_nrg = configs['percent_high_nrg']
-        vad = nrg_vad(sframes, percent_high_nrg)
-        s1 = np.array(deframe(vad, win_len, hop_len)).squeeze()
-        s1 = np.pad(s1, (0, len(s) - len(s1)), 'constant', constant_values=(0.))
-        pause = s1 * s
 
-        return pause
+        # Calculate zero frames
+        zero_mean_frames = data_frame - np.tile(np.mean(data_frame, axis=1), (data_frame.shape[1], 1)).T
 
-    def __getitem__(self, item: int):
+        # Calculate frame energy
+        threshold = 1e-5
+        frame_energy = np.diagonal(np.dot(zero_mean_frames + threshold, (zero_mean_frames + threshold).T)) / float(
+            zero_mean_frames.shape[1])
+        # Calculate frame log energy
+        raw_log_energy = np.log(frame_energy) / float(zero_mean_frames.shape[1])
+        log_energy = (raw_log_energy - np.mean(raw_log_energy)) / (np.sqrt(np.var(raw_log_energy)))
+
+        # Calculate the VAD
+        context = 5
+        energy_threshold = 0
+        vad_output = np.zeros((n_frames, 1))
+        for i in range(n_frames):
+            start = max(i - context, 0)
+            end = min(i + context, n_frames - 1)
+            n_above_thr = np.sum(log_energy[start:end] > energy_threshold)
+            n_total = end - start + 1
+            vad_output[i] = 1. * ((float(n_above_thr) / n_total) > percent_high_nrg)
+
+        # De-frame the data
+        n_samples = (n_frames - 1) * hop_length + window_length
+        sample_output = np.zeros((n_samples, 1))
+        for i in range(n_frames):
+            sample_output[i * hop_length: i * hop_length + window_length] = vad_output[i]
+
+        # Generate the output
+        sample_output = sample_output.squeeze()
+        sample_output = np.pad(sample_output, (0, len(input_wav) - len(sample_output)), 'constant', constant_values=0.)
+        processed_wav = sample_output * input_wav
+        return processed_wav
+
+    def __getitem__(self, item: int) -> List:
         """
         Get one item from the dataset
         :param item: int, the order of the given data
@@ -319,9 +357,9 @@ class AldsDataset(Dataset):
                 output_list.append(melspec_out)
             # Add the Pause feature to output if used
             if AudioFeatures.PAUSE == item:
-                pause_out = self.pause(output_wav, self.configs['pause'], normalized=self.configs['normalized'])
+                pause_out = self.pause(output_wav, self.configs['sr'], self.configs['pause'],
+                                       normalized=self.configs['normalized'])
                 output_list.append(pause_out)
-                print(pause_out.shape)
         # Add the label to output
         output_list.append(label)
         return output_list

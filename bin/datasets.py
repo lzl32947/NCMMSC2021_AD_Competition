@@ -52,9 +52,12 @@ if __name__ == '__main__':
                     if len(item[index][batch_num].shape) == 2:
                         ax.matshow(item[index][batch_num])
                     # In format of Image(3 dimension) and use the imshow()
-                    else:
+                    elif len(item[index][batch_num].shape) == 3:
                         img = np.transpose(item[index][batch_num], (1, 2, 0))
                         ax.imshow(img)
+                    # In format of Audio(1 dimension) and use the plot()
+                    elif len(item[index][batch_num].shape) == 1:
+                        ax.plot(range(len(item[index][batch_num])), item[index][batch_num])
                     # Add the title
                     ax.set_title("{}".format(use_features[index].value))
                 # Plot the image
