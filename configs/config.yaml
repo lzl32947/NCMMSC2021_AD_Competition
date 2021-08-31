@@ -1,4 +1,4 @@
-features: [ "MFCC","Spectrogram","MelSpectrogram","Pause" ]
+features: [ "MFCC","Spectrogram","MelSpectrogram"]
 
 train:
   epoch: 15
@@ -11,8 +11,11 @@ dataset:
   k_fold: 4
   repeat_times: 32
   use_merge: true
+  use_vad: true
   random_disruption: true
   batch_size: 4
+
+
 
   process:
     sr: 16000
@@ -41,8 +44,9 @@ dataset:
       n_fft: 1024
       n_mels: 128
       hop_length: 512
-    pause:
+    vad:
       percent_high_nrg: 0.5
+
 
 
 
