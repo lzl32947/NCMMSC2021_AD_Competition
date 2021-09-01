@@ -1,6 +1,5 @@
 from configs.types import AudioFeatures
-from network.melspec.melspec import MelSpecModel
-from network.melspec.lstm.lstm import MelSpecModel_lstm
+from model.manager import Registers
 from util.log_util.logger import GlobalLogger
 from util.tools.files_util import global_init
 from util.train_util.trainer_util import prepare_feature, prepare_dataloader, read_weight, get_best_acc_weight, \
@@ -17,4 +16,5 @@ if __name__ == '__main__':
     # Read the fold from config
     total_fold = configs['dataset']['k_fold']
     # Train the general model
-    train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS, MelSpecModel_lstm)
+    train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS, Registers.model["SpecificTrainModel"],
+                           input_shape=(1, 128, 157))
