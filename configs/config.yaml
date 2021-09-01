@@ -1,5 +1,8 @@
 features: [ "MFCC","Spectrogram","MelSpectrogram"]
 
+model:
+  model_path: "model/models"
+
 train:
   epoch: 15
   save_best: true
