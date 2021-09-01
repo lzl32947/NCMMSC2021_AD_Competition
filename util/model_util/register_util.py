@@ -10,6 +10,9 @@ def register_model(model_path: str) -> None:
     """
     # Get all python modules in model_path
     models = [i.replace(".py", "") for i in os.listdir(model_path)]
+    # Remove the "__pycache__"
+    if "__pycache__" in models:
+        models.remove("__pycache__")
     # Get the package names
     module_python = model_path.replace("/", ".") if "/" in model_path else model_path.replace("\\", ".")
     # Generate the imports
