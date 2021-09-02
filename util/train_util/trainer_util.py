@@ -14,6 +14,7 @@ import time
 import torch
 import torch.nn.functional as func
 
+
 def prepare_feature(feature_list: List[str]) -> List[AudioFeatures]:
     """
     This function is to get which features are used in dataset.
@@ -42,6 +43,7 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
     """
     # override the parameters in configs if given in kwargs
     use_merge = configs['use_merge'] if 'use_merge' not in kwargs.keys() else kwargs['use_merge']
+    use_vad = configs['use_vad'] if 'use_vad' not in kwargs.keys() else kwargs['use_vad']
     repeat_times = configs['repeat_times'] if 'repeat_times' not in kwargs.keys() else kwargs['repeat_times']
     k_fold = configs['k_fold'] if 'k_fold' not in kwargs.keys() else kwargs['k_fold']
     batch_size = configs['batch_size'] if 'batch_size' not in kwargs.keys() else kwargs['batch_size']
@@ -50,7 +52,7 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
     if k_fold != 0:
         # Generate the k_fold dataloader
         for fold in range(k_fold):
-            dataset = AldsDataset(use_features=use_features, use_merge=use_merge,
+            dataset = AldsDataset(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
                                   repeat_times=repeat_times, configs=configs['process'], k_fold=k_fold,
                                   current_fold=fold, random_disruption=random_disruption,
                                   run_for=run_for)
@@ -60,7 +62,7 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
     else:
         # Generate the single dataloader
         for fold in range(1):
-            dataset = AldsDataset(use_features=use_features, use_merge=use_merge,
+            dataset = AldsDataset(use_features=use_features, use_merge=use_merge,use_vad=use_vad,
                                   repeat_times=repeat_times, configs=configs['process'],
                                   random_disruption=random_disruption,
                                   run_for=run_for)
