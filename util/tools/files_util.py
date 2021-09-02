@@ -6,6 +6,7 @@ import warnings
 import yaml
 
 from util.log_util.logger import GlobalLogger
+from util.model_util.register_util import register_model
 
 
 def create_dir(target: str) -> bool:
@@ -79,6 +80,8 @@ def global_init() -> (str, Dict):
     run_time = time.strftime("%Y%m%d_%H%M%S", time.localtime())
     # Read the configs from the config directories, and should be in directory 'configs/config.yaml'
     config = read_config(os.path.join("configs", "config.yaml"))
+    # Try to register all need to register
+    register_model(config["model"]["model_path"])
     # Create the global logger and init the log with the previous config
     logger = GlobalLogger()
     logger.init_config(config['log'], run_time)

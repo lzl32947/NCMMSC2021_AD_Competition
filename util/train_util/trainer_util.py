@@ -188,7 +188,7 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
         epoch = configs['train']['epoch']
 
         # If not running on GPU
-        model = model_func()
+        model = model_func(**kwargs)
         model = model.cuda()
 
         # Init the criterion, CE by default
@@ -213,7 +213,7 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
                                                                              current_epoch))
             # Running one batch
             for iteration, data in enumerate(train_dataloader):
-                feature, label = data[0], data[-1]
+                feature, label = data[specific_feature], data[AudioFeatures.LABEL]
                 # Get features and set them to cuda
                 feature = feature.cuda()
                 label = label.cuda()
@@ -268,7 +268,7 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
                 # Running one batch
                 for data in test_dataloader:
                     # Get the features
-                    feature, label = data[0], data[-1]
+                    feature, label = data[specific_feature], data[AudioFeatures.LABEL]
                     feature = feature.cuda()
                     label = label.cuda()
                     # Running the model
