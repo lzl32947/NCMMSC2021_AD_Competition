@@ -82,6 +82,7 @@ def global_init() -> (str, Dict):
     config = read_config(os.path.join("configs", "config.yaml"))
     # Try to register all need to register
     register_model(config["model"]["model_path"])
+    register_model(config["model"]["module_path"])
     # Create the global logger and init the log with the previous config
     logger = GlobalLogger()
     logger.init_config(config['log'], run_time)

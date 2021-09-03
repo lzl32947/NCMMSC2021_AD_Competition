@@ -26,7 +26,7 @@ def register_model(model_path: str) -> None:
                     full_name = base_dir + "." + name
                 else:
                     full_name = name
-                # Import module
+                # Import modules
                 importlib.import_module(full_name)
             except ImportError as e:
                 raise e

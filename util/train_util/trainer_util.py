@@ -8,7 +8,6 @@ from util.train_util.data_loader import AldsDataset
 import numpy as np
 from torch import nn
 from torch import optim
-from network.general.general_model import GeneralModel, ConvModel
 from tqdm import tqdm
 import time
 import torch

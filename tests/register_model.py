@@ -10,3 +10,5 @@ if __name__ == '__main__':
     logger = GlobalLogger().get_logger()
     for key in Registers.model.keys():
         print(key, Registers.model[key])
+    for key in Registers.module.keys():
+        print(key, Registers.module[key])
