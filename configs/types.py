@@ -15,9 +15,19 @@ class VoiceType(Enum):
 
 
 class AudioFeatures(Enum):
+    # Features
     MFCC = "MFCC"
     SPECS = "Spectrogram"
     MELSPECS = "MelSpectrogram"
+    # Features from VAD output
+    MFCC_VAD = "MFCC_VAD"
+    SPECS_VAD = "SPECS_VAD"
+    MELSPECS_VAD = "MELSPECS_VAD"
+    # Label
+    LABEL = "LABEL"
+    # Audio
+    RAW = "RAW"
+    VAD = "VAD"
 
 
 class DatasetMode(Enum):

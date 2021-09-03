@@ -1,29 +1,29 @@
 import random
-from abc import ABC, abstractmethod
-from typing import List, Optional, Dict, Union
-from PIL import Image
+from typing import List, Optional, Dict, Union, Tuple, Any
+
 import numpy as np
-import torch
+from PIL import Image
 import torchaudio
 from torch.utils.data.dataset import Dataset
 import os
 import librosa
-
+from wav_process.unsupervised_vad import *
 from configs.types import ADType, AudioFeatures, DatasetMode
 
 
-class BasicDataset(Dataset):
+class AldsDataset(Dataset):
     """
-        This is the dataset overwrite the torch.utils.data.dataset.Dataset and create the dataset for this program
-        """
+    This is the dataset overwrite the torch.utils.data.dataset.Dataset and create the dataset for this program
+    """
 
-    def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, repeat_times: int = 1,
-                 random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
+    def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, use_vad: bool = False,
+                 repeat_times: int = 1, random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
                  current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN) -> None:
         """
         Init the Dataset with the given parameters
         :param use_features: List[AudioFeatures], the features to use and to be processed in this dataset
         :param use_merge: bool, whether to use the merge audios in dataset
+        :param use_vad: bool, whether to use the vad output
         :param repeat_times: int, the re-randomized sample counts
         :param random_disruption: int, the re-sample randomized time, given in seconds, e.g. 5s should be given '5'
         :param configs: Dict, the configs dict
@@ -38,12 +38,14 @@ class BasicDataset(Dataset):
         for t in ADType:
             item = t.value
             self.target_dic[item] = []
+        # Init the files and set the count of the files
+        self.count = 0
+        self.init_files(use_merge)
         # Assert the repeat_times should be larger than zero
         assert repeat_times > 0
         self.repeat_times = repeat_times
         self.use_merge = use_merge
-        # Init the files and set the count of the files
-        self.count = self.init_files()
+        self.use_vad = use_vad
         self.sample_length = configs['crop_length']
         # Transform the dict to list
         data, label = self.dict2list(k_fold, current_fold, run_for)
@@ -52,17 +54,18 @@ class BasicDataset(Dataset):
         self.train_list = data
         self.label_list = label
         self.sr = configs['sr']
+        self.expand_dim = configs['dim'] == 3
         self.use_features = use_features
 
         self.configs = configs
 
-    def init_files(self) -> int:
+    def init_files(self, use_merge: bool) -> None:
         """
         Collect all the files into dict and return the count of the dataset
-        :return: int, count of the files
+        :param use_merge: bool, whether to use the merge audio files
         """
         # Merge files should be set to 'dataset/merge' by default and original files should be set to 'dataset/raw'
-        if self.use_merge:
+        if use_merge:
             data_dir = os.path.join("dataset", "merge")
         else:
             data_dir = os.path.join("dataset", "raw")
@@ -75,10 +78,10 @@ class BasicDataset(Dataset):
                 # Save the file names to the target_dic
                 self.target_dic[item].append(os.path.join(target_path, files))
                 count += 1
-        # Return the count of the files
-        return count
+        self.count = count
 
-    def dict2list(self, k_fold: int, current_fold: Optional[int], run_for: DatasetMode) -> [int, List, List]:
+    def dict2list(self, k_fold: int, current_fold: Optional[int], run_for: DatasetMode) -> [int, List,
+                                                                                            List]:
         """
         Transform the target_dic to list format ,extract the k_fold data and then randomize them
         :param k_fold: int, determine how many splits should the data be set to
@@ -113,7 +116,7 @@ class BasicDataset(Dataset):
                 label = [item for index, item in enumerate(label) if
                          index % k_fold != current_fold]
                 assert len(target_file_list) == len(label)
-                self.count = len(label)
+                count = len(label)
             elif run_for == DatasetMode.TEST:
                 # Keep the data with the congruence relation with current fold
                 target_file_list = [item for index, item in enumerate(target_file_list) if
@@ -121,7 +124,10 @@ class BasicDataset(Dataset):
                 label = [item for index, item in enumerate(label) if
                          index % k_fold == current_fold]
                 assert len(target_file_list) == len(label)
-                self.count = len(label)
+                count = len(label)
+            else:
+                raise RuntimeError()
+            self.count = count
         return target_file_list, label
 
     @staticmethod
@@ -150,9 +156,11 @@ class BasicDataset(Dataset):
         return self.count * self.repeat_times
 
     @staticmethod
-    def resample_wav(file_path: str, sample_length: int, sr: int) -> np.ndarray:
+    def resample_wav(file_path: str, sample_length: int, sr: int, use_vad: bool) -> Union[
+        Tuple[Any, np.ndarray], Any]:
         """
         Crop part of the audio and return
+        :param use_vad: bool, if True, extra audio will be return
         :param file_path: str, the path to the audio file
         :param sample_length: int, the sample length, and be in format of seconds, e.g. 5s
         :param sr: int, the sample rate
@@ -161,84 +169,37 @@ class BasicDataset(Dataset):
         waveform, sample_rate = librosa.load(file_path, sr=sr)
         start = int(random.random() * (len(waveform) - sample_length * sample_rate))
         cropped = waveform[start: start + sample_length * sample_rate]
-
-        return cropped
+        if use_vad:
+            directory = file_path.split("/")[-3] if "/" in file_path else file_path.split("\\")[-3]
+            vad_out, sample_rate = librosa.load(file_path.replace(directory, directory + "_vad"), sr=sr)
+            vad_cropped = vad_out[start: start + sample_length * sample_rate]
+            return cropped, vad_cropped
+        else:
+            return cropped
 
     @staticmethod
-    def pre_emphasis(signal: np.ndarray, emphasis_config: Dict) -> np.ndarray:
+    def pre_emphasis(signal: np.ndarray, configs: Dict) -> np.ndarray:
         """
         The pre-emphasis procedure
         :param signal: np.ndarray, the audio
-        :param emphasis_config: Dict, the config file
+        :param configs: Dict, the config file
         :return: np.ndarray, the pre-emphasised audio
         """
-        pre = np.append(signal[0], signal[1:] - emphasis_config['coefficient'] * signal[:-1])
+        pre = np.append(signal[0], signal[1:] - configs['coefficient'] * signal[:-1])
         return pre
 
-    def __getitem__(self, item: int):
-        """
-        Get one item from the dataset
-        :param item: int, the order of the given data
-        :return: List, the data
-        """
-        # Get the file and the label
-        file = self.train_list[item % self.count]
-        label = self.label_list[item % self.count]
-        # Read and crop the audio
-        cropped_wav: np.ndarray = self.resample_wav(file, self.sample_length, self.sr)
-        # Pre-emphasis the audio
-        output_wav = self.pre_emphasis(cropped_wav, self.configs['pre_emphasis'])
-        output_list = []
-
-        for item in self.use_features:
-
-            # Add the MFCC feature to output if used
-            if AudioFeatures.MFCC == item:
-                mfcc_out = self.mfcc(output_wav, self.configs['mfcc'], normalized=self.configs['normalized'])
-                output_list.append(mfcc_out)
-            # Add the Spectrogram feature to output if used
-            if AudioFeatures.SPECS == item:
-                spec_out = self.spec(output_wav, self.configs['specs'], normalized=self.configs['normalized'])
-                output_list.append(spec_out)
-            # Add the Mel-Spectrogram feature to output if used
-            if AudioFeatures.MELSPECS == item:
-                melspec_out = self.melspec(output_wav, self.configs['melspecs'], normalized=self.configs['normalized'])
-                output_list.append(melspec_out)
-        # Add the label to output
-        output_list.append(label)
-        return output_list
-
-    @abstractmethod
-    def spec(self, input_wav: np.ndarray, spec_config: Dict, normalized: bool = True) -> np.ndarray:
-        pass
-
-    @abstractmethod
-    def mfcc(self, input_wav: np.ndarray, mfcc_config: Dict, normalized: bool = True) -> np.ndarray:
-        pass
-
-    @abstractmethod
-    def melspec(self, input_wav: np.ndarray, melspec_config: Dict, normalized: bool = True) -> np.ndarray:
-        pass
-
-
-class AldsDataset2D(BasicDataset):
-    def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, repeat_times: int = 1,
-                 random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
-                 current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN) -> None:
-
-        super().__init__(use_features, use_merge, repeat_times, random_disruption, configs, k_fold, current_fold,
-                         run_for)
-
-    def spec(self, input_wav: np.ndarray, spec_config: Dict, normalized: bool = True) -> np.ndarray:
+    @staticmethod
+    def spec(input_wav: np.ndarray, configs: Dict, normalized: bool = True, expand_dim: bool = True) -> np.ndarray:
         """
         Generate the Spectrogram of the given audio
+        :param expand_dim: bool, whether to expand the dim
         :param input_wav: np.ndarray, the audio files
-        :param spec_config: Dict, the configs
+        :param configs: Dict, the configs
         :param normalized: bool, whether to normalized the audio with mean equals 0 and std equals 1
         :return: np.ndarray, the Spectrogram data
         """
-        n_fft = spec_config['n_fft']
-        hop_length = spec_config['hop_length']
+        n_fft = configs['n_fft']
+        hop_length = configs['hop_length']
         # Perform the Short-time Fourier transform (STFT)
         spec = librosa.core.stft(input_wav, n_fft=n_fft, hop_length=hop_length)
         # Convert an amplitude spectrogram to dB-scaled spectrogram
@@ -247,32 +208,37 @@ class AldsDataset2D(BasicDataset):
         if normalized:
             spec = (spec - spec.mean()) / spec.std()
         # Resize the data to the target shape with the help of PIL.Image
-        if spec_config['resize']:
-            resize_height = spec.shape[0] if spec_config['resize_height'] < 0 else spec_config['resize_height']
-            resize_width = spec.shape[1] if spec_config['resize_width'] < 0 else spec_config['resize_width']
+        if configs['resize']:
+            resize_height = spec.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
+            resize_width = spec.shape[1] if configs['resize_width'] < 0 else configs['resize_width']
             resize_shape = (resize_width, resize_height)
             image = Image.fromarray(spec)
 
             image = image.resize(resize_shape, Image.ANTIALIAS)
             spec = np.array(image)
-        # Expand dimension to 3 to process it as the image
-        spec = np.expand_dims(spec, axis=0)
+        if expand_dim:
+            # Expand dimension to 3 to process it as the image
+            spec = np.expand_dims(spec, axis=0)
         return spec
 
-    def melspec(self, input_wav: np.ndarray, melspec_config: Dict, normalized: bool = True) -> np.ndarray:
+    @staticmethod
+    def melspec(input_wav: np.ndarray, sr: int, configs: Dict, normalized: bool = True,
+                expand_dim: bool = True) -> np.ndarray:
         """
         Generate the Mel-Spectrogram of the given audio
+        :param expand_dim: bool, whether to expand the dim
         :param input_wav: np.ndarray, the audio files
-        :param melspec_config: Dict, the configs
+        :param sr: int, sample rate
+        :param configs: Dict, the configs
         :param normalized: bool, whether to normalized the audio with mean equals 0 and std equals 1
         :return: np.ndarray, the Mel-Spectrogram data
         """
-        n_fft = melspec_config['n_fft']
-        n_mels = melspec_config['n_mels']
-        hop_length = melspec_config['hop_length']
+        n_fft = configs['n_fft']
+        n_mels = configs['n_mels']
+        hop_length = configs['hop_length']
         # Compute a mel-scaled spectrogram
         melspec = librosa.feature.melspectrogram(y=input_wav,
-                                                 sr=self.configs['sr'],
+                                                 sr=sr,
                                                  n_fft=n_fft,
                                                  hop_length=hop_length,
                                                  n_mels=n_mels)
@@ -282,33 +248,38 @@ class AldsDataset2D(BasicDataset):
         if normalized:
             melspec = (melspec - melspec.mean()) / melspec.std()
         # Resize the data to the target shape with the help of PIL.Image
-        if melspec_config['resize']:
-            resize_height = melspec.shape[0] if melspec_config['resize_height'] < 0 else melspec_config['resize_height']
-            resize_width = melspec.shape[1] if melspec_config['resize_width'] < 0 else melspec_config['resize_width']
+        if configs['resize']:
+            resize_height = melspec.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
+            resize_width = melspec.shape[1] if configs['resize_width'] < 0 else configs['resize_width']
             resize_shape = (resize_width, resize_height)
             image = Image.fromarray(melspec)
 
             image = image.resize(resize_shape, Image.ANTIALIAS)
             melspec = np.array(image)
-        # Expand dimension to 3 to process it as the image
-        melspec = np.expand_dims(melspec, axis=0)
+        if expand_dim:
+            # Expand dimension to 3 to process it as the image
+            melspec = np.expand_dims(melspec, axis=0)
         return melspec
 
-    def mfcc(self, input_wav: np.ndarray, mfcc_config: Dict, normalized: bool = True) -> np.ndarray:
+    @staticmethod
+    def mfcc(input_wav: np.ndarray, sr: int, configs: Dict, normalized: bool = True,
+             expand_dim: bool = True) -> np.ndarray:
         """
         Generate the MFCC features of the given audio
+        :param expand_dim: bool, whether to expand the dim
         :param input_wav: np.ndarray, the audio files
-        :param mfcc_config: Dict, the configs
+        :param sr: int, sample rate
+        :param configs: Dict, the configs
         :param normalized: bool, whether to normalized the audio with mean equals 0 and std equals 1
         :return: np.ndarray, the MFCC features
         """
-        n_fft = mfcc_config['n_fft']
-        n_mfcc = mfcc_config['n_mfcc']
-        n_mels = mfcc_config['n_mels']
-        hop_length = mfcc_config['hop_length']
+        n_fft = configs['n_fft']
+        n_mfcc = configs['n_mfcc']
+        n_mels = configs['n_mels']
+        hop_length = configs['hop_length']
         # Calculate the Mel-frequency cepstral coefficients (MFCCs)
         mfcc = librosa.feature.mfcc(input_wav,
-                                    sr=self.configs['sr'],
+                                    sr=sr,
                                     n_fft=n_fft,
                                     n_mfcc=n_mfcc,
                                     n_mels=n_mels,
@@ -317,20 +288,144 @@ class AldsDataset2D(BasicDataset):
         if normalized:
             mfcc = (mfcc - mfcc.mean()) / mfcc.std()
         # Resize the data to the target shape with the help of PIL.Image
-        if mfcc_config['resize']:
-            resize_height = mfcc.shape[0] if mfcc_config['resize_height'] < 0 else mfcc_config['resize_height']
-            resize_width = mfcc.shape[1] if mfcc_config['resize_width'] < 0 else mfcc_config['resize_width']
+        if configs['resize']:
+            resize_height = mfcc.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
+            resize_width = mfcc.shape[1] if configs['resize_width'] < 0 else configs['resize_width']
             resize_shape = (resize_width, resize_height)
             image = Image.fromarray(mfcc)
 
             image = image.resize(resize_shape, Image.ANTIALIAS)
             mfcc = np.array(image)
-        # Expand dimension to 3 to process it as the image
-        mfcc = np.expand_dims(mfcc, axis=0)
+        if expand_dim:
+            # Expand dimension to 3 to process it as the image
+            mfcc = np.expand_dims(mfcc, axis=0)
         return mfcc
 
+    @staticmethod
+    def pause(input_wav: np.ndarray, sr: int, configs: Dict) -> np.ndarray:
+        """
+        Generate the pause features of the given audio
+        :param sr: int, sample rate
+        :param input_wav: np.ndarray, the audio files
+        :param configs: Dict, the configs
+        :param normalized: bool, whether to normalized the audio with mean equals 0 and std equals 1
+        :return: np.ndarray, the pause features
+        """
+        window_length = int(sr * 0.025)
+        hop_length = int(sr * 0.010)
+        # En-frame the data
+        en_frame = np.squeeze(input_wav)
+        n_frames = 1 + int(np.floor((len(en_frame) - window_length) / float(hop_length)))
+        data_frame = np.zeros((n_frames, window_length))
+        for i in range(n_frames):
+            data_frame[i] = en_frame[i * hop_length: i * hop_length + window_length]
 
-def audio_collate_fn_2d(batch):
+        percent_high_nrg = configs['percent_high_nrg']
+
+        # Calculate zero frames
+        zero_mean_frames = data_frame - np.tile(np.mean(data_frame, axis=1), (data_frame.shape[1], 1)).T
+
+        # Calculate frame energy
+        threshold = 1e-5
+        frame_energy = np.diagonal(np.dot(zero_mean_frames + threshold, (zero_mean_frames + threshold).T)) / float(
+            zero_mean_frames.shape[1])
+        # Calculate frame log energy
+        raw_log_energy = np.log(frame_energy) / float(zero_mean_frames.shape[1])
+        log_energy = (raw_log_energy - np.mean(raw_log_energy)) / (np.sqrt(np.var(raw_log_energy)))
+
+        # Calculate the VAD
+        context = 5
+        energy_threshold = 0
+        vad_output = np.zeros((n_frames, 1))
+        for i in range(n_frames):
+            start = max(i - context, 0)
+            end = min(i + context, n_frames - 1)
+            n_above_thr = np.sum(log_energy[start:end] > energy_threshold)
+            n_total = end - start + 1
+            vad_output[i] = 1. * ((float(n_above_thr) / n_total) > percent_high_nrg)
+
+        # De-frame the data
+        n_samples = (n_frames - 1) * hop_length + window_length
+        sample_output = np.zeros((n_samples, 1))
+        for i in range(n_frames):
+            sample_output[i * hop_length: i * hop_length + window_length] = vad_output[i]
+
+        # Generate the output
+        sample_output = sample_output.squeeze()
+        sample_output = np.pad(sample_output, (0, len(input_wav) - len(sample_output)), 'constant', constant_values=0.)
+        processed_wav = sample_output * input_wav
+        return processed_wav
+
+    def __getitem__(self, item: int) -> Dict:
+        """
+        Get one item from the dataset
+        :param item: int, the order of the given data
+        :return: Dict, the data
+        """
+        # Get the file and the label
+        file = self.train_list[item % self.count]
+        label = self.label_list[item % self.count]
+        output_dict = {}
+        # Read and crop the audio
+        if self.use_vad:
+
+            cropped_wav, vad_cropped = self.resample_wav(file, self.sample_length, self.sr, self.use_vad)
+            # Pre-emphasis the audio
+            output_wav = self.pre_emphasis(cropped_wav, self.configs['pre_emphasis'])
+            output_vad = self.pre_emphasis(vad_cropped, self.configs['pre_emphasis'])
+        else:
+            cropped_wav: np.ndarray = self.resample_wav(file, self.sample_length, self.sr, self.use_vad)
+            # Pre-emphasis the audio
+            output_wav = self.pre_emphasis(cropped_wav, self.configs['pre_emphasis'])
+            output_vad = None
+
+        for item in self.use_features:
+            # Add the MFCC feature to output if used
+            if AudioFeatures.MFCC == item:
+                mfcc_out = self.mfcc(output_wav, self.sr, self.configs['mfcc'],
+                                     normalized=self.configs['normalized'], expand_dim=self.expand_dim)
+                output_dict[AudioFeatures.MFCC] = mfcc_out
+            # Add the Spectrogram feature to output if used
+            if AudioFeatures.SPECS == item:
+                spec_out = self.spec(output_wav, self.configs['specs'], normalized=self.configs['normalized'],
+                                     expand_dim=self.expand_dim)
+                output_dict[AudioFeatures.SPECS] = spec_out
+            # Add the Mel-Spectrogram feature to output if used
+            if AudioFeatures.MELSPECS == item:
+                melspec_out = self.melspec(output_wav, self.sr, self.configs['melspecs'],
+                                           normalized=self.configs['normalized'], expand_dim=self.expand_dim)
+                output_dict[AudioFeatures.MELSPECS] = melspec_out
+        if self.use_vad:
+            assert output_vad is not None
+            for item in self.use_features:
+
+                # Add the MFCC feature to output if used
+                if AudioFeatures.MFCC == item:
+                    mfcc_out = self.mfcc(output_vad, self.sr, self.configs['mfcc'],
+                                         normalized=self.configs['normalized'], expand_dim=self.expand_dim)
+                    output_dict[AudioFeatures.MFCC_VAD] = mfcc_out
+                # Add the Spectrogram feature to output if used
+                if AudioFeatures.SPECS == item:
+                    spec_out = self.spec(output_vad, self.configs['specs'], normalized=self.configs['normalized'],
+                                         expand_dim=self.expand_dim)
+                    output_dict[AudioFeatures.SPECS_VAD] = spec_out
+                # Add the Mel-Spectrogram feature to output if used
+                if AudioFeatures.MELSPECS == item:
+                    melspec_out = self.melspec(output_vad, self.sr, self.configs['melspecs'],
+                                               normalized=self.configs['normalized'], expand_dim=self.expand_dim)
+                    output_dict[AudioFeatures.MELSPECS_VAD] = melspec_out
+
+        # Add the label to output
+        output_dict[AudioFeatures.LABEL] = label
+        # Add raw audio to output
+        output_dict[AudioFeatures.RAW] = output_wav
+        # Add vad audio to output
+        if self.use_vad:
+            output_dict[AudioFeatures.VAD] = output_vad
+        return output_dict
+
+
+def audio_collate_fn(batch):
     # The custom the collate_fn function
     # NOTICE: this function is not used in program and not been test
     sizes = len(batch)
@@ -338,78 +433,3 @@ def audio_collate_fn_2d(batch):
     for index, item in enumerate(batch):
         collate_list[index].append(item[index])
     return collate_list
-
-
-class AldsDataset1D(BasicDataset):
-    def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, repeat_times: int = 1,
-                 random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
-                 current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN) -> None:
-        super().__init__(use_features, use_merge, repeat_times, random_disruption, configs, k_fold, current_fold,
-                         run_for)
-
-    def spec(self, input_wav: np.ndarray, spec_config: Dict, normalized: bool = True) -> np.ndarray:
-        """
-        Generate the Spectrogram of the given audio
-        :param input_wav: np.ndarray, the audio files
-        :param spec_config: Dict, the configs
-        :param normalized: bool, whether to normalized the audio with mean equals 0 and std equals 1
-        :return: np.ndarray, the Spectrogram data
-        """
-        n_fft = spec_config['n_fft']
-        hop_length = spec_config['hop_length']
-        # Perform the Short-time Fourier transform (STFT)
-        spec = librosa.core.stft(input_wav, n_fft=n_fft, hop_length=hop_length)
-        # Convert an amplitude spectrogram to dB-scaled spectrogram
-        spec = librosa.amplitude_to_db(np.abs(spec), ref=np.max)
-        # Normalize the data
-        if normalized:
-            spec = (spec - spec.mean()) / spec.std()
-        return spec
-
-    def melspec(self, input_wav: np.ndarray, melspec_config: Dict, normalized: bool = True) -> np.ndarray:
-        """
-        Generate the Mel-Spectrogram of the given audio
-        :param input_wav: np.ndarray, the audio files
-        :param melspec_config: Dict, the configs
-        :param normalized: bool, whether to normalized the audio with mean equals 0 and std equals 1
-        :return: np.ndarray, the Mel-Spectrogram data
-        """
-        n_fft = melspec_config['n_fft']
-        n_mels = melspec_config['n_mels']
-        hop_length = melspec_config['hop_length']
-        # Compute a mel-scaled spectrogram
-        melspec = librosa.feature.melspectrogram(y=input_wav,
-                                                 sr=self.configs['sr'],
-                                                 n_fft=n_fft,
-                                                 hop_length=hop_length,
-                                                 n_mels=n_mels)
-        # Convert a power spectrogram (amplitude squared) to decibel (dB) units
-        melspec = librosa.power_to_db(melspec, ref=np.max)
-        # Normalize the data
-        if normalized:
-            melspec = (melspec - melspec.mean()) / melspec.std()
-        return melspec
-
-    def mfcc(self, input_wav: np.ndarray, mfcc_config: Dict, normalized: bool = True) -> np.ndarray:
-        """
-        Generate the MFCC features of the given audio
-        :param input_wav: np.ndarray, the audio files
-        :param mfcc_config: Dict, the configs
-        :param normalized: bool, whether to normalized the audio with mean equals 0 and std equals 1
-        :return: np.ndarray, the MFCC features
-        """
-        n_fft = mfcc_config['n_fft']
-        n_mfcc = mfcc_config['n_mfcc']
-        n_mels = mfcc_config['n_mels']
-        hop_length = mfcc_config['hop_length']
-        # Calculate the Mel-frequency cepstral coefficients (MFCCs)
-        mfcc = librosa.feature.mfcc(input_wav,
-                                    sr=self.configs['sr'],
-                                    n_fft=n_fft,
-                                    n_mfcc=n_mfcc,
-                                    n_mels=n_mels,
-                                    hop_length=hop_length)
-        # Normalize the data
-        if normalized:
-            mfcc = (mfcc - mfcc.mean()) / mfcc.std()
-        return mfcc

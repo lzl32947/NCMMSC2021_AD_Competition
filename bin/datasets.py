@@ -37,29 +37,37 @@ def test_dataset1D():
             # Write log
             logging_str = ""
             for index, features in enumerate(use_features):
-                logging_str = logging_str + ("{}->{}\t".format(use_features[index].value, item[index].shape))
-            logging_str = logging_str + "label: {}\t".format(item[-1])
+                logging_str = logging_str + ("{}->{}\t".format(use_features[index].value, item[features].shape))
+            logging_str = logging_str + "label: {}\t".format(item[AudioFeatures.LABEL])
             logging_str = logging_str + "time use: {:<.2f}".format(current_time - now_time)
             logger.info(logging_str)
             # Get the batch
-            batch_size = item[0].shape[0]
+            batch_size = item[AudioFeatures.LABEL].shape[0]
             for batch_num in range(batch_size):
                 # Plot the data in each figure
                 fig = plt.figure()
                 plot_position = 1
-                for index, features in enumerate(use_features):
+                for index, features in enumerate(item.keys()):
+                    # Ignore the label
+                    if features == AudioFeatures.LABEL:
+                        continue
+
                     # Add the subplot to figure
-                    ax = fig.add_subplot(len(use_features), 1, plot_position)
+                    ax = fig.add_subplot(len(item.keys()) - 1, 1, plot_position)
                     plot_position += 1
+
                     # If in format of Mat(2 dimension) then use the matshow()
-                    if len(item[index][batch_num].shape) == 2:
-                        ax.matshow(item[index][batch_num])
+                    if len(item[features][batch_num].shape) == 2:
+                        ax.matshow(item[features][batch_num],aspect='auto')
                     # In format of Image(3 dimension) and use the imshow()
-                    else:
-                        img = np.transpose(item[index][batch_num], (1, 2, 0))
-                        ax.imshow(img)
+                    elif len(item[features][batch_num].shape) == 3:
+                        img = np.transpose(item[features][batch_num], (1, 2, 0))
+                        ax.imshow(img,aspect='auto')
+                    # In format of Audio(1 dimension) and use the plot()
+                    elif len(item[features][batch_num].shape) == 1:
+                        ax.plot(range(len(item[features][batch_num])), item[features][batch_num])
                     # Add the title
-                    ax.set_title("{}".format(use_features[index].value))
+                    ax.set_title("{}".format(list(item.keys())[index].value))
                 # Plot the image
                 plt.tight_layout()
                 fig.show()
