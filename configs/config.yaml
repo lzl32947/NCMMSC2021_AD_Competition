@@ -1,7 +1,8 @@
-features: [ "MFCC","Spectrogram","MelSpectrogram"]
+features: [ "MFCC","Spectrogram","MelSpectrogram" ]
 
 model:
   model_path: "model/models"
+  module_path: "model/modules"
 
 train:
   epoch: 15
@@ -19,9 +20,9 @@ dataset:
   batch_size: 4
 
 
-
   process:
     sr: 16000
+    dim: 2
     crop_length: 5
     normalized: true
     pre_emphasis:

@@ -54,6 +54,7 @@ class AldsDataset(Dataset):
         self.train_list = data
         self.label_list = label
         self.sr = configs['sr']
+        self.expand_dim = configs['dim'] == 3
         self.use_features = use_features
 
         self.configs = configs
@@ -154,7 +155,8 @@ class AldsDataset(Dataset):
         # The repeat_times mean the re-randomized sample times
         return self.count * self.repeat_times
 
-    def resample_wav(self, file_path: str, sample_length: int, sr: int, use_vad: bool) -> Union[
+    @staticmethod
+    def resample_wav(file_path: str, sample_length: int, sr: int, use_vad: bool) -> Union[
         Tuple[Any, np.ndarray], Any]:
         """
         Crop part of the audio and return
@@ -187,9 +189,10 @@ class AldsDataset(Dataset):
         return pre
 
     @staticmethod
-    def spec(input_wav: np.ndarray, configs: Dict, normalized: bool = True) -> np.ndarray:
+    def spec(input_wav: np.ndarray, configs: Dict, normalized: bool = True, expand_dim: bool = True) -> np.ndarray:
         """
         Generate the Spectrogram of the given audio
+        :param expand_dim: bool, whether to expand the dim
         :param input_wav: np.ndarray, the audio files
         :param configs: Dict, the configs
         :param normalized: bool, whether to normalized the audio with mean equals 0 and std equals 1
@@ -213,14 +216,17 @@ class AldsDataset(Dataset):
 
             image = image.resize(resize_shape, Image.ANTIALIAS)
             spec = np.array(image)
-        # Expand dimension to 3 to process it as the image
-        spec = np.expand_dims(spec, axis=0)
+        if expand_dim:
+            # Expand dimension to 3 to process it as the image
+            spec = np.expand_dims(spec, axis=0)
         return spec
 
     @staticmethod
-    def melspec(input_wav: np.ndarray, sr: int, configs: Dict, normalized: bool = True) -> np.ndarray:
+    def melspec(input_wav: np.ndarray, sr: int, configs: Dict, normalized: bool = True,
+                expand_dim: bool = True) -> np.ndarray:
         """
         Generate the Mel-Spectrogram of the given audio
+        :param expand_dim: bool, whether to expand the dim
         :param input_wav: np.ndarray, the audio files
         :param sr: int, sample rate
         :param configs: Dict, the configs
@@ -250,14 +256,17 @@ class AldsDataset(Dataset):
 
             image = image.resize(resize_shape, Image.ANTIALIAS)
             melspec = np.array(image)
-        # Expand dimension to 3 to process it as the image
-        melspec = np.expand_dims(melspec, axis=0)
+        if expand_dim:
+            # Expand dimension to 3 to process it as the image
+            melspec = np.expand_dims(melspec, axis=0)
         return melspec
 
     @staticmethod
-    def mfcc(input_wav: np.ndarray, sr: int, configs: Dict, normalized: bool = True) -> np.ndarray:
+    def mfcc(input_wav: np.ndarray, sr: int, configs: Dict, normalized: bool = True,
+             expand_dim: bool = True) -> np.ndarray:
         """
         Generate the MFCC features of the given audio
+        :param expand_dim: bool, whether to expand the dim
         :param input_wav: np.ndarray, the audio files
         :param sr: int, sample rate
         :param configs: Dict, the configs
@@ -287,12 +296,13 @@ class AldsDataset(Dataset):
 
             image = image.resize(resize_shape, Image.ANTIALIAS)
             mfcc = np.array(image)
-        # Expand dimension to 3 to process it as the image
-        mfcc = np.expand_dims(mfcc, axis=0)
+        if expand_dim:
+            # Expand dimension to 3 to process it as the image
+            mfcc = np.expand_dims(mfcc, axis=0)
         return mfcc
 
     @staticmethod
-    def pause(input_wav: np.ndarray, sr: int, configs: Dict, normalized: bool = True) -> np.ndarray:
+    def pause(input_wav: np.ndarray, sr: int, configs: Dict) -> np.ndarray:
         """
         Generate the pause features of the given audio
         :param sr: int, sample rate
@@ -373,16 +383,17 @@ class AldsDataset(Dataset):
             # Add the MFCC feature to output if used
             if AudioFeatures.MFCC == item:
                 mfcc_out = self.mfcc(output_wav, self.sr, self.configs['mfcc'],
-                                     normalized=self.configs['normalized'])
+                                     normalized=self.configs['normalized'], expand_dim=self.expand_dim)
                 output_dict[AudioFeatures.MFCC] = mfcc_out
             # Add the Spectrogram feature to output if used
             if AudioFeatures.SPECS == item:
-                spec_out = self.spec(output_wav, self.configs['specs'], normalized=self.configs['normalized'])
+                spec_out = self.spec(output_wav, self.configs['specs'], normalized=self.configs['normalized'],
+                                     expand_dim=self.expand_dim)
                 output_dict[AudioFeatures.SPECS] = spec_out
             # Add the Mel-Spectrogram feature to output if used
             if AudioFeatures.MELSPECS == item:
                 melspec_out = self.melspec(output_wav, self.sr, self.configs['melspecs'],
-                                           normalized=self.configs['normalized'])
+                                           normalized=self.configs['normalized'], expand_dim=self.expand_dim)
                 output_dict[AudioFeatures.MELSPECS] = melspec_out
         if self.use_vad:
             assert output_vad is not None
@@ -391,16 +402,17 @@ class AldsDataset(Dataset):
                 # Add the MFCC feature to output if used
                 if AudioFeatures.MFCC == item:
                     mfcc_out = self.mfcc(output_vad, self.sr, self.configs['mfcc'],
-                                         normalized=self.configs['normalized'])
+                                         normalized=self.configs['normalized'], expand_dim=self.expand_dim)
                     output_dict[AudioFeatures.MFCC_VAD] = mfcc_out
                 # Add the Spectrogram feature to output if used
                 if AudioFeatures.SPECS == item:
-                    spec_out = self.spec(output_vad, self.configs['specs'], normalized=self.configs['normalized'])
+                    spec_out = self.spec(output_vad, self.configs['specs'], normalized=self.configs['normalized'],
+                                         expand_dim=self.expand_dim)
                     output_dict[AudioFeatures.SPECS_VAD] = spec_out
                 # Add the Mel-Spectrogram feature to output if used
                 if AudioFeatures.MELSPECS == item:
                     melspec_out = self.melspec(output_vad, self.sr, self.configs['melspecs'],
-                                               normalized=self.configs['normalized'])
+                                               normalized=self.configs['normalized'], expand_dim=self.expand_dim)
                     output_dict[AudioFeatures.MELSPECS_VAD] = melspec_out
 
         # Add the label to output

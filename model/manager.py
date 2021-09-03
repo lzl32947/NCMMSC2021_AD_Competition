@@ -71,8 +71,10 @@ class Registers:
     """
     Registers class should not be used to instantiate!
     """
-    # Register all used modules
+    # Register all used models
     model = Register("model")
+    # Register all used models
+    module = Register("modules")
 
     # Raise error when init this class
     def __init__(self):

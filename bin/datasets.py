@@ -55,11 +55,11 @@ if __name__ == '__main__':
 
                     # If in format of Mat(2 dimension) then use the matshow()
                     if len(item[features][batch_num].shape) == 2:
-                        ax.matshow(item[features][batch_num])
+                        ax.matshow(item[features][batch_num],aspect='auto')
                     # In format of Image(3 dimension) and use the imshow()
                     elif len(item[features][batch_num].shape) == 3:
                         img = np.transpose(item[features][batch_num], (1, 2, 0))
-                        ax.imshow(img)
+                        ax.imshow(img,aspect='auto')
                     # In format of Audio(1 dimension) and use the plot()
                     elif len(item[features][batch_num].shape) == 1:
                         ax.plot(range(len(item[features][batch_num])), item[features][batch_num])
