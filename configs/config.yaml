@@ -4,10 +4,6 @@ model:
   model_path: "model/models"
   module_path: "model/modules"
 
-train:
-  epoch: 15
-  save_best: true
-
 warning:
   ignore: true
 
