@@ -22,7 +22,7 @@ dataset:
 
   process:
     sr: 16000
-    dim: 2
+    dim: 3
     crop_length: 5
     normalized: true
     pre_emphasis:
