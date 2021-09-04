@@ -61,7 +61,7 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
     else:
         # Generate the single dataloader
         for fold in range(1):
-            dataset = AldsDataset(use_features=use_features, use_merge=use_merge,use_vad=use_vad,
+            dataset = AldsDataset(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
                                   repeat_times=repeat_times, configs=configs['process'],
                                   random_disruption=random_disruption,
                                   run_for=run_for)
@@ -131,7 +131,12 @@ def get_best_acc_weight(weight_dir: str, fold: int, current_fold: int,
     current_list = np.array(current_list)
     acc_list = np.array(acc_list)
     # Get the index of the best accuracy file
-    acc_index = np.argmax(acc_list[current_list == current_fold])
+    max_acc = 0
+    acc_index = None
+    for index, acc in enumerate(acc_list):
+        if current_list[index] == current_fold and acc >= max_acc:
+            max_acc = acc
+            acc_index = index
     # Return the path to that file
     return file_list[acc_index]
 
@@ -159,4 +164,3 @@ def get_best_loss_weight(weight_dir: str, fold: int, current_fold: int,
     acc_index = np.argmin(acc_list[current_list == current_fold])
     # Return the path to that file
     return file_list[acc_index]
-
