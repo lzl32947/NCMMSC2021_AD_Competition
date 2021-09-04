@@ -13,7 +13,7 @@ dataset:
   use_merge: true
   use_vad: true
   random_disruption: true
-  batch_size: 4
+  batch_size: 16
 
 
   process:

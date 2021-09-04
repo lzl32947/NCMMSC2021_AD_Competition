@@ -13,9 +13,10 @@ import torch
 
 
 def train_specific_feature(configs: Dict, time_identifier: str, specific_feature: AudioFeatures,
-                           model_func: callable, **kwargs) -> None:
+                           model_func: callable, epoch: int = 20, **kwargs) -> None:
     """
     This is the trainer of training only with one specific features.
+    :param epoch: int, training epochs
     :param configs: Dict, the configs
     :param time_identifier: str, the global identifier
     :param specific_feature: AudioFeatures, the feature to use
@@ -34,8 +35,6 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
     for current_fold, (train_dataloader, test_dataloader) in enumerate(
             zip(prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TRAIN),
                 prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TEST))):
-        # Getting the epoch
-        epoch = configs['train']['epoch']
 
         # If not running on GPU
         model = model_func(**kwargs)
@@ -171,5 +170,6 @@ if __name__ == '__main__':
     # Read the fold from config
     total_fold = configs['dataset']['k_fold']
     # Train the general model
-    train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS, Registers.model["SpecificTrainModel"],
+    train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS,
+                           Registers.model["SpecificTrainResNetModel"],
                            input_shape=(1, 128, 157))
