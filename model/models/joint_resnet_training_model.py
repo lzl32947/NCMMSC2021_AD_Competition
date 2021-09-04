@@ -25,6 +25,31 @@ class SpecificTrainResNetModel(BaseModel):
         return output
 
 
+@Registers.model.register
+class SpecificTrainResNetLongLSTMModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super(SpecificTrainResNetLongLSTMModel, self).__init__()
+        self.extractor = Registers.module["ResNet"](50)
+        self.avg_pool = nn.AdaptiveAvgPool2d((1, None))
+        self.layer_dim = 2
+        self.hidden_dim = 49
+        self.lstm = nn.LSTM(input_size=2048, hidden_size=self.hidden_dim, num_layers=self.layer_dim)
+        self.fc = nn.Linear(2401, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        output = self.avg_pool(output)
+        output = output.squeeze(2).permute([2, 0, 1])
+        # h0 = torch.zeros(self.layer_dim, batch_size, self.hidden_dim).requires_grad_()
+        # c0 = torch.zeros(self.layer_dim, batch_size, self.hidden_dim).requires_grad_()
+        lstm_out, (hn, cn) = self.lstm(output)
+        lstm_out = func.relu(lstm_out)
+        lstm_out = lstm_out.view(batch_size, -1)
+        lstm_out = self.fc(lstm_out)
+        return lstm_out
+
+
 class ConcatModel(nn.Module):
 
     def __init__(self):
@@ -85,6 +110,6 @@ class MSMJointConcatFineTuneResNetModel(BaseModel):
 if __name__ == '__main__':
     import torchinfo
 
-    model = ConcatModel()
+    model = SpecificTrainResNetLongLSTMModel(input_shape=())
     model.cuda()
-    torchinfo.summary(model, (4, 6144, 8, 10))
+    torchinfo.summary(model, (4, 1, 128, 782))

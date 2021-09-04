@@ -171,5 +171,5 @@ if __name__ == '__main__':
     total_fold = configs['dataset']['k_fold']
     # Train the general model
     train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS,
-                           Registers.model["SpecificTrainResNetModel"],
-                           input_shape=(1, 128, 157))
+                           Registers.model["SpecificTrainResNetLongLSTMModel"],
+                           input_shape=(1, 128, 782))
