@@ -544,6 +544,8 @@ if __name__ == '__main__':
     logger = GlobalLogger().get_logger()
     # Train the general model
     train_joint(configs, time_identifier, "MSMJointConcatFineTuneModel",
-                train_specific=True, train_specific_epoch=20,
+                train_specific=False, train_specific_epoch=20, specific_weight={AudioFeatures.MFCC: "20210903_230628",
+                                                                                AudioFeatures.MELSPECS: "20210903_230628",
+                                                                                AudioFeatures.SPECS: "20210903_230628", },
                 train_general=True, train_general_epoch=20,
                 fine_tune=True, fine_tune_epoch=20)
