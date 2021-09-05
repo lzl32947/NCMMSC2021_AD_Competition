@@ -155,6 +155,49 @@ class SpecificTrainModel(BaseModel):
 
 
 @Registers.model.register
+class SpecificTrainLongModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super().__init__()
+        self.extractor = ExtractionModel()
+        self.dense = DenseModel()
+        self.pool = nn.AdaptiveAvgPool2d((13, 15))
+        self.set_expected_input(input_shape)
+        self.set_description("Specific 2D Train Model")
+
+    def forward(self, input_tensor: torch.Tensor):
+        output = self.extractor(input_tensor)
+        output = self.pool(output)
+        output = self.dense(output)
+        return output
+
+
+@Registers.model.register
+class MSMJointConcatFineTuneLongModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super().__init__()
+        self.extractor_mfcc = ExtractionModel()
+        self.extractor_spec = ExtractionModel()
+        self.extractor_mel = ExtractionModel()
+        self.pool1 = nn.AdaptiveAvgPool2d((13, 15))
+        self.pool2 = nn.AdaptiveAvgPool2d((13, 15))
+        self.pool3 = nn.AdaptiveAvgPool2d((13, 15))
+        self.dense = ConcatModel()
+        self.set_expected_input(input_shape)
+        self.set_description("MFCC SPEC MELSPEC Joint 2D Fine-tune Model")
+
+    def forward(self, input_mfcc: torch.Tensor, input_spec: torch.Tensor, input_mel: torch.Tensor):
+        output_mfcc = self.extractor_mfcc(input_mfcc)
+        output_spec = self.extractor_spec(input_spec)
+        output_mel = self.extractor_mel(input_mel)
+        output_mfcc = self.pool1(output_mfcc)
+        output_spec = self.pool2(output_spec)
+        output_mel = self.pool3(output_mel)
+        concat_output = torch.cat([output_spec, output_mel, output_mfcc], dim=1)
+        output = self.dense(concat_output)
+        return output
+
+
+@Registers.model.register
 class MSMJointConcatFineTuneModel(BaseModel):
     def __init__(self, input_shape: Tuple):
         super().__init__()
@@ -202,5 +245,5 @@ class MSMJointFusionFineTuneModel(BaseModel):
 if __name__ == '__main__':
     import torchinfo
 
-    model = ExtractionModel()
-    torchinfo.summary(model.cuda(0), (4, 1, 128, 157))
+    model = MSMJointConcatFineTuneLongModel(input_shape=())
+    torchinfo.summary(model.cuda(0), ((4, 1, 128, 782),(4, 1, 128, 782),(4, 1, 128, 782)))

@@ -12,12 +12,13 @@ from util.train_util.trainer_util import prepare_feature, prepare_dataloader, re
 import torch
 
 
-def train_joint(configs: Dict, time_identifier: str, model_name: str, train_specific: bool = True,
+def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model_name: str, train_specific: bool = True,
                 train_specific_epoch: int = 20, train_general_epoch: int = 40, specific_weight: Optional[Dict] = None,
                 general_weight: Optional[str] = None, train_general: bool = False,
                 fine_tune: bool = True, fine_tune_epoch: int = 20) -> None:
     """
     This is the trainer of training with joint-features.
+    :param base_model_name: str, the name of base model (extraction model)
     :param fine_tune_epoch: int, the epochs if fine-tune the general model
     :param train_general: bool, whether to train the general model or directly use the given weight
     :param general_weight: str, if not train the general model, the weights must be given
@@ -39,7 +40,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, train_spec
     # Train the specific model, this usually happens when there is no previous training
 
     if train_specific:
-        logger.info("Training the specific model.")
+        logger.info("Training the specific model with {}.".format(base_model_name))
         for specific_feature in use_features:
             logger.info(
                 "Training the specific model with feature {} in {} epochs.".format(specific_feature.name,
@@ -54,7 +55,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, train_spec
                         prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TEST))):
 
                 # If not running on GPU
-                model = Registers.model["SpecificTrainModel"](input_shape=(128, 157))
+                model = Registers.model[base_model_name](input_shape=(128, 157))
                 model = model.cuda()
 
                 # Init the criterion, CE by default
@@ -543,11 +544,10 @@ if __name__ == '__main__':
     time_identifier, configs = global_init()
     logger = GlobalLogger().get_logger()
     # Train the general model
-    model_name = "MSMJointFusionFineTuneModel"
+    model_name = "MSMJointConcatFineTuneLongModel"
+    base_model_name = "SpecificTrainLongModel"
     logger.info("Training with model {}.".format(model_name))
-    train_joint(configs, time_identifier, model_name,
-                train_specific=False, train_specific_epoch=20, specific_weight={AudioFeatures.MFCC: "20210903_230628",
-                                                                                AudioFeatures.MELSPECS: "20210903_230628",
-                                                                                AudioFeatures.SPECS: "20210903_230628", },
+    train_joint(configs, time_identifier, model_name, base_model_name,
+                train_specific=True, train_specific_epoch=20,
                 train_general=True, train_general_epoch=20,
                 fine_tune=True, fine_tune_epoch=20)
