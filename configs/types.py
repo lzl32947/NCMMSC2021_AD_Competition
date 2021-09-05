@@ -21,8 +21,8 @@ class AudioFeatures(Enum):
     MELSPECS = "MelSpectrogram"
     # Features from VAD output
     MFCC_VAD = "MFCC_VAD"
-    SPECS_VAD = "SPECS_VAD"
-    MELSPECS_VAD = "MELSPECS_VAD"
+    SPECS_VAD = "Spectrogram_VAD"
+    MELSPECS_VAD = "MelSpectrogram_VAD"
     # Label
     LABEL = "LABEL"
     # Audio

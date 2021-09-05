@@ -9,9 +9,9 @@ from model.manager import Register, Registers
 
 
 class DenseModel(nn.Module):
-    def __init__(self):
+    def __init__(self, input_unit=6240):
         super().__init__()
-        self.linear_1 = nn.Linear(6240, 64)
+        self.linear_1 = nn.Linear(input_unit, 64)
         self.dropout = nn.Dropout(0.3)
         self.linear_2 = nn.Linear(64, 3)
 
@@ -155,6 +155,87 @@ class SpecificTrainModel(BaseModel):
 
 
 @Registers.model.register
+class SpecificTrainLongModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super().__init__()
+        self.extractor = ExtractionModel()
+        self.dense = DenseModel()
+        self.pool = nn.AdaptiveAvgPool2d((13, 15))
+        self.set_expected_input(input_shape)
+        self.set_description("Specific 2D Train Model")
+
+    def forward(self, input_tensor: torch.Tensor):
+        output = self.extractor(input_tensor)
+        output = self.pool(output)
+        output = self.dense(output)
+        return output
+
+
+@Registers.model.register
+class SpecificTrainLongLSTMModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super().__init__()
+        self.extractor = ExtractionModel()
+        self.layer_dim = 2
+        self.hidden_dim = 32
+        self.lstm = nn.LSTM(input_size=128, hidden_size=self.hidden_dim, num_layers=self.layer_dim)
+        self.dense = DenseModel(self.hidden_dim * 21)
+
+        self.conv_layers = nn.Sequential(
+            nn.Conv2d(32, 64, (3, 3), stride=(1, 1)),
+            nn.ReLU(),
+
+            nn.AvgPool2d((2, 2)),
+            nn.ReLU(),
+            nn.Conv2d(64, 128, (3, 3), stride=(1, 1)),
+            nn.ReLU(),
+            nn.AvgPool2d((2, 2)),
+
+        )
+
+        self.set_expected_input(input_shape)
+        self.set_description("Specific 2D Train Model")
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        output = self.conv_layers(output)
+        output = output.squeeze(2).permute([2, 0, 1]).contiguous()
+
+        lstm_out, (hn, cn) = self.lstm(output)
+        lstm_out = lstm_out.permute([1, 0, 2]).contiguous()
+        lstm_out = lstm_out.view(batch_size, -1)
+        lstm_out = self.dense(lstm_out)
+        return lstm_out
+
+
+@Registers.model.register
+class MSMJointConcatFineTuneLongModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super().__init__()
+        self.extractor_mfcc = ExtractionModel()
+        self.extractor_spec = ExtractionModel()
+        self.extractor_mel = ExtractionModel()
+        self.pool1 = nn.AdaptiveAvgPool2d((13, 15))
+        self.pool2 = nn.AdaptiveAvgPool2d((13, 15))
+        self.pool3 = nn.AdaptiveAvgPool2d((13, 15))
+        self.dense = ConcatModel()
+        self.set_expected_input(input_shape)
+        self.set_description("MFCC SPEC MELSPEC Joint 2D Fine-tune Model")
+
+    def forward(self, input_mfcc: torch.Tensor, input_spec: torch.Tensor, input_mel: torch.Tensor):
+        output_mfcc = self.extractor_mfcc(input_mfcc)
+        output_spec = self.extractor_spec(input_spec)
+        output_mel = self.extractor_mel(input_mel)
+        output_mfcc = self.pool1(output_mfcc)
+        output_spec = self.pool2(output_spec)
+        output_mel = self.pool3(output_mel)
+        concat_output = torch.cat([output_spec, output_mel, output_mfcc], dim=1)
+        output = self.dense(concat_output)
+        return output
+
+
+@Registers.model.register
 class MSMJointConcatFineTuneModel(BaseModel):
     def __init__(self, input_shape: Tuple):
         super().__init__()
@@ -202,5 +283,5 @@ class MSMJointFusionFineTuneModel(BaseModel):
 if __name__ == '__main__':
     import torchinfo
 
-    model = ExtractionModel()
-    torchinfo.summary(model.cuda(0), (4, 1, 128, 157))
+    model = SpecificTrainLongLSTMModel(input_shape=())
+    torchinfo.summary(model.cuda(0), (4, 1, 128, 782))
