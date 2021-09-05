@@ -543,7 +543,9 @@ if __name__ == '__main__':
     time_identifier, configs = global_init()
     logger = GlobalLogger().get_logger()
     # Train the general model
-    train_joint(configs, time_identifier, "MSMJointFusionFineTuneModel",
+    model_name = "MSMJointFusionFineTuneModel"
+    logger.info("Training with model {}.".format(model_name))
+    train_joint(configs, time_identifier, model_name,
                 train_specific=False, train_specific_epoch=20, specific_weight={AudioFeatures.MFCC: "20210903_230628",
                                                                                 AudioFeatures.MELSPECS: "20210903_230628",
                                                                                 AudioFeatures.SPECS: "20210903_230628", },
