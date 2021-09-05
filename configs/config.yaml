@@ -4,26 +4,22 @@ model:
   model_path: "model/models"
   module_path: "model/modules"
 
-train:
-  epoch: 15
-  save_best: true
-
 warning:
   ignore: true
 
 dataset:
   k_fold: 4
-  repeat_times: 32
+  repeat_times: 16
   use_merge: true
   use_vad: true
   random_disruption: true
-  batch_size: 4
+  batch_size: 8
 
 
   process:
     sr: 16000
-    dim: 2
-    crop_length: 5
+    dim: 3
+    crop_length: 25
     normalized: true
     pre_emphasis:
       coefficient: 0.95

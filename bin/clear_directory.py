@@ -49,7 +49,7 @@ def clear_weight(configs: Dict, **kwargs) -> None:
         print("No weights to be deleted")
 
 
-def clear_log(configs: Dict, clear_limit: int = 20, **kwargs) -> None:
+def clear_log(configs: Dict, clear_limit: int = 5, **kwargs) -> None:
     """
     Clear the log directory
     :param configs: Dict, the configs
@@ -69,6 +69,12 @@ def clear_log(configs: Dict, clear_limit: int = 20, **kwargs) -> None:
         # Running into the sub directory
         for log_dirs in sub_directories:
             sub_directory = os.path.join(log_dir, log_dirs)
+            # Delete if empty
+            if len(os.listdir(sub_directory)) == 0:
+                os.rmdir(sub_directory)
+                delete_count += 1
+                bar.update(1)
+                continue
             # Get the path to the log file
             log_file = os.path.join(sub_directory, "run.log")
             delete_flag = False
@@ -80,10 +86,8 @@ def clear_log(configs: Dict, clear_limit: int = 20, **kwargs) -> None:
             if delete_flag:
                 delete_count += 1
                 # Remove the configs if exist
-                if os.path.exists(os.path.join(sub_directory, "config.yaml")):
-                    os.remove(os.path.join(sub_directory, "config.yaml"))
-                # Remove log file
-                os.remove(log_file)
+                for file in os.listdir(sub_directory):
+                    os.remove(os.path.join(sub_directory,file))
                 # Remove directory
                 os.rmdir(sub_directory)
             # Update the bar
