@@ -6,12 +6,7 @@ from util.log_util.logger import GlobalLogger
 from util.tools.files_util import create_dir
 from util.train_util.data_loader import AldsDataset
 import numpy as np
-from torch import nn
-from torch import optim
-from tqdm import tqdm
-import time
-import torch
-import torch.nn.functional as func
+import re
 
 
 def prepare_feature(feature_list: List[str]) -> List[AudioFeatures]:
@@ -91,22 +86,17 @@ def read_weight(weight_dir: str, specific_feature: Union[AudioFeatures, str]) ->
         file_list.append(os.path.join(directory, files))
         # Split the file name
         filename = files.split(".pth")[0]
-        # Split the fold, epoch, loss and accuracy
-        fold, epoch, loss, acc = filename.split("-")
-        # 'fold' in format of 'fold{}_{}'
-        current_fold = int(fold[4:].split("_")[0])
-        current_list.append(current_fold)
-        total_fold = int(fold[4:].split("_")[1])
-        total_list.append(total_fold)
-        # 'epoch' in format of 'epoch{}'
-        epoch = int(epoch[5:])
-        epoch_list.append(epoch)
-        # 'loss' in format of 'loss{}'
-        loss = float(loss[4:])
-        loss_list.append(loss)
-        # 'accuracy' in format of 'acc{}'
-        acc = float(acc[3:])
-        acc_list.append(acc)
+        # Use re to split the fold, epoch, loss and accuracy
+        matches = re.match(r'^fold(.*)_(.*)-epoch(.*)-loss(.*)-acc(.*)', filename, re.M | re.I)
+
+        current_fold, fold, epoch, loss, acc = matches.group(1), matches.group(2), matches.group(3), matches.group(
+            4), matches.group(5)
+        # Append the list
+        current_list.append(int(current_fold))
+        total_list.append(int(fold))
+        epoch_list.append(int(epoch))
+        loss_list.append(float(loss))
+        acc_list.append(float(acc))
     # Return the lists
     return file_list, current_list, total_list, epoch_list, loss_list, acc_list
 
