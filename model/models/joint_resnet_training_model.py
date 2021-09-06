@@ -6,6 +6,7 @@ import torch.nn.functional as func
 
 from model.base_model import BaseModel
 from model.manager import Register, Registers
+# from model.modules.resnet import ResNet
 
 
 @Registers.model.register
@@ -29,12 +30,14 @@ class SpecificTrainResNetModel(BaseModel):
 class SpecificTrainResNetLongLSTMModel(BaseModel):
     def __init__(self, input_shape: Tuple):
         super(SpecificTrainResNetLongLSTMModel, self).__init__()
+        # self.extractor = ResNet(50)
         self.extractor = Registers.module["ResNet"](50)
         self.avg_pool = nn.AdaptiveAvgPool2d((1, None))
         self.layer_dim = 2
-        self.hidden_dim = 49
-        self.lstm = nn.LSTM(input_size=2048, hidden_size=self.hidden_dim, num_layers=self.layer_dim)
-        self.fc = nn.Linear(2401, 3)
+        self.hidden_dim = 3000
+        self.lstm = nn.LSTM(input_size=2048, hidden_size=self.hidden_dim, num_layers=self.layer_dim, bidirectional=True)
+        self.fc = nn.Linear(6000, 3)
+        # self.fc = nn.Linear(2401, 3)
 
     def forward(self, input_tensor: torch.Tensor):
         batch_size = input_tensor.shape[0]

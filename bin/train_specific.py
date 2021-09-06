@@ -170,7 +170,7 @@ if __name__ == '__main__':
     # Read the fold from config
     total_fold = configs['dataset']['k_fold']
     # Train the general model
-    model_func = Registers.model["SpecificTrainLongTransformerEncoderModel"]
+    model_func = Registers.model["SpecificTrainResNetLongLSTMModel"]
     logger.info("Training with model {}.".format(model_func))
     train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS,
                            model_func,
