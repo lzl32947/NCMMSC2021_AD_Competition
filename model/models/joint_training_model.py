@@ -321,5 +321,5 @@ class MSMJointFusionFineTuneModel(BaseModel):
 if __name__ == '__main__':
     import torchinfo
 
-    model = SpecificTrainLongTransformerEncoderModel(input_shape=())
+    model = SpecificTrainLongLSTMModel(input_shape=())
     torchinfo.summary(model.cuda(0), (4, 1, 128, 782))
