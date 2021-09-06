@@ -210,6 +210,44 @@ class SpecificTrainLongLSTMModel(BaseModel):
 
 
 @Registers.model.register
+class SpecificTrainLongTransformerEncoderModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super().__init__()
+        self.extractor = ExtractionModel()
+
+        encoder_layer = nn.TransformerEncoderLayer(d_model=128, nhead=4)
+        self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=6)
+        self.dense = DenseModel(21 * 128)
+
+        self.conv_layers = nn.Sequential(
+            nn.Conv2d(32, 64, (3, 3), stride=(1, 1)),
+            nn.ReLU(),
+
+            nn.AvgPool2d((2, 2)),
+            nn.ReLU(),
+            nn.Conv2d(64, 128, (3, 3), stride=(1, 1)),
+            nn.ReLU(),
+            nn.AvgPool2d((2, 2)),
+
+        )
+
+        self.set_expected_input(input_shape)
+        self.set_description("Specific 2D Train Model")
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        output = self.conv_layers(output)
+        output = output.squeeze(2).permute([2, 0, 1]).contiguous()
+
+        lstm_out = self.transformer_encoder(output)
+        lstm_out = lstm_out.permute([1, 0, 2]).contiguous()
+        lstm_out = lstm_out.view(batch_size, -1)
+        lstm_out = self.dense(lstm_out)
+        return lstm_out
+
+
+@Registers.model.register
 class MSMJointConcatFineTuneLongModel(BaseModel):
     def __init__(self, input_shape: Tuple):
         super().__init__()
@@ -283,5 +321,5 @@ class MSMJointFusionFineTuneModel(BaseModel):
 if __name__ == '__main__':
     import torchinfo
 
-    model = SpecificTrainLongLSTMModel(input_shape=())
+    model = SpecificTrainLongTransformerEncoderModel(input_shape=())
     torchinfo.summary(model.cuda(0), (4, 1, 128, 782))
