@@ -121,11 +121,10 @@ class MSMJointConcatFineTuneResNetModel(BaseModel):
         self.set_expected_input(input_shape)
         self.set_description("MFCC SPEC MELSPEC ResNet Joint 2D Fine-tune Model")
 
-    def forward(self, input_spec: torch.Tensor, input_mel: torch.Tensor, input_mfcc: torch.Tensor):
-        # NOTICE: parameters are right and due to previous error, given should be (spec,mel,mfcc)
-        output_mfcc = self.extractor_mfcc(input_spec)
-        output_spec = self.extractor_spec(input_mel)
-        output_mel = self.extractor_mel(input_mfcc)
+    def forward(self, input_mfcc: torch.Tensor, input_spec: torch.Tensor, input_mel: torch.Tensor):
+        output_mfcc = self.extractor_mfcc(input_mfcc)
+        output_spec = self.extractor_spec(input_spec)
+        output_mel = self.extractor_mel(input_mel)
         concat_output = torch.cat([output_spec, output_mel, output_mfcc], dim=1)
         output = self.dense(concat_output)
         return output
