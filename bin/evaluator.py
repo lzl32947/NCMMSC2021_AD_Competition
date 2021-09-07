@@ -265,12 +265,12 @@ def analysis_result(identifier, config, correct_label, predicted_label, model_na
 if __name__ == '__main__':
     time_identifier, configs = global_init(True)
     logger = GlobalLogger().get_logger()
-    model_name = "MSMJointConcatFineTuneLongModel"
-    weight_identifier = "20210905_133648"
-    c, p = evaluate_joint(time_identifier, configs, model_name,
-                          [AudioFeatures.SPECS, AudioFeatures.MELSPECS, AudioFeatures.MFCC], weight_identifier,
-                          "Fine_tune", input_shape=())
-    # c, p = evaluate_specific(time_identifier, configs, model_name,
-    #                          AudioFeatures.MELSPECS, weight_identifier, input_shape=())
+    model_name = "SpecificTrainLongLSTMModel"
+    weight_identifier = "20210905_151007"
+    # c, p = evaluate_joint(time_identifier, configs, model_name,
+    #                       [AudioFeatures.SPECS, AudioFeatures.MELSPECS, AudioFeatures.MFCC], weight_identifier,
+    #                       "Fine_tune", input_shape=())
+    c, p = evaluate_specific(time_identifier, configs, model_name,
+                             AudioFeatures.MELSPECS, weight_identifier, input_shape=())
     logger.info("Analysis results for {} with {}".format(model_name, weight_identifier))
     analysis_result(time_identifier, configs, c, p, model_name)
