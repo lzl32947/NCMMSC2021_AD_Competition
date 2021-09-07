@@ -15,7 +15,7 @@ if __name__ == '__main__':
     target_dir = os.path.join("dataset", "merge_vad")
 
     # Read config and init the global identifier
-    time_identifier, config = global_init()
+    time_identifier, config = global_init("config")
 
     if not create_dir(target_dir):
         raise RuntimeError("Target dir not created!")
