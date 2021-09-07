@@ -1,0 +1,57 @@
+features: [ "MFCC","Spectrogram","MelSpectrogram" ]
+
+model:
+  model_path: "model/models"
+  module_path: "model/modules"
+
+warning:
+  ignore: true
+
+dataset:
+  k_fold: 4
+  repeat_times: 32
+  use_merge: true
+  use_vad: true
+  random_disruption: true
+  batch_size: 16
+
+
+  process:
+    sr: 16000
+    dim: 3
+    crop_length: 5
+    normalized: true
+    pre_emphasis:
+      coefficient: 0.95
+    mfcc:
+      resize: true
+      resize_height: 128
+      resize_width: -1
+      n_fft: 1024
+      n_mfcc: 20
+      n_mels: 128
+      hop_length: 512
+    specs:
+      resize: true
+      resize_height: 128
+      resize_width: -1
+      n_fft: 1024
+      hop_length: 512
+    melspecs:
+      resize: true
+      resize_height: 128
+      resize_width: -1
+      n_fft: 1024
+      n_mels: 128
+      hop_length: 512
+    vad:
+      percent_high_nrg: 0.5
+
+
+
+
+log:
+  log_dir: "log"
+
+weight:
+  weight_dir: "weight"
