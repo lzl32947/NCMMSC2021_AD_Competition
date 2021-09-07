@@ -232,7 +232,8 @@ def plot_image(identifier, config, cm, classes, title: str, cmap=plt.cm.Blues):
                         ha="center", va="center",
                         color="white" if cm[i, j] > thresh else "black")
     fig.tight_layout()
-    fig.savefig(os.path.join(config["image"]["image_dir"], identifier, "{}.png".format(title.replace(" ", "_"))),
+    fig.savefig(os.path.join(config["image"]["image_dir"], identifier,
+                             "{}.png".format(title.replace(" ", "_").replace("\n", "_"))),
                 transparent=True)
     plt.close(fig)
 
@@ -250,26 +251,26 @@ def analysis_result(identifier, config, correct_label, predicted_label, model_na
         acc = len(correct[correct == predicted]) / len(correct)
         matrix = confusion_matrix(y_true=correct, y_pred=predicted)
         plot_image(identifier, config, matrix, [i.value for i in ADType],
-                   "{} {}-{} Fold Results with Accuracy {:.2f} Percent".format(model_name, fold, total_fold, acc * 100))
+                   "{} {}-{} Fold Results\nAccuracy {:.2f} Percent".format(model_name, fold, total_fold, acc * 100))
         logger.info("Finish generating image {}-{}.".format(fold, total_fold))
     correct = np.concatenate(total_correct)
     predicted = np.concatenate(total_predicted)
     matrix = confusion_matrix(y_true=correct, y_pred=predicted)
     acc = len(correct[correct == predicted]) / len(correct)
     plot_image(identifier, config, matrix, [i.value for i in ADType],
-               "{} Results with Accuracy {:.2f} Percent".format(model_name, acc * 100))
+               "{} Results\nAccuracy {:.2f} Percent".format(model_name, acc * 100))
     logger.info("Finish generating all images.")
 
 
 if __name__ == '__main__':
     time_identifier, configs = global_init(True)
     logger = GlobalLogger().get_logger()
-    model_name = "SpecificTrainLongModel"
-    weight_identifier = "20210906_215527"
+    model_name = "SpecificTrainResNetLongModel"
+    weight_identifier = "MELSPEC"
     # c, p = evaluate_joint(time_identifier, configs, model_name,
     #                       [AudioFeatures.SPECS, AudioFeatures.MELSPECS, AudioFeatures.MFCC], weight_identifier,
     #                       "Fine_tune", input_shape=())
     c, p = evaluate_specific(time_identifier, configs, model_name,
-                             AudioFeatures.MELSPECS_VAD, weight_identifier, input_shape=())
+                             AudioFeatures.MELSPECS, weight_identifier, input_shape=())
     logger.info("Analysis results for {} with {}".format(model_name, weight_identifier))
     analysis_result(time_identifier, configs, c, p, model_name)

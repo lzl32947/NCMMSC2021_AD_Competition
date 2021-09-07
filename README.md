@@ -57,12 +57,12 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 |[20210904_141710](log/20210904_141710)| 5s|MSMJointConcatFineTuneModel|General|4|[75.60%](weight/20210904_141710/General/fold0_4-epoch8-loss0.1915400112553945-acc0.7560483870967742.pth),[69.15%](weight/20210904_141710/General/fold1_4-epoch10-loss0.10834520640175628-acc0.6915322580645161.pth),[77.22%](weight/20210904_141710/General/fold2_4-epoch19-loss0.04884094702909984-acc0.7721774193548387.pth),[73.96%](weight/20210904_141710/General/fold3_4-epoch17-loss0.06354183974044939-acc0.7395833333333334.pth)| 71.48%|MFCC,SPECS,MELSPEC for training |
 |[20210904_141710](log/20210904_141710)| 5s|MSMJointConcatFineTuneModel|Fine-tune|4|[78.53%](weight/20210904_141710/Fine_tune/fold0_4-epoch14-loss0.015200369094521233-acc0.7852822580645161.pth),[68.25%](weight/20210904_141710/Fine_tune/fold1_4-epoch14-loss0.013524920946684173-acc0.6824596774193549.pth),[78.63%](weight/20210904_141710/Fine_tune/fold2_4-epoch19-loss0.004208964913864886-acc0.7862903225806451.pth),[75.00%](weight/20210904_141710/Fine_tune/fold3_4-epoch16-loss0.007014893440207997-acc0.75.pth)| 75.10%|MFCC,SPECS,MELSPEC for training |
 |[20210904_150739](log/20210904_150739)| 5s|SpecificTrainResNetModel| MELSPEC| 4| [67.64%](weight/20210904_150739/MelSpectrogram/fold0_4-epoch15-loss0.0042680471195066984-acc0.6764112903225806.pth),[70.06%](weight/20210904_150739/MelSpectrogram/fold1_4-epoch12-loss0.019796290293312348-acc0.7006048387096774.pth),[72.18%](weight/20210904_150739/MelSpectrogram/fold2_4-epoch3-loss0.23754373382088606-acc0.7217741935483871.pth),[68.23%](weight/20210904_150739/MelSpectrogram/fold3_4-epoch9-loss0.03088850547685989-acc0.6822916666666666.pth)| 69.53%||
-|[20210904_215820](log/20210904_215820)| 25s|SpecificTrainResNetLongLSTMModel|MELSPEC|4|[65.32%](weight/20210904_215820/MelSpectrogram/fold0_4-epoch17-loss0.017942649561598006-acc0.6532258064516129.pth),[57.46%](weight/20210904_215820/MelSpectrogram/fold1_4-epoch19-loss0.0057612667840895365-acc0.5745967741935484.pth),[65.73%](weight/20210904_215820/MelSpectrogram/fold2_4-epoch19-loss0.03588582380198995-acc0.657258064516129.pth),[72.29%](weight/20210904_215820/MelSpectrogram/fold3_4-epoch19-loss0.054043575335213895-acc0.7229166666666667.pth)|65.20%| |
+|[20210904_215820](log/20210904_215820)| 25s|SpecificTrainResNetLongLSTMModel|MELSPEC|4|[65.32%](weight/20210904_215820/MelSpectrogram/fold0_4-epoch17-loss0.017942649561598006-acc0.6532258064516129.pth),[57.46%](weight/20210904_215820/MelSpectrogram/fold1_4-epoch19-loss0.0057612667840895365-acc0.5745967741935484.pth),[65.73%](weight/20210904_215820/MelSpectrogram/fold2_4-epoch19-loss0.03588582380198995-acc0.657258064516129.pth),[72.29%](weight/20210904_215820/MelSpectrogram/fold3_4-epoch19-loss0.054043575335213895-acc0.7229166666666667.pth)|65.20%| |[Result](#res5)|
 |[20210904_234029](log/20210904_234029)| 25s|SpecificTrainResNetLongModel|MELSPEC|4|[77.62%](weight/20210904_234029/MelSpectrogram/fold0_4-epoch15-loss0.0005298890865880733-acc0.7762096774193549.pth),[59.07%](weight/20210904_234029/MelSpectrogram/fold1_4-epoch16-loss7.291974601726466e-05-acc0.5907258064516129.pth),[64.52%](weight/20210904_234029/MelSpectrogram/fold2_4-epoch13-loss0.0773518512467233-acc0.6451612903225806.pth),[72.50%](weight/20210904_234029/MelSpectrogram/fold3_4-epoch18-loss0.04882786973404128-acc0.725.pth)| 68.43%||
 |[20210905_151007](log/20210905_151007)| 25s|SpecificTrainLongLSTMModel|MELSPEC|4|[73.49%](weight/20210905_151007/MelSpectrogram/fold0_4-epoch14-loss0.11516540292043077-acc0.7348790322580645.pth),[61.09%](weight/20210905_151007/MelSpectrogram/fold1_4-epoch11-loss0.2968559519428274-acc0.6108870967741935.pth),[75.40%](weight/20210905_151007/MelSpectrogram/fold2_4-epoch13-loss0.14352692384272814-acc0.7540322580645161.pth),[65.10%](weight/20210905_151007/MelSpectrogram/fold3_4-epoch13-loss0.19081749549756447-acc0.6510416666666666.pth) |68.77%| |
 |[20210905_130825](log/20210905_130825)| 25s|SpecificTrainLongModel|MELSPEC|4|[78.23%](weight/20210905_130825/MelSpectrogram/fold0_4-epoch4-loss0.04840035374661017-acc0.782258064516129.pth),[59.98%](weight/20210905_130825/MelSpectrogram/fold1_4-epoch2-loss0.09746426020485713-acc0.5997983870967742.pth),[78.63%](weight/20210905_130825/MelSpectrogram/fold2_4-epoch17-loss0.0036692070889725787-acc0.7862903225806451.pth),[66.35%](weight/20210905_130825/MelSpectrogram/fold3_4-epoch2-loss0.14088858466755638-acc0.6635416666666667.pth)|70.79%| | [Result](#res1)|
-|[20210905_133648](log/20210905_133648)| 25s|SpecificTrainLongModel|SPECS|4|[70.97%](weight/20210905_133648/Spectrogram/fold0_4-epoch17-loss0.005109133508401852-acc0.7096774193548387.pth),[58.17%](weight/20210905_133648/Spectrogram/fold1_4-epoch7-loss0.009974943350560194-acc0.5816532258064516.pth),[76.41%](weight/20210905_133648/Spectrogram/fold2_4-epoch2-loss0.14389855253672146-acc0.7641129032258065.pth),[66.88%](weight/20210905_133648/Spectrogram/fold3_4-epoch5-loss0.0316563960589138-acc0.66875.pth)| 68.11%| |
-|[20210905_133648](log/20210905_133648)| 25s|SpecificTrainLongModel|MFCC|4|[73.19%](weight/20210905_133648/MFCC/fold0_4-epoch1-loss0.6708392670944981-acc0.7318548387096774.pth),[66.94%](weight/20210905_133648/MFCC/fold1_4-epoch18-loss0.011163503149399057-acc0.6693548387096774.pth),[76.41%](weight/20210905_133648/MFCC/fold2_4-epoch17-loss0.0059203855958596405-acc0.7641129032258065.pth),[70.21%](weight/20210905_133648/MFCC/fold3_4-epoch13-loss0.006423260154288953-acc0.7020833333333333.pth)| 71.68%| |
+|[20210905_133648](log/20210905_133648)| 25s|SpecificTrainLongModel|SPECS|4|[70.97%](weight/20210905_133648/Spectrogram/fold0_4-epoch17-loss0.005109133508401852-acc0.7096774193548387.pth),[58.17%](weight/20210905_133648/Spectrogram/fold1_4-epoch7-loss0.009974943350560194-acc0.5816532258064516.pth),[76.41%](weight/20210905_133648/Spectrogram/fold2_4-epoch2-loss0.14389855253672146-acc0.7641129032258065.pth),[66.88%](weight/20210905_133648/Spectrogram/fold3_4-epoch5-loss0.0316563960589138-acc0.66875.pth)| 68.11%| |[Result](#res3)|
+|[20210905_133648](log/20210905_133648)| 25s|SpecificTrainLongModel|MFCC|4|[73.19%](weight/20210905_133648/MFCC/fold0_4-epoch1-loss0.6708392670944981-acc0.7318548387096774.pth),[66.94%](weight/20210905_133648/MFCC/fold1_4-epoch18-loss0.011163503149399057-acc0.6693548387096774.pth),[76.41%](weight/20210905_133648/MFCC/fold2_4-epoch17-loss0.0059203855958596405-acc0.7641129032258065.pth),[70.21%](weight/20210905_133648/MFCC/fold3_4-epoch13-loss0.006423260154288953-acc0.7020833333333333.pth)| 71.68%| |[Result](#res4)|
 |[20210905_133648](log/20210905_133648)| 25s|SpecificTrainLongModel|MELSPEC|4|[78.23%](weight/20210905_133648/MelSpectrogram/fold0_4-epoch1-loss0.5207754814916331-acc0.782258064516129.pth),[59.17%](weight/20210905_133648/MelSpectrogram/fold1_4-epoch11-loss0.003643666341304197-acc0.5917338709677419.pth),[75.60%](weight/20210905_133648/MelSpectrogram/fold2_4-epoch10-loss0.007353401618393432-acc0.7560483870967742.pth),[63.75%](weight/20210905_133648/MelSpectrogram/fold3_4-epoch1-loss0.45186451201637584-acc0.6375.pth)| 68.19%| |
 |[20210905_133648](log/20210905_133648)| 25s|MSMJointConcatFineTuneLongModel|General|4|[71.27%](weight/20210905_133648/General/fold0_4-epoch9-loss0.014396540212897968-acc0.7127016129032258.pth),[72.38%](weight/20210905_133648/General/fold1_4-epoch13-loss0.007122711696865736-acc0.7237903225806451.pth),[79.64%](weight/20210905_133648/General/fold2_4-epoch11-loss0.006662264470081857-acc0.7963709677419355.pth),[72.40%](weight/20210905_133648/General/fold3_4-epoch6-loss0.054713346807646654-acc0.7239583333333334.pth)| 73.92%| MFCC,SPECS,MELSPEC for training|
 |[20210905_133648](log/20210905_133648)| 25s|MSMJointConcatFineTuneLongModel|Fine-tune|4|[73.29%](weight/20210905_133648/Fine_tune/fold0_4-epoch3-loss0.006180769617260566-acc0.7328629032258065.pth),[64.21%](weight/20210905_133648/Fine_tune/fold1_4-epoch2-loss0.012040591682307422-acc0.6421370967741935.pth),[79.94%](weight/20210905_133648/Fine_tune/fold2_4-epoch12-loss0.0006443048127948714-acc0.7993951612903226.pth),[74.79%](weight/20210905_133648/Fine_tune/fold3_4-epoch14-loss0.000780794843008788-acc0.7479166666666667.pth)| 73.06%| MFCC,SPECS,MELSPEC for training|
@@ -99,3 +99,44 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 
     ![SpecificTrainLongModel](image/20210907_175242/SpecificTrainLongModel_Results_with_Accuracy_68.78_Percent.png)
 
+* [20210905_133648](log/20210905_133648)  <span id="res3">SpecificTrainLongModel</span> with SPEC
+
+    ![SpecificTrainLongModel](image/20210907_183657/SpecificTrainLongModel_0-4_Fold_Results_Accuracy_70.91_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210907_183657/SpecificTrainLongModel_1-4_Fold_Results_Accuracy_57.42_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210907_183657/SpecificTrainLongModel_2-4_Fold_Results_Accuracy_75.52_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210907_183657/SpecificTrainLongModel_3-4_Fold_Results_Accuracy_66.56_Percent.png)
+
+    With General:
+
+    ![SpecificTrainLongModel](image/20210907_183657/SpecificTrainLongModel_Results_Accuracy_67.61_Percent.png)
+
+* [20210905_133648](log/20210905_133648)  <span id="res4">SpecificTrainLongModel</span> with MFCC
+
+    ![SpecificTrainLongModel](image/20210907_184705/SpecificTrainLongModel_0-4_Fold_Results_Accuracy_73.12_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210907_184705/SpecificTrainLongModel_1-4_Fold_Results_Accuracy_66.71_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210907_184705/SpecificTrainLongModel_2-4_Fold_Results_Accuracy_75.71_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210907_184705/SpecificTrainLongModel_3-4_Fold_Results_Accuracy_69.52_Percent.png)
+
+    With General:
+
+    ![SpecificTrainLongModel](image/20210907_184705/SpecificTrainLongModel_Results_Accuracy_71.28_Percent.png)
+
+* [20210904_215820](log/20210904_215820)  <span id="res5">SpecificTrainResNetLongLSTMModel</span> with MELSPEC
+
+    ![SpecificTrainResNetLongLSTMModel](image/20210907_184826/SpecificTrainResNetLongLSTMModel_0-4_Fold_Results_Accuracy_60.50_Percent.png)
+
+    ![SpecificTrainResNetLongLSTMModel](image/20210907_184826/SpecificTrainResNetLongLSTMModel_1-4_Fold_Results_Accuracy_51.90_Percent.png)
+
+    ![SpecificTrainResNetLongLSTMModel](image/20210907_184826/SpecificTrainResNetLongLSTMModel_2-4_Fold_Results_Accuracy_65.46_Percent.png)
+
+    ![SpecificTrainResNetLongLSTMModel](image/20210907_184826/SpecificTrainResNetLongLSTMModel_3-4_Fold_Results_Accuracy_57.75_Percent.png)
+
+    With General:
+
+    ![SpecificTrainResNetLongLSTMModel](image/20210907_184826/SpecificTrainResNetLongLSTMModel_Results_Accuracy_58.91_Percent.png)
