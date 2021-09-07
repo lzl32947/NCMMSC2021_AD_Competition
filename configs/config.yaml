@@ -48,7 +48,11 @@ dataset:
       percent_high_nrg: 0.5
 
 
+image:
+  image_dir: "image"
 
+output:
+  output_dir: "output"
 
 log:
   log_dir: "log"

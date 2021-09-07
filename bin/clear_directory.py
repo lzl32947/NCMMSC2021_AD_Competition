@@ -5,6 +5,68 @@ from tqdm import tqdm
 from util.tools.files_util import set_working_dir, read_config
 
 
+def clear_output(configs: Dict, **kwargs) -> None:
+    """
+    Clear the weight directory
+    :param configs: Dict, the configs
+    :param kwargs: Dict, other necessary parameters
+    :return: None
+    """
+    # Unless otherwise given, the weight directory is in the config['output_dir']
+    output_dir = kwargs['output_dir'] if 'output_dir' in kwargs.keys() else configs['output_dir']
+    sub_directories = os.listdir(output_dir)
+    # List the weight directory
+    if len(sub_directories) > 0:
+        # Generate the tqdm bar
+        bar = tqdm(range(len(sub_directories)))
+        bar.set_description("Removing the unnecessary outputs")
+        delete_count = 0
+        # Running into the sub directory
+        for output_dirs in sub_directories:
+            sub_directory = os.path.join(output_dir, output_dirs)
+            if len(os.listdir(sub_directory)) == 0:
+                # The dir is empty
+                os.rmdir(sub_directory)
+                delete_count += 1
+            # Update the bar
+            bar.set_postfix(deleted=delete_count)
+            bar.update(1)
+        bar.close()
+    else:
+        print("No outputs to be deleted")
+
+
+def clear_image(configs: Dict, **kwargs) -> None:
+    """
+    Clear the weight directory
+    :param configs: Dict, the configs
+    :param kwargs: Dict, other necessary parameters
+    :return: None
+    """
+    # Unless otherwise given, the weight directory is in the config['image_dir']
+    image_dir = kwargs['image_dir'] if 'image_dir' in kwargs.keys() else configs['image_dir']
+    sub_directories = os.listdir(image_dir)
+    # List the weight directory
+    if len(sub_directories) > 0:
+        # Generate the tqdm bar
+        bar = tqdm(range(len(sub_directories)))
+        bar.set_description("Removing the unnecessary images")
+        delete_count = 0
+        # Running into the sub directory
+        for image_dirs in sub_directories:
+            sub_directory = os.path.join(image_dir, image_dirs)
+            if len(os.listdir(sub_directory)) == 0:
+                # The dir is empty
+                os.rmdir(sub_directory)
+                delete_count += 1
+            # Update the bar
+            bar.set_postfix(deleted=delete_count)
+            bar.update(1)
+        bar.close()
+    else:
+        print("No images to be deleted")
+
+
 def clear_weight(configs: Dict, **kwargs) -> None:
     """
     Clear the weight directory
@@ -87,7 +149,7 @@ def clear_log(configs: Dict, clear_limit: int = 20, **kwargs) -> None:
                 delete_count += 1
                 # Remove the configs if exist
                 for file in os.listdir(sub_directory):
-                    os.remove(os.path.join(sub_directory,file))
+                    os.remove(os.path.join(sub_directory, file))
                 # Remove directory
                 os.rmdir(sub_directory)
             # Update the bar
@@ -107,3 +169,5 @@ if __name__ == '__main__':
     config = read_config(os.path.join("configs", "config.yaml"))
     clear_log(config['log'])
     clear_weight(config['weight'])
+    clear_image(config['image'])
+    clear_output(config['output'])
