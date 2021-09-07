@@ -74,7 +74,7 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 
 ### Details
 
-* [20210904_215820](log/20210904_215820)  <span id="#longdetail1">SpecificTrainResNetLongLSTMModel</span> with MELSPEC
+* [20210904_215820](log/20210904_215820)  <span id="longdetail1">SpecificTrainResNetLongLSTMModel</span> with MELSPEC
 
     ![SpecificTrainResNetLongLSTMModel](image/20210907_184826/SpecificTrainResNetLongLSTMModel_0-4_Fold_Results_Accuracy_60.50_Percent.png)
 
@@ -86,7 +86,7 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 
 
 
-* [20210904_234029](log/20210904_234029) <span id="#longdetail2">SpecificTrainResNetLongModel</span> with MELSPEC
+* [20210904_234029](log/20210904_234029) <span id="longdetail2">SpecificTrainResNetLongModel</span> with MELSPEC
 
     ![SpecificTrainResNetLongModel](image/20210907_192320/SpecificTrainResNetLongModel_0-4_Fold_Results_Accuracy_76.85_Percent.png)
 
@@ -98,7 +98,7 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 
 
 
-* [20210905_151007](log/20210905_151007)  <span id="#longdetail3">SpecificTrainLongLSTMModel</span> with MELSPEC
+* [20210905_151007](log/20210905_151007)  <span id="longdetail3">SpecificTrainLongLSTMModel</span> with MELSPEC
 
     ![SpecificTrainLongLSTMModel](image/20210907_212203/SpecificTrainLongLSTMModel_0-4_Fold_Results_Accuracy_73.53_Percent.png)
 
@@ -109,7 +109,7 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
     ![SpecificTrainLongLSTMModel](image/20210907_212203/SpecificTrainLongLSTMModel_3-4_Fold_Results_Accuracy_64.58_Percent.png)
 
 
-* [20210905_130825](log/20210905_130825)  <span id="#longdetail4">SpecificTrainLongModel</span> with MELSPEC
+* [20210905_130825](log/20210905_130825)  <span id="longdetail4">SpecificTrainLongModel</span> with MELSPEC
 
     ![SpecificTrainLongModel](image/20210907_202132/SpecificTrainLongModel_0-4_Fold_Results_Accuracy_78.51_Percent.png)
 
@@ -120,7 +120,7 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
     ![SpecificTrainLongModel](image/20210907_202132/SpecificTrainLongModel_3-4_Fold_Results_Accuracy_65.50_Percent.png)
 
 
-* [20210905_133648](log/20210905_133648)  <span id="#longdetail5">SpecificTrainLongModel</span> with SPEC
+* [20210905_133648](log/20210905_133648)  <span id="longdetail5">SpecificTrainLongModel</span> with SPEC
 
     ![SpecificTrainLongModel](image/20210907_183657/SpecificTrainLongModel_0-4_Fold_Results_Accuracy_70.91_Percent.png)
 
@@ -131,7 +131,7 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
     ![SpecificTrainLongModel](image/20210907_183657/SpecificTrainLongModel_3-4_Fold_Results_Accuracy_66.56_Percent.png)
 
 
-* [20210905_133648](log/20210905_133648)  <span id="#longdetail6">SpecificTrainLongModel</span> with MFCC
+* [20210905_133648](log/20210905_133648)  <span id="longdetail6">SpecificTrainLongModel</span> with MFCC
 
     ![SpecificTrainLongModel](image/20210907_184705/SpecificTrainLongModel_0-4_Fold_Results_Accuracy_73.12_Percent.png)
 
@@ -142,7 +142,7 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
     ![SpecificTrainLongModel](image/20210907_184705/SpecificTrainLongModel_3-4_Fold_Results_Accuracy_69.52_Percent.png)
 
 
-* [20210905_133648](log/20210905_133648)  <span id="#longdetail7">SpecificTrainLongModel</span> with MELSPEC
+* [20210905_133648](log/20210905_133648)  <span id="longdetail7">SpecificTrainLongModel</span> with MELSPEC
 
     ![SpecificTrainLongModel](image/20210907_192416/SpecificTrainLongModel_0-4_Fold_Results_Accuracy_77.36_Percent.png)
 
@@ -153,7 +153,7 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
     ![SpecificTrainLongModel](image/20210907_192416/SpecificTrainLongModel_3-4_Fold_Results_Accuracy_63.06_Percent.png)
 
 
-* [20210905_133648](log/20210905_133648)  <span id="#longdetail8">MSMJointConcatFineTuneLongModel</span> with General
+* [20210905_133648](log/20210905_133648)  <span id="longdetail8">MSMJointConcatFineTuneLongModel</span> with General
 
     ![MSMJointConcatFineTuneLongModel](image/20210907_192859/MSMJointConcatFineTuneLongModel_0-4_Fold_Results_Accuracy_70.83_Percent.png)
 
@@ -164,7 +164,7 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
     ![MSMJointConcatFineTuneLongModel](image/20210907_192859/MSMJointConcatFineTuneLongModel_3-4_Fold_Results_Accuracy_72.56_Percent.png)
 
 
-* [20210905_133648](log/20210905_133648)  <span id="#longdetail9">MSMJointConcatFineTuneLongModel</span> with Fine-tune
+* [20210905_133648](log/20210905_133648)  <span id="longdetail9">MSMJointConcatFineTuneLongModel</span> with Fine-tune
 
     ![MSMJointConcatFineTuneLongModel](image/20210907_202227/MSMJointConcatFineTuneLongModel_0-4_Fold_Results_Accuracy_72.16_Percent.png)
 
@@ -175,7 +175,7 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
     ![MSMJointConcatFineTuneLongModel](image/20210907_202227/MSMJointConcatFineTuneLongModel_3-4_Fold_Results_Accuracy_73.92_Percent.png)
 
 
-* [20210906_215527](log/20210906_215527)  <span id="#longdetail10">SpecificTrainLongModel</span> with MelSpectrogram_VAD
+* [20210906_215527](log/20210906_215527)  <span id="longdetail10">SpecificTrainLongModel</span> with MelSpectrogram_VAD
 
     ![SpecificTrainLongModel](image/20210907_175242/SpecificTrainLongModel_0-4_Fold_Results_with_Accuracy_67.88_Percent.png)
 
@@ -186,7 +186,7 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
     ![SpecificTrainLongModel](image/20210907_175242/SpecificTrainLongModel_3-4_Fold_Results_with_Accuracy_73.38_Percent.png)
 
 
-* [20210906_185221](log/20210906_185221)  <span id="#longdetail11">SpecificTrainLongTransformerEncoderModel</span> with MELSPEC
+* [20210906_185221](log/20210906_185221)  <span id="longdetail11">SpecificTrainLongTransformerEncoderModel</span> with MELSPEC
 
     ![SpecificTrainLongTransformerEncoderModel](image/20210907_192510/SpecificTrainLongTransformerEncoderModel_0-4_Fold_Results_Accuracy_68.39_Percent.png)
 
@@ -200,55 +200,55 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 
 ### General
 
-* [20210904_215820](log/20210904_215820)  <span id="#longgeneral1">SpecificTrainResNetLongLSTMModel</span> with MELSPEC
+* [20210904_215820](log/20210904_215820)  <span id="longgeneral1">SpecificTrainResNetLongLSTMModel</span> with MELSPEC
 
     ![SpecificTrainResNetLongLSTMModel](image/20210907_184826/SpecificTrainResNetLongLSTMModel_Results_Accuracy_58.91_Percent.png)
 
 
-* [20210904_234029](log/20210904_234029) <span id="#longgeneral2">SpecificTrainResNetLongModel</span> with MELSPEC
+* [20210904_234029](log/20210904_234029) <span id="longgeneral2">SpecificTrainResNetLongModel</span> with MELSPEC
 
     ![SpecificTrainResNetLongModel](image/20210907_192320/SpecificTrainResNetLongModel_Results_Accuracy_66.92_Percent.png)
 
 
-* [20210905_151007](log/20210905_151007)  <span id="#longgeneral3">SpecificTrainLongLSTMModel</span> with MELSPEC
+* [20210905_151007](log/20210905_151007)  <span id="longgeneral3">SpecificTrainLongLSTMModel</span> with MELSPEC
 
     ![SpecificTrainLongLSTMModel](image/20210907_212203/SpecificTrainLongLSTMModel_Results_Accuracy_68.38_Percent.png)
 
-* [20210905_130825](log/20210905_130825)  <span id="#longgeneral4">SpecificTrainLongModel</span> with MELSPEC
+* [20210905_130825](log/20210905_130825)  <span id="longgeneral4">SpecificTrainLongModel</span> with MELSPEC
 
     ![SpecificTrainLongModel](image/20210907_202132/SpecificTrainLongModel_Results_Accuracy_70.75_Percent.png)
 
 
 
-* [20210905_133648](log/20210905_133648)  <span id="#longgeneral5">SpecificTrainLongModel</span> with SPEC
+* [20210905_133648](log/20210905_133648)  <span id="longgeneral5">SpecificTrainLongModel</span> with SPEC
 
     ![SpecificTrainLongModel](image/20210907_183657/SpecificTrainLongModel_Results_Accuracy_67.61_Percent.png)
 
 
-* [20210905_133648](log/20210905_133648)  <span id="#longgeneral6">SpecificTrainLongModel</span> with MFCC
+* [20210905_133648](log/20210905_133648)  <span id="longgeneral6">SpecificTrainLongModel</span> with MFCC
 
     ![SpecificTrainLongModel](image/20210907_184705/SpecificTrainLongModel_Results_Accuracy_71.28_Percent.png)
 
-* [20210905_133648](log/20210905_133648)  <span id="#longgeneral7">SpecificTrainLongModel</span> with MELSPEC
+* [20210905_133648](log/20210905_133648)  <span id="longgeneral7">SpecificTrainLongModel</span> with MELSPEC
 
     ![SpecificTrainLongModel](image/20210907_192416/SpecificTrainLongModel_Results_Accuracy_68.55_Percent.png)
 
 
-* [20210905_133648](log/20210905_133648)  <span id="#longgeneral8">MSMJointConcatFineTuneLongModel</span> with General
+* [20210905_133648](log/20210905_133648)  <span id="longgeneral8">MSMJointConcatFineTuneLongModel</span> with General
 
     ![MSMJointConcatFineTuneLongModel](image/20210907_192859/MSMJointConcatFineTuneLongModel_Results_Accuracy_73.41_Percent.png)
 
 
-* [20210905_133648](log/20210905_133648)  <span id="#longgeneral9">MSMJointConcatFineTuneLongModel</span> with Fine-tune
+* [20210905_133648](log/20210905_133648)  <span id="longgeneral9">MSMJointConcatFineTuneLongModel</span> with Fine-tune
 
     ![MSMJointConcatFineTuneLongModel](image/20210907_202227/MSMJointConcatFineTuneLongModel_Results_Accuracy_72.22_Percent.png)
 
 
-* [20210906_215527](log/20210906_215527)  <span id="#longgeneral10">SpecificTrainLongModel</span> with MelSpectrogram_VAD
+* [20210906_215527](log/20210906_215527)  <span id="longgeneral10">SpecificTrainLongModel</span> with MelSpectrogram_VAD
 
     ![SpecificTrainLongModel](image/20210907_175242/SpecificTrainLongModel_Results_with_Accuracy_68.78_Percent.png)
 
 
-* [20210906_185221](log/20210906_185221)  <span id="#longgeneral11">SpecificTrainLongTransformerEncoderModel</span> with MELSPEC
+* [20210906_185221](log/20210906_185221)  <span id="longgeneral11">SpecificTrainLongTransformerEncoderModel</span> with MELSPEC
 
     ![SpecificTrainLongTransformerEncoderModel](image/20210907_192510/SpecificTrainLongTransformerEncoderModel_Results_Accuracy_68.99_Percent.png)
