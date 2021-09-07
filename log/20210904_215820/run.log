@@ -1,0 +1,240 @@
+2021-09-04 22:00:27,769 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 1, time cost 124.20968294143677s ,with loss 1.055113581535609
+2021-09-04 22:00:57,718 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 1, time cost 29.948209047317505s ,with acc 0.4254032258064516
+2021-09-04 22:00:57,918 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch1-loss1.055113581535609-acc0.4254032258064516.pth
+2021-09-04 22:02:58,551 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 2, time cost 120.63206768035889s ,with loss 0.988877200562021
+2021-09-04 22:03:28,617 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 2, time cost 30.064875602722168s ,with acc 0.4778225806451613
+2021-09-04 22:03:28,823 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch2-loss0.988877200562021-acc0.4778225806451613.pth
+2021-09-04 22:05:28,288 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 3, time cost 119.4638843536377s ,with loss 0.904702151923076
+2021-09-04 22:05:58,529 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 3, time cost 30.24055027961731s ,with acc 0.5060483870967742
+2021-09-04 22:05:58,722 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch3-loss0.904702151923076-acc0.5060483870967742.pth
+2021-09-04 22:07:58,174 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 4, time cost 119.45237469673157s ,with loss 0.7594794935506323
+2021-09-04 22:08:28,088 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 4, time cost 29.913206338882446s ,with acc 0.5524193548387096
+2021-09-04 22:08:28,277 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch4-loss0.7594794935506323-acc0.5524193548387096.pth
+2021-09-04 22:10:27,639 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 5, time cost 119.36075735092163s ,with loss 0.6682184039736572
+2021-09-04 22:10:57,602 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 5, time cost 29.962838888168335s ,with acc 0.5665322580645161
+2021-09-04 22:10:57,793 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch5-loss0.6682184039736572-acc0.5665322580645161.pth
+2021-09-04 22:12:57,305 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 6, time cost 119.51134634017944s ,with loss 0.4923930295297633
+2021-09-04 22:13:27,173 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 6, time cost 29.866703748703003s ,with acc 0.5262096774193549
+2021-09-04 22:13:27,368 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch6-loss0.4923930295297633-acc0.5262096774193549.pth
+2021-09-04 22:15:26,504 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 7, time cost 119.13550233840942s ,with loss 0.3410213882022578
+2021-09-04 22:15:56,466 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 7, time cost 29.96216607093811s ,with acc 0.5645161290322581
+2021-09-04 22:15:56,728 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch7-loss0.3410213882022578-acc0.5645161290322581.pth
+2021-09-04 22:17:55,737 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 8, time cost 119.00813817977905s ,with loss 0.2551956452510279
+2021-09-04 22:18:25,686 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 8, time cost 29.949280261993408s ,with acc 0.5463709677419355
+2021-09-04 22:18:25,891 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch8-loss0.2551956452510279-acc0.5463709677419355.pth
+2021-09-04 22:20:27,540 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 9, time cost 121.64767861366272s ,with loss 0.25658727265165554
+2021-09-04 22:20:57,888 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 9, time cost 30.348256587982178s ,with acc 0.5625
+2021-09-04 22:20:58,154 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch9-loss0.25658727265165554-acc0.5625.pth
+2021-09-04 22:22:57,825 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 10, time cost 119.66984272003174s ,with loss 0.2315592583592819
+2021-09-04 22:23:27,495 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 10, time cost 29.66951608657837s ,with acc 0.5383064516129032
+2021-09-04 22:23:27,683 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch10-loss0.2315592583592819-acc0.5383064516129032.pth
+2021-09-04 22:25:25,584 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 11, time cost 117.89936947822571s ,with loss 0.1774280830691366
+2021-09-04 22:25:55,138 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 11, time cost 29.554394006729126s ,with acc 0.5201612903225806
+2021-09-04 22:25:55,335 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch11-loss0.1774280830691366-acc0.5201612903225806.pth
+2021-09-04 22:27:53,818 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 12, time cost 118.482177734375s ,with loss 0.18050546190478717
+2021-09-04 22:28:23,265 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 12, time cost 29.446024417877197s ,with acc 0.5705645161290323
+2021-09-04 22:28:23,450 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch12-loss0.18050546190478717-acc0.5705645161290323.pth
+2021-09-04 22:30:21,090 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 13, time cost 117.6394054889679s ,with loss 0.11832356522284934
+2021-09-04 22:30:50,600 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 13, time cost 29.508558750152588s ,with acc 0.6108870967741935
+2021-09-04 22:30:50,790 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch13-loss0.11832356522284934-acc0.6108870967741935.pth
+2021-09-04 22:32:48,551 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 14, time cost 117.7597382068634s ,with loss 0.06375959420414723
+2021-09-04 22:33:17,994 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 14, time cost 29.443373680114746s ,with acc 0.5826612903225806
+2021-09-04 22:33:18,188 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch14-loss0.06375959420414723-acc0.5826612903225806.pth
+2021-09-04 22:35:16,053 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 15, time cost 117.86466979980469s ,with loss 0.04840729856843372
+2021-09-04 22:35:45,451 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 15, time cost 29.397156715393066s ,with acc 0.625
+2021-09-04 22:35:45,688 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch15-loss0.04840729856843372-acc0.625.pth
+2021-09-04 22:37:43,371 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 16, time cost 117.68208885192871s ,with loss 0.022316967828057543
+2021-09-04 22:38:12,853 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 16, time cost 29.481441974639893s ,with acc 0.6310483870967742
+2021-09-04 22:38:13,091 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch16-loss0.022316967828057543-acc0.6310483870967742.pth
+2021-09-04 22:40:10,679 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 17, time cost 117.58690738677979s ,with loss 0.017942649561598006
+2021-09-04 22:40:40,154 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 17, time cost 29.475265741348267s ,with acc 0.6532258064516129
+2021-09-04 22:40:40,344 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch17-loss0.017942649561598006-acc0.6532258064516129.pth
+2021-09-04 22:42:38,409 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 18, time cost 118.06553339958191s ,with loss 0.012109959277871025
+2021-09-04 22:43:07,675 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 18, time cost 29.265114068984985s ,with acc 0.6471774193548387
+2021-09-04 22:43:07,890 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch18-loss0.012109959277871025-acc0.6471774193548387.pth
+2021-09-04 22:45:04,753 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 19, time cost 116.86161851882935s ,with loss 0.00943345901981482
+2021-09-04 22:45:34,030 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 19, time cost 29.27721619606018s ,with acc 0.6330645161290323
+2021-09-04 22:45:34,300 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch19-loss0.00943345901981482-acc0.6330645161290323.pth
+2021-09-04 22:47:31,312 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 0/4, epoch 20, time cost 117.01082563400269s ,with loss 0.008608033813526044
+2021-09-04 22:48:00,538 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 0/4, epoch 20, time cost 29.225685834884644s ,with acc 0.6491935483870968
+2021-09-04 22:48:00,728 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold0_4-epoch20-loss0.008608033813526044-acc0.6491935483870968.pth
+2021-09-04 22:49:58,248 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 1, time cost 117.28679370880127s ,with loss 1.0484560964548069
+2021-09-04 22:50:27,138 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 1, time cost 28.89062523841858s ,with acc 0.4596774193548387
+2021-09-04 22:50:27,335 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch1-loss1.0484560964548069-acc0.4596774193548387.pth
+2021-09-04 22:52:24,454 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 2, time cost 117.11767387390137s ,with loss 0.9667839670310849
+2021-09-04 22:52:53,314 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 2, time cost 28.859242916107178s ,with acc 0.4153225806451613
+2021-09-04 22:52:53,503 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch2-loss0.9667839670310849-acc0.4153225806451613.pth
+2021-09-04 22:54:50,604 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 3, time cost 117.10108518600464s ,with loss 0.8648122178147668
+2021-09-04 22:55:19,418 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 3, time cost 28.813283920288086s ,with acc 0.4637096774193548
+2021-09-04 22:55:19,706 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch3-loss0.8648122178147668-acc0.4637096774193548.pth
+2021-09-04 22:57:16,784 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 4, time cost 117.07697701454163s ,with loss 0.6931983643899793
+2021-09-04 22:57:45,627 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 4, time cost 28.843474626541138s ,with acc 0.4939516129032258
+2021-09-04 22:57:45,820 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch4-loss0.6931983643899793-acc0.4939516129032258.pth
+2021-09-04 22:59:42,854 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 5, time cost 117.03391146659851s ,with loss 0.5342519820222388
+2021-09-04 23:00:11,798 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 5, time cost 28.942928552627563s ,with acc 0.4576612903225806
+2021-09-04 23:00:12,011 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch5-loss0.5342519820222388-acc0.4576612903225806.pth
+2021-09-04 23:02:09,072 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 6, time cost 117.06056499481201s ,with loss 0.3883606503596124
+2021-09-04 23:02:37,905 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 6, time cost 28.832338571548462s ,with acc 0.4596774193548387
+2021-09-04 23:02:38,091 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch6-loss0.3883606503596124-acc0.4596774193548387.pth
+2021-09-04 23:04:35,289 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 7, time cost 117.19790506362915s ,with loss 0.2321883940907276
+2021-09-04 23:05:04,242 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 7, time cost 28.953111171722412s ,with acc 0.4737903225806452
+2021-09-04 23:05:04,455 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch7-loss0.2321883940907276-acc0.4737903225806452.pth
+2021-09-04 23:07:01,539 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 8, time cost 117.0823347568512s ,with loss 0.17481922136579195
+2021-09-04 23:07:30,375 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 8, time cost 28.836223602294922s ,with acc 0.5
+2021-09-04 23:07:30,576 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch8-loss0.17481922136579195-acc0.5.pth
+2021-09-04 23:09:27,613 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 9, time cost 117.03578853607178s ,with loss 0.06957427269030038
+2021-09-04 23:09:56,529 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 9, time cost 28.91582226753235s ,with acc 0.4737903225806452
+2021-09-04 23:09:56,719 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch9-loss0.06957427269030038-acc0.4737903225806452.pth
+2021-09-04 23:11:52,266 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 10, time cost 115.546058177948s ,with loss 0.09948919013992924
+2021-09-04 23:12:19,632 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 10, time cost 27.3663649559021s ,with acc 0.5161290322580645
+2021-09-04 23:12:19,817 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch10-loss0.09948919013992924-acc0.5161290322580645.pth
+2021-09-04 23:14:10,358 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 11, time cost 110.53978180885315s ,with loss 0.08169408113715927
+2021-09-04 23:14:37,333 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 11, time cost 26.975258111953735s ,with acc 0.5524193548387096
+2021-09-04 23:14:37,521 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch11-loss0.08169408113715927-acc0.5524193548387096.pth
+2021-09-04 23:16:28,131 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 12, time cost 110.6090350151062s ,with loss 0.02993156808509451
+2021-09-04 23:16:55,095 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 12, time cost 26.96298575401306s ,with acc 0.532258064516129
+2021-09-04 23:16:55,270 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch12-loss0.02993156808509451-acc0.532258064516129.pth
+2021-09-04 23:18:45,882 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 13, time cost 110.61087369918823s ,with loss 0.02574737012037076
+2021-09-04 23:19:12,938 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 13, time cost 27.056806802749634s ,with acc 0.5161290322580645
+2021-09-04 23:19:13,146 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch13-loss0.02574737012037076-acc0.5161290322580645.pth
+2021-09-04 23:21:03,898 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 14, time cost 110.75087380409241s ,with loss 0.09984533516209289
+2021-09-04 23:21:30,876 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 14, time cost 26.978493690490723s ,with acc 0.5100806451612904
+2021-09-04 23:21:31,072 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch14-loss0.09984533516209289-acc0.5100806451612904.pth
+2021-09-04 23:23:21,880 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 15, time cost 110.80831027030945s ,with loss 0.05012166198424023
+2021-09-04 23:23:48,824 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 15, time cost 26.944610834121704s ,with acc 0.5604838709677419
+2021-09-04 23:23:48,996 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch15-loss0.05012166198424023-acc0.5604838709677419.pth
+2021-09-04 23:25:40,033 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 16, time cost 111.03606820106506s ,with loss 0.014339888639844266
+2021-09-04 23:26:07,085 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 16, time cost 27.05223321914673s ,with acc 0.5483870967741935
+2021-09-04 23:26:07,346 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch16-loss0.014339888639844266-acc0.5483870967741935.pth
+2021-09-04 23:27:58,507 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 17, time cost 111.16010546684265s ,with loss 0.008271535154958458
+2021-09-04 23:28:25,521 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 17, time cost 27.01436138153076s ,with acc 0.5342741935483871
+2021-09-04 23:28:25,774 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch17-loss0.008271535154958458-acc0.5342741935483871.pth
+2021-09-04 23:30:17,001 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 18, time cost 111.22569131851196s ,with loss 0.006602079315242641
+2021-09-04 23:30:44,154 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 18, time cost 27.152766704559326s ,with acc 0.5584677419354839
+2021-09-04 23:30:44,338 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch18-loss0.006602079315242641-acc0.5584677419354839.pth
+2021-09-04 23:32:38,113 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 19, time cost 113.77310633659363s ,with loss 0.0057612667840895365
+2021-09-04 23:33:05,775 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 19, time cost 27.662761926651s ,with acc 0.5745967741935484
+2021-09-04 23:33:05,974 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch19-loss0.0057612667840895365-acc0.5745967741935484.pth
+2021-09-04 23:35:01,293 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 1/4, epoch 20, time cost 115.3182806968689s ,with loss 0.004228662109159379
+2021-09-04 23:35:29,598 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 1/4, epoch 20, time cost 28.3053195476532s ,with acc 0.5725806451612904
+2021-09-04 23:35:29,777 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold1_4-epoch20-loss0.004228662109159379-acc0.5725806451612904.pth
+2021-09-04 23:37:19,027 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 1, time cost 109.0232322216034s ,with loss 1.0645358329233916
+2021-09-04 23:37:53,965 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 1, time cost 34.93801760673523s ,with acc 0.48185483870967744
+2021-09-04 23:37:54,197 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch1-loss1.0645358329233916-acc0.48185483870967744.pth
+2021-09-04 23:39:44,120 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 2, time cost 109.92185950279236s ,with loss 0.976490295127682
+2021-09-04 23:40:19,580 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 2, time cost 35.46039366722107s ,with acc 0.5040322580645161
+2021-09-04 23:40:19,770 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch2-loss0.976490295127682-acc0.5040322580645161.pth
+2021-09-04 23:42:11,088 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 3, time cost 111.31603860855103s ,with loss 0.8730414283016453
+2021-09-04 23:42:45,322 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 3, time cost 34.23439407348633s ,with acc 0.4314516129032258
+2021-09-04 23:42:45,518 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch3-loss0.8730414283016453-acc0.4314516129032258.pth
+2021-09-04 23:44:34,856 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 4, time cost 109.3364360332489s ,with loss 0.7799309548800406
+2021-09-04 23:45:09,051 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 4, time cost 34.1954984664917s ,with acc 0.47580645161290325
+2021-09-04 23:45:09,250 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch4-loss0.7799309548800406-acc0.47580645161290325.pth
+2021-09-04 23:46:58,410 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 5, time cost 109.15891098976135s ,with loss 0.6825559924802055
+2021-09-04 23:47:32,616 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 5, time cost 34.206470251083374s ,with acc 0.49798387096774194
+2021-09-04 23:47:32,849 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch5-loss0.6825559924802055-acc0.49798387096774194.pth
+2021-09-04 23:49:22,191 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 6, time cost 109.34142184257507s ,with loss 0.5966732664762632
+2021-09-04 23:49:56,399 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 6, time cost 34.208465814590454s ,with acc 0.5685483870967742
+2021-09-04 23:49:56,575 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch6-loss0.5966732664762632-acc0.5685483870967742.pth
+2021-09-04 23:51:45,771 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 7, time cost 109.19481611251831s ,with loss 0.48455982149133214
+2021-09-04 23:52:20,120 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 7, time cost 34.34908699989319s ,with acc 0.5786290322580645
+2021-09-04 23:52:20,301 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch7-loss0.48455982149133214-acc0.5786290322580645.pth
+2021-09-04 23:54:09,276 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 8, time cost 108.97340655326843s ,with loss 0.4016117613114741
+2021-09-04 23:54:43,412 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 8, time cost 34.136656761169434s ,with acc 0.592741935483871
+2021-09-04 23:54:43,603 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch8-loss0.4016117613114741-acc0.592741935483871.pth
+2021-09-04 23:56:32,934 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 9, time cost 109.33045196533203s ,with loss 0.3017626257370348
+2021-09-04 23:57:07,047 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 9, time cost 34.11272120475769s ,with acc 0.5907258064516129
+2021-09-04 23:57:07,247 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch9-loss0.3017626257370348-acc0.5907258064516129.pth
+2021-09-04 23:58:56,202 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 10, time cost 108.95545506477356s ,with loss 0.2640407401663454
+2021-09-04 23:59:30,577 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 10, time cost 34.37501931190491s ,with acc 0.5705645161290323
+2021-09-04 23:59:30,860 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch10-loss0.2640407401663454-acc0.5705645161290323.pth
+2021-09-05 00:01:19,997 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 11, time cost 109.13597297668457s ,with loss 0.17728331206244943
+2021-09-05 00:01:54,406 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 11, time cost 34.40892815589905s ,with acc 0.5403225806451613
+2021-09-05 00:01:54,603 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch11-loss0.17728331206244943-acc0.5403225806451613.pth
+2021-09-05 00:03:43,598 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 12, time cost 108.99534797668457s ,with loss 0.10985802310903597
+2021-09-05 00:04:19,516 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 12, time cost 35.91789126396179s ,with acc 0.6068548387096774
+2021-09-05 00:04:19,768 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch12-loss0.10985802310903597-acc0.6068548387096774.pth
+2021-09-05 00:06:09,806 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 13, time cost 110.0365617275238s ,with loss 0.0705548177331524
+2021-09-05 00:06:44,020 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 13, time cost 34.21444797515869s ,with acc 0.6512096774193549
+2021-09-05 00:06:44,207 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch13-loss0.0705548177331524-acc0.6512096774193549.pth
+2021-09-05 00:08:33,277 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 14, time cost 109.0681529045105s ,with loss 0.03514618153111888
+2021-09-05 00:09:07,651 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 14, time cost 34.37402153015137s ,with acc 0.6290322580645161
+2021-09-05 00:09:07,844 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch14-loss0.03514618153111888-acc0.6290322580645161.pth
+2021-09-05 00:11:00,866 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 15, time cost 113.02057790756226s ,with loss 0.14981953613206986
+2021-09-05 00:11:38,908 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 15, time cost 38.042205810546875s ,with acc 0.592741935483871
+2021-09-05 00:11:39,100 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch15-loss0.14981953613206986-acc0.592741935483871.pth
+2021-09-05 00:13:34,460 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 16, time cost 115.35931825637817s ,with loss 0.14346183072168217
+2021-09-05 00:14:11,101 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 16, time cost 36.640955448150635s ,with acc 0.6411290322580645
+2021-09-05 00:14:11,312 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch16-loss0.14346183072168217-acc0.6411290322580645.pth
+2021-09-05 00:16:06,110 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 17, time cost 114.7968237400055s ,with loss 0.10764183697629841
+2021-09-05 00:16:40,314 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 17, time cost 34.20347809791565s ,with acc 0.5625
+2021-09-05 00:16:40,525 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch17-loss0.10764183697629841-acc0.5625.pth
+2021-09-05 00:18:29,039 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 18, time cost 108.51263999938965s ,with loss 0.06066345934042423
+2021-09-05 00:19:03,479 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 18, time cost 34.4398455619812s ,with acc 0.6310483870967742
+2021-09-05 00:19:03,657 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch18-loss0.06066345934042423-acc0.6310483870967742.pth
+2021-09-05 00:20:52,231 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 19, time cost 108.57247996330261s ,with loss 0.03588582380198995
+2021-09-05 00:21:26,464 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 19, time cost 34.23239994049072s ,with acc 0.657258064516129
+2021-09-05 00:21:26,662 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch19-loss0.03588582380198995-acc0.657258064516129.pth
+2021-09-05 00:23:15,435 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 2/4, epoch 20, time cost 108.77194619178772s ,with loss 0.03251562898588853
+2021-09-05 00:23:49,660 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 2/4, epoch 20, time cost 34.22442054748535s ,with acc 0.6491935483870968
+2021-09-05 00:23:49,841 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold2_4-epoch20-loss0.03251562898588853-acc0.6491935483870968.pth
+2021-09-05 00:25:47,184 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 1, time cost 117.12858557701111s ,with loss 1.049634724855423
+2021-09-05 00:26:13,157 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 1, time cost 25.9725022315979s ,with acc 0.4354166666666667
+2021-09-05 00:26:13,463 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch1-loss1.049634724855423-acc0.4354166666666667.pth
+2021-09-05 00:28:10,506 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 2, time cost 117.04281449317932s ,with loss 0.9794904961380907
+2021-09-05 00:28:36,370 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 2, time cost 25.86279582977295s ,with acc 0.43125
+2021-09-05 00:28:36,613 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch2-loss0.9794904961380907-acc0.43125.pth
+2021-09-05 00:30:34,041 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 3, time cost 117.42678761482239s ,with loss 0.9090414422173654
+2021-09-05 00:30:59,940 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 3, time cost 25.899697303771973s ,with acc 0.45
+2021-09-05 00:31:00,126 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch3-loss0.9090414422173654-acc0.45.pth
+2021-09-05 00:32:57,237 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 4, time cost 117.1096363067627s ,with loss 0.8125119859813362
+2021-09-05 00:33:23,299 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 4, time cost 26.061264276504517s ,with acc 0.49375
+2021-09-05 00:33:23,730 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch4-loss0.8125119859813362-acc0.49375.pth
+2021-09-05 00:35:20,857 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 5, time cost 117.1265914440155s ,with loss 0.692926029684723
+2021-09-05 00:35:46,759 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 5, time cost 25.901691913604736s ,with acc 0.49375
+2021-09-05 00:35:46,939 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch5-loss0.692926029684723-acc0.49375.pth
+2021-09-05 00:37:44,275 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 6, time cost 117.33503341674805s ,with loss 0.5657168104443498
+2021-09-05 00:38:10,038 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 6, time cost 25.763062477111816s ,with acc 0.5395833333333333
+2021-09-05 00:38:10,223 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch6-loss0.5657168104443498-acc0.5395833333333333.pth
+2021-09-05 00:40:06,887 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 7, time cost 116.66382956504822s ,with loss 0.42649724791126864
+2021-09-05 00:40:32,775 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 7, time cost 25.886730909347534s ,with acc 0.51875
+2021-09-05 00:40:33,011 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch7-loss0.42649724791126864-acc0.51875.pth
+2021-09-05 00:42:29,761 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 8, time cost 116.74860215187073s ,with loss 0.3705227093030048
+2021-09-05 00:42:55,535 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 8, time cost 25.774033069610596s ,with acc 0.5375
+2021-09-05 00:42:55,719 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch8-loss0.3705227093030048-acc0.5375.pth
+2021-09-05 00:44:52,738 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 9, time cost 117.01788210868835s ,with loss 0.30682442171038476
+2021-09-05 00:45:18,516 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 9, time cost 25.77802348136902s ,with acc 0.5625
+2021-09-05 00:45:18,714 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch9-loss0.30682442171038476-acc0.5625.pth
+2021-09-05 00:47:15,368 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 10, time cost 116.65385556221008s ,with loss 0.22671812620534693
+2021-09-05 00:47:41,228 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 10, time cost 25.859803676605225s ,with acc 0.5854166666666667
+2021-09-05 00:47:41,465 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch10-loss0.22671812620534693-acc0.5854166666666667.pth
+2021-09-05 00:49:38,444 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 11, time cost 116.97898530960083s ,with loss 0.18321480369696053
+2021-09-05 00:50:04,331 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 11, time cost 25.887730360031128s ,with acc 0.6125
+2021-09-05 00:50:04,526 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch11-loss0.18321480369696053-acc0.6125.pth
+2021-09-05 00:52:01,681 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 12, time cost 117.15551400184631s ,with loss 0.1155767034518943
+2021-09-05 00:52:27,437 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 12, time cost 25.756081342697144s ,with acc 0.6270833333333333
+2021-09-05 00:52:27,677 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch12-loss0.1155767034518943-acc0.6270833333333333.pth
+2021-09-05 00:54:24,286 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 13, time cost 116.60797834396362s ,with loss 0.0735447565794632
+2021-09-05 00:54:50,106 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 13, time cost 25.819911241531372s ,with acc 0.6479166666666667
+2021-09-05 00:54:50,282 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch13-loss0.0735447565794632-acc0.6479166666666667.pth
+2021-09-05 00:56:47,221 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 14, time cost 116.93909215927124s ,with loss 0.06751647133189904
+2021-09-05 00:57:13,004 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 14, time cost 25.78300976753235s ,with acc 0.6270833333333333
+2021-09-05 00:57:13,227 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch14-loss0.06751647133189904-acc0.6270833333333333.pth
+2021-09-05 00:59:10,140 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 15, time cost 116.9121642112732s ,with loss 0.09686911185722678
+2021-09-05 00:59:35,933 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 15, time cost 25.791985273361206s ,with acc 0.5416666666666666
+2021-09-05 00:59:36,130 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch15-loss0.09686911185722678-acc0.5416666666666666.pth
+2021-09-05 01:01:32,844 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 16, time cost 116.71269726753235s ,with loss 0.18367970840484704
+2021-09-05 01:01:58,634 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 16, time cost 25.7899911403656s ,with acc 0.6291666666666667
+2021-09-05 01:01:58,885 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch16-loss0.18367970840484704-acc0.6291666666666667.pth
+2021-09-05 01:03:55,805 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 17, time cost 116.91914558410645s ,with loss 0.09638089059241196
+2021-09-05 01:04:21,570 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 17, time cost 25.765058517456055s ,with acc 0.6229166666666667
+2021-09-05 01:04:21,772 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch17-loss0.09638089059241196-acc0.6229166666666667.pth
+2021-09-05 01:06:18,557 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 18, time cost 116.78550291061401s ,with loss 0.0678861602234544
+2021-09-05 01:06:44,376 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 18, time cost 25.81791663169861s ,with acc 0.6708333333333333
+2021-09-05 01:06:44,566 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch18-loss0.0678861602234544-acc0.6708333333333333.pth
+2021-09-05 01:08:41,187 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 19, time cost 116.61994624137878s ,with loss 0.054043575335213895
+2021-09-05 01:09:06,932 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 19, time cost 25.745110988616943s ,with acc 0.7229166666666667
+2021-09-05 01:09:07,208 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch19-loss0.054043575335213895-acc0.7229166666666667.pth
+2021-09-05 01:11:04,169 - train_specific.py[line:92] - INFO: Finish training feature AudioFeatures.MELSPECS, for fold 3/4, epoch 20, time cost 116.960036277771s ,with loss 0.02884885336157255
+2021-09-05 01:11:29,960 - train_specific.py[line:144] - INFO: Finish testing feature AudioFeatures.MELSPECS, for fold 3/4, epoch 20, time cost 25.790987491607666s ,with acc 0.6791666666666667
+2021-09-05 01:11:30,166 - train_specific.py[line:159] - INFO: Saving weight to weight\20210904_215820\MelSpectrogram\fold3_4-epoch20-loss0.02884885336157255-acc0.6791666666666667.pth
