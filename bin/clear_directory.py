@@ -49,7 +49,7 @@ def clear_weight(configs: Dict, **kwargs) -> None:
         print("No weights to be deleted")
 
 
-def clear_log(configs: Dict, clear_limit: int = 5, **kwargs) -> None:
+def clear_log(configs: Dict, clear_limit: int = 20, **kwargs) -> None:
     """
     Clear the log directory
     :param configs: Dict, the configs

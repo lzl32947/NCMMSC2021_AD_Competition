@@ -5,22 +5,22 @@ model:
   module_path: "model/modules"
 
 warning:
-  ignore: true
+  ignore: true  # whether to ignore warnings, true by default
 
 dataset:
-  k_fold: 4
-  repeat_times: 32
-  use_merge: true
-  use_vad: true
-  random_disruption: true
-  batch_size: 4
+  k_fold: 4   # 4 by default
+  repeat_times: 32  # 32 by default
+  use_merge: true   # whether to use the merge files, true by default
+  use_vad: true     # whether to generate the vad features, true by default
+  random_disruption: true # whether to randomize, notice that this will not change the file for k-fold and is safe, true by default
+  batch_size: 16     # batch size, 16 by default
 
 
   process:
-    sr: 16000
-    dim: 3
-    crop_length: 5
-    normalized: true
+    sr: 16000     # sample rate, 16000 by default
+    dim: 3        # dimensions, 3 means expand dims to tuple of shape 4 to process in image-like ways, 2 means not expand and process in test-embedding way, 3 by default
+    crop_length: 25 # sample seconds, 5 by default
+    normalized: true  # normalized, true by default
     pre_emphasis:
       coefficient: 0.95
     mfcc:

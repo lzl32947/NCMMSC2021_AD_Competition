@@ -7,7 +7,6 @@ import torchaudio
 from torch.utils.data.dataset import Dataset
 import os
 import librosa
-from wav_process.unsupervised_vad import *
 from configs.types import ADType, AudioFeatures, DatasetMode
 
 
@@ -400,17 +399,17 @@ class AldsDataset(Dataset):
             for item in self.use_features:
 
                 # Add the MFCC feature to output if used
-                if AudioFeatures.MFCC == item:
+                if AudioFeatures.MFCC == item or AudioFeatures.MFCC_VAD == item:
                     mfcc_out = self.mfcc(output_vad, self.sr, self.configs['mfcc'],
                                          normalized=self.configs['normalized'], expand_dim=self.expand_dim)
                     output_dict[AudioFeatures.MFCC_VAD] = mfcc_out
                 # Add the Spectrogram feature to output if used
-                if AudioFeatures.SPECS == item:
+                if AudioFeatures.SPECS == item or AudioFeatures.SPECS_VAD == item:
                     spec_out = self.spec(output_vad, self.configs['specs'], normalized=self.configs['normalized'],
                                          expand_dim=self.expand_dim)
                     output_dict[AudioFeatures.SPECS_VAD] = spec_out
                 # Add the Mel-Spectrogram feature to output if used
-                if AudioFeatures.MELSPECS == item:
+                if AudioFeatures.MELSPECS == item or AudioFeatures.MELSPECS_VAD == item:
                     melspec_out = self.melspec(output_vad, self.sr, self.configs['melspecs'],
                                                normalized=self.configs['normalized'], expand_dim=self.expand_dim)
                     output_dict[AudioFeatures.MELSPECS_VAD] = melspec_out
