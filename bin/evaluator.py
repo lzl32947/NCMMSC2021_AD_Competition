@@ -269,7 +269,7 @@ if __name__ == '__main__':
     weight_identifier = "20210905_133648"
     c, p = evaluate_joint(time_identifier, configs, model_name,
                           [AudioFeatures.SPECS, AudioFeatures.MELSPECS, AudioFeatures.MFCC], weight_identifier,
-                          "General", input_shape=())
+                          "Fine_tune", input_shape=())
     # c, p = evaluate_specific(time_identifier, configs, model_name,
     #                          AudioFeatures.MELSPECS, weight_identifier, input_shape=())
     logger.info("Analysis results for {} with {}".format(model_name, weight_identifier))
