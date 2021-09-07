@@ -247,14 +247,17 @@ def analysis_result(identifier, config, correct_label, predicted_label, model_na
         total_correct.append(correct)
         predicted = np.concatenate(predicted_label[fold])
         total_predicted.append(predicted)
+        acc = len(correct[correct == predicted]) / len(correct)
         matrix = confusion_matrix(y_true=correct, y_pred=predicted)
         plot_image(identifier, config, matrix, [i.value for i in ADType],
-                   "{} {}-{} Fold Results".format(model_name, fold, total_fold))
+                   "{} {}-{} Fold Results with Accuracy {:.2f} Percent".format(model_name, fold, total_fold, acc * 100))
         logger.info("Finish generating image {}-{}.".format(fold, total_fold))
     correct = np.concatenate(total_correct)
     predicted = np.concatenate(total_predicted)
     matrix = confusion_matrix(y_true=correct, y_pred=predicted)
-    plot_image(identifier, config, matrix, [i.value for i in ADType], "{} Results".format(model_name))
+    acc = len(correct[correct == predicted]) / len(correct)
+    plot_image(identifier, config, matrix, [i.value for i in ADType],
+               "{} Results with Accuracy {:.2f} Percent".format(model_name, acc * 100))
     logger.info("Finish generating all images.")
 
 
