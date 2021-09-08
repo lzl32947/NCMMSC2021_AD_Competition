@@ -1,8 +1,10 @@
 from typing import Tuple
 
+import torchvision.models
 from torch import nn
 import torch
 import torch.nn.functional as func
+from torch.utils import model_zoo
 
 from model.base_model import BaseModel
 from model.manager import Register, Registers
@@ -59,6 +61,29 @@ class SpecificTrainResNetLongModel(BaseModel):
         self.fc = nn.Linear(2048 * 6, 2048)
         self.fc2 = nn.Linear(2048, 512)
         self.fc3 = nn.Linear(512, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        output = self.avg_pool(output)
+        long_out = output.view(batch_size, -1)
+        long_out = self.fc(long_out)
+        long_out2 = func.relu(long_out)
+        long_out2 = self.fc2(long_out2)
+        long_out3 = func.relu(long_out2)
+        long_out3 = self.fc3(long_out3)
+        return long_out3
+
+
+@Registers.model.register
+class SpecificTrainResNet18BackboneLongModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super(SpecificTrainResNet18BackboneLongModel, self).__init__()
+        self.extractor = Registers.module["ResNetBackbone"](18)
+        self.avg_pool = nn.AdaptiveAvgPool2d((1, 6))
+        self.fc = nn.Linear(512 * 6, 512)
+        self.fc2 = nn.Linear(512, 64)
+        self.fc3 = nn.Linear(64, 3)
 
     def forward(self, input_tensor: torch.Tensor):
         batch_size = input_tensor.shape[0]
@@ -133,6 +158,16 @@ class MSMJointConcatFineTuneResNetModel(BaseModel):
 if __name__ == '__main__':
     import torchinfo
 
-    model = SpecificTrainResNetLongLSTMModel(input_shape=())
-    model.cuda()
-    torchinfo.summary(model, (4, 1, 128, 782))
+    #
+    # model = SpecificTrainResNetLongLSTMModel(input_shape=())
+    # model.cuda()
+    # torchinfo.summary(model, (4, 1, 128, 782))
+    model = torchvision.models.resnet18(pretrained=True)
+    state_dict = model_zoo.load_url('https://download.pytorch.org/models/resnet18-f37072fd.pth')
+    model.load_state_dict(state_dict, strict=False)
+    backbone = list(
+        [model.conv1, model.bn1, model.relu, model.maxpool, model.layer1, model.layer2, model.layer3, model.layer4,
+         model.avgpool]
+    )
+    model = nn.Sequential(*backbone)
+    torchinfo.summary(model.cuda(), (4, 3, 128, 782))

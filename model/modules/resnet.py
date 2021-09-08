@@ -1,5 +1,7 @@
 import torch
 import torch.nn as nn
+import torchvision
+from torch.utils import model_zoo
 
 from model.manager import Registers
 
@@ -113,7 +115,6 @@ class ResNet(nn.Module):
         self.conv4_x = self._make_layer(block, 256, num_block[2], 2)
         self.conv5_x = self._make_layer(block, 512, num_block[3], 2)
 
-
     def _make_layer(self, block, out_channels, num_blocks, stride):
         """
         Make resnet layers(by layer i didnt mean this 'layer' was the
@@ -142,13 +143,48 @@ class ResNet(nn.Module):
         output = self.conv4_x(output)
         output = self.conv5_x(output)
 
-
         return output
+
+
+@Registers.module.register
+class ResNetBackbone(nn.Module):
+    def __init__(self, num_layers=18):
+        super().__init__()
+        if num_layers not in [18, 34, 50, 101, 152]:
+            raise RuntimeError("Layers should be in 18,34,50,101,152")
+        model = None
+        if num_layers == 18:
+            model = torchvision.models.resnet18()
+            state_dict = model_zoo.load_url('https://download.pytorch.org/models/resnet18-f37072fd.pth')
+            model.load_state_dict(state_dict, strict=False)
+        elif num_layers == 34:
+            model = torchvision.models.resnet34()
+            state_dict = model_zoo.load_url('https://download.pytorch.org/models/resnet34-333f7ec4.pth')
+            model.load_state_dict(state_dict, strict=False)
+        elif num_layers == 50:
+            model = torchvision.models.resnet50()
+            state_dict = model_zoo.load_url('https://download.pytorch.org/models/resnet50-19c8e357.pth')
+            model.load_state_dict(state_dict, strict=False)
+        elif num_layers == 101:
+            model = torchvision.models.resnet101()
+            state_dict = model_zoo.load_url('https://download.pytorch.org/models/resnet101-5d3b4d8f.pth')
+            model.load_state_dict(state_dict, strict=False)
+        else:
+            model = torchvision.models.resnet152()
+            state_dict = model_zoo.load_url('https://download.pytorch.org/models/resnet152-b121ed2d.pth')
+            model.load_state_dict(state_dict, strict=False)
+        backbone = list(
+            [model.conv1, model.bn1, model.relu, model.maxpool, model.layer1, model.layer2, model.layer3, model.layer4]
+        )
+        self.model = nn.Sequential(*backbone)
+
+    def forward(self, input_tensor: torch.Tensor):
+        return self.model(input_tensor)
 
 
 if __name__ == '__main__':
     import torchinfo
 
-    model = ResNet(50)
-    model.cuda(0)
-    torchinfo.summary(model, (4, 1, 128, 157))
+    models = ResNet(50)
+    models.cuda(0)
+    torchinfo.summary(models, (4, 1, 128, 157))

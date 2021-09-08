@@ -15,9 +15,10 @@ import torch
 def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model_name: str, train_specific: bool = True,
                 train_specific_epoch: int = 20, train_general_epoch: int = 40, specific_weight: Optional[Dict] = None,
                 general_weight: Optional[str] = None, train_general: bool = False,
-                fine_tune: bool = True, fine_tune_epoch: int = 20) -> None:
+                fine_tune: bool = True, fine_tune_epoch: int = 20, input_channels: int = 1, **kwargs) -> None:
     """
     This is the trainer of training with joint-features.
+    :param input_channels: int, the input channels of the model, default is 1
     :param base_model_name: str, the name of base model (extraction model)
     :param fine_tune_epoch: int, the epochs if fine-tune the general model
     :param train_general: bool, whether to train the general model or directly use the given weight
@@ -81,6 +82,10 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     # Running one batch
                     for iteration, data in enumerate(train_dataloader):
                         feature, label = data[specific_feature], data[AudioFeatures.LABEL]
+
+                        if input_channels != 1:
+                            feature = torch.cat([feature] * input_channels, dim=1)
+
                         # Get features and set them to cuda
                         feature = feature.cuda()
                         label = label.cuda()
@@ -136,6 +141,10 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                         for data in test_dataloader:
                             # Get the features
                             feature, label = data[specific_feature], data[AudioFeatures.LABEL]
+
+                            if input_channels != 1:
+                                feature = torch.cat([feature] * input_channels, dim=1)
+
                             feature = feature.cuda()
                             label = label.cuda()
                             # Running the model
@@ -268,6 +277,12 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     # Get features and set them to cuda
                     spec, mel, mfcc, label = data[AudioFeatures.SPECS], data[AudioFeatures.MELSPECS], data[
                         AudioFeatures.MFCC], data[AudioFeatures.LABEL]
+
+                    if input_channels != 1:
+                        spec = torch.cat([spec] * input_channels, dim=1)
+                        mel = torch.cat([mel] * input_channels, dim=1)
+                        mfcc = torch.cat([mfcc] * input_channels, dim=1)
+
                     spec = spec.cuda()
                     mel = mel.cuda()
                     mfcc = mfcc.cuda()
@@ -324,6 +339,10 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                         # Get the features
                         spec, mel, mfcc, label = data[AudioFeatures.SPECS], data[AudioFeatures.MELSPECS], data[
                             AudioFeatures.MFCC], data[AudioFeatures.LABEL]
+                        if input_channels != 1:
+                            spec = torch.cat([spec] * input_channels, dim=1)
+                            mel = torch.cat([mel] * input_channels, dim=1)
+                            mfcc = torch.cat([mfcc] * input_channels, dim=1)
                         spec = spec.cuda()
                         mel = mel.cuda()
                         mfcc = mfcc.cuda()
@@ -434,10 +453,17 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     # Get features and set them to cuda
                     spec, mel, mfcc, label = data[AudioFeatures.SPECS], data[AudioFeatures.MELSPECS], data[
                         AudioFeatures.MFCC], data[AudioFeatures.LABEL]
+
+                    if input_channels != 1:
+                        spec = torch.cat([spec] * input_channels, dim=1)
+                        mel = torch.cat([mel] * input_channels, dim=1)
+                        mfcc = torch.cat([mfcc] * input_channels, dim=1)
+
                     spec = spec.cuda()
                     mel = mel.cuda()
                     mfcc = mfcc.cuda()
                     label = label.cuda()
+
                     # Set the optimizer to zero
                     optimizer.zero_grad()
                     # Go through one epoch
@@ -490,6 +516,12 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                         # Get the features
                         spec, mel, mfcc, label = data[AudioFeatures.SPECS], data[AudioFeatures.MELSPECS], data[
                             AudioFeatures.MFCC], data[AudioFeatures.LABEL]
+
+                        if input_channels != 1:
+                            spec = torch.cat([spec] * input_channels, dim=1)
+                            mel = torch.cat([mel] * input_channels, dim=1)
+                            mfcc = torch.cat([mfcc] * input_channels, dim=1)
+
                         spec = spec.cuda()
                         mel = mel.cuda()
                         mfcc = mfcc.cuda()
