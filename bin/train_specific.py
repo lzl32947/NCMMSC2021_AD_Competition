@@ -181,5 +181,5 @@ if __name__ == '__main__':
     # Train the general model
     model_name = "SpecificTrainResNet18BackboneLongLSTMModel"
     logger.info("Training with model {}.".format(model_name))
-    train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS,
+    train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS_VAD,
                            model_name, input_shape=(1, 128, 782), input_channels=3)
