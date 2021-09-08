@@ -43,7 +43,7 @@ class SpecificTrainResNetLongLSTMModel(BaseModel):
         #
         # )
         self.layer_dim = 2
-        self.hidden_dim = 800
+        self.hidden_dim = 600
         self.lstm = nn.LSTM(input_size=512, hidden_size=self.hidden_dim, num_layers=self.layer_dim, bidirectional=True
                             , batch_first=True)
         self.fc = nn.Linear(self.hidden_dim * 2, 3)
