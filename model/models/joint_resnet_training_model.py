@@ -53,9 +53,9 @@ class SpecificTrainResNetLongLSTMModel(BaseModel):
 
 
 @Registers.model.register
-class SpecificTrainModifiedResNetLongLSTMModel(BaseModel):
+class SpecificTrainResNet18BackboneLongLSTMModel(BaseModel):
     def __init__(self, input_shape: Tuple):
-        super(SpecificTrainModifiedResNetLongLSTMModel, self).__init__()
+        super(SpecificTrainResNet18BackboneLongLSTMModel, self).__init__()
         self.extractor = Registers.module["ResNetBackbone"](18)
         self.avg_pool = nn.AdaptiveAvgPool2d((1, None))
         self.layer_dim = 2
