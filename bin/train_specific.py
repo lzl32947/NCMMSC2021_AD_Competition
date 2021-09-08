@@ -13,14 +13,15 @@ import torch
 
 
 def train_specific_feature(configs: Dict, time_identifier: str, specific_feature: AudioFeatures,
-                           model_func: callable, epoch: int = 20, **kwargs) -> None:
+                           model_name: str, epoch: int = 20, input_channels: int = 1, **kwargs) -> None:
     """
     This is the trainer of training only with one specific features.
+    :param input_channels: int, the input channels of the model, default is 1
     :param epoch: int, training epochs
     :param configs: Dict, the configs
     :param time_identifier: str, the global identifier
     :param specific_feature: AudioFeatures, the feature to use
-    :param model_func: function call, the custom model
+    :param model_name: str, the custom model in Registers
     :return: None
     """
     # Init the saving directory
@@ -37,7 +38,7 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
                 prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TEST))):
 
         # If not running on GPU
-        model = model_func(**kwargs)
+        model = Registers.model[model_name](**kwargs)
         model = model.cuda()
 
         # Init the criterion, CE by default
@@ -63,6 +64,10 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
             # Running one batch
             for iteration, data in enumerate(train_dataloader):
                 feature, label = data[specific_feature], data[AudioFeatures.LABEL]
+
+                if input_channels != 1:
+                    feature = torch.cat([feature] * input_channels, dim=1)
+
                 # Get features and set them to cuda
                 feature = feature.cuda()
                 label = label.cuda()
@@ -118,6 +123,10 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
                 for data in test_dataloader:
                     # Get the features
                     feature, label = data[specific_feature], data[AudioFeatures.LABEL]
+
+                    if input_channels != 1:
+                        feature = torch.cat([feature] * input_channels, dim=1)
+
                     feature = feature.cuda()
                     label = label.cuda()
                     # Running the model
@@ -170,8 +179,7 @@ if __name__ == '__main__':
     # Read the fold from config
     total_fold = configs['dataset']['k_fold']
     # Train the general model
-    model_func = Registers.model["SpecificTrainResNetLongLSTMModel"]
-    logger.info("Training with model {}.".format(model_func))
+    model_name = "SpecificTrainResNet18BackboneLongLSTMModel"
+    logger.info("Training with model {}.".format(model_name))
     train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS,
-                           model_func,
-                           input_shape=(1, 128, 782))
+                           model_name, input_shape=(1, 128, 782), input_channels=3)
