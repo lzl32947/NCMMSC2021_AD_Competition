@@ -17,7 +17,7 @@ import pickle
 
 
 def evaluate_specific(identifier: str, config: Dict, model_name: str, use_feature: Union[AudioFeatures, str],
-                      weight_identifier: str, **kwargs):
+                      weight_identifier: str, input_channels: int = 1, **kwargs):
     correct_label = []
     predicted_label = []
     total = 0
@@ -64,6 +64,9 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
 
                 feature, label = data[use_feature], data[AudioFeatures.LABEL]
 
+                if input_channels != 1:
+                    feature = torch.cat([feature] * input_channels, dim=1)
+
                 correct_label_fold.append(label.numpy())
 
                 feature = feature.cuda()
@@ -102,7 +105,7 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
 
 
 def evaluate_joint(identifier: str, config: Dict, model_name: str, use_feature: List[AudioFeatures],
-                   weight_identifier: str, weight_description: str, **kwargs):
+                   weight_identifier: str, weight_description: str, input_channels: int = 1, **kwargs):
     correct_label = []
     predicted_label = []
     total = 0
@@ -149,7 +152,11 @@ def evaluate_joint(identifier: str, config: Dict, model_name: str, use_feature: 
                 feature_list = []
                 label = data[AudioFeatures.LABEL]
                 for item in use_feature:
-                    feature = data[item].cuda()
+
+                    feature = data[item]
+                    if input_channels != 1:
+                        feature = torch.cat([feature] * input_channels, dim=1)
+                    feature = feature.cuda()
                     feature_list.append(feature)
                 correct_label_fold.append(label.numpy())
 
@@ -265,12 +272,12 @@ def analysis_result(identifier, config, correct_label, predicted_label, model_na
 if __name__ == '__main__':
     time_identifier, configs = global_init(True)
     logger = GlobalLogger().get_logger()
-    model_name = "SpecificTrainLongLSTMModel"
-    weight_identifier = "20210905_151007"
+    model_name = "SpecificTrainResNet18BackboneLongModel"
+    weight_identifier = "20210908_121607"
     # c, p = evaluate_joint(time_identifier, configs, model_name,
     #                       [AudioFeatures.SPECS, AudioFeatures.MELSPECS, AudioFeatures.MFCC], weight_identifier,
     #                       "Fine_tune", input_shape=())
     c, p = evaluate_specific(time_identifier, configs, model_name,
-                             AudioFeatures.MELSPECS, weight_identifier, input_shape=())
+                             AudioFeatures.MELSPECS_VAD, weight_identifier, input_shape=(),input_channels=3)
     logger.info("Analysis results for {} with {}".format(model_name, weight_identifier))
     analysis_result(time_identifier, configs, c, p, model_name)
