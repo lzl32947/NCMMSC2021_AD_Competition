@@ -1,0 +1,517 @@
+2021-09-04 14:17:10,039 - train_MSM_joint_model.py[line:36] - INFO: Training the general model.
+2021-09-04 14:17:10,039 - train_MSM_joint_model.py[line:184] - INFO: Skip training the specific features.
+2021-09-04 14:17:10,039 - train_MSM_joint_model.py[line:190] - INFO: Training general models.
+2021-09-04 14:17:11,714 - train_MSM_joint_model.py[line:239] - INFO: Load weight weight\20210903_230628\MFCC\fold0_4-epoch20-loss0.06089490287020003-acc0.7590725806451613.pth for MFCC.
+2021-09-04 14:17:11,719 - train_MSM_joint_model.py[line:239] - INFO: Load weight weight\20210903_230628\Spectrogram\fold0_4-epoch3-loss0.18052627741075333-acc0.7147177419354839.pth for Spectrogram.
+2021-09-04 14:17:11,724 - train_MSM_joint_model.py[line:239] - INFO: Load weight weight\20210903_230628\MelSpectrogram\fold0_4-epoch17-loss0.032558338473584865-acc0.717741935483871.pth for MelSpectrogram.
+2021-09-04 14:17:11,725 - train_MSM_joint_model.py[line:247] - INFO: In mode training, freeze the extractor layers.
+2021-09-04 14:19:57,061 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 1, time cost 165.33569645881653s ,with loss 0.9641567873566047
+2021-09-04 14:20:41,756 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 1, time cost 44.69443368911743s ,with acc 0.5514112903225806
+2021-09-04 14:20:42,160 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch1-loss0.9641567873566047-acc0.5514112903225806.pth
+2021-09-04 14:23:00,756 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 2, time cost 138.5962371826172s ,with loss 0.7534578325955764
+2021-09-04 14:23:43,371 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 2, time cost 42.61485457420349s ,with acc 0.6512096774193549
+2021-09-04 14:23:43,439 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch2-loss0.7534578325955764-acc0.6512096774193549.pth
+2021-09-04 14:25:56,160 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 3, time cost 132.7202877998352s ,with loss 0.6092385711229366
+2021-09-04 14:26:38,211 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 3, time cost 42.05072093009949s ,with acc 0.6824596774193549
+2021-09-04 14:26:38,340 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch3-loss0.6092385711229366-acc0.6824596774193549.pth
+2021-09-04 14:28:51,083 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 4, time cost 132.74318027496338s ,with loss 0.46475350265593635
+2021-09-04 14:29:34,013 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 4, time cost 42.930415868759155s ,with acc 0.7076612903225806
+2021-09-04 14:29:34,067 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch4-loss0.46475350265593635-acc0.7076612903225806.pth
+2021-09-04 14:31:52,872 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 5, time cost 138.80524468421936s ,with loss 0.37476340373573097
+2021-09-04 14:32:36,379 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 5, time cost 43.50653123855591s ,with acc 0.7268145161290323
+2021-09-04 14:32:36,433 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch5-loss0.37476340373573097-acc0.7268145161290323.pth
+2021-09-04 14:34:57,659 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 6, time cost 141.2265923023224s ,with loss 0.2894308249587598
+2021-09-04 14:35:42,841 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 6, time cost 45.181429624557495s ,with acc 0.7328629032258065
+2021-09-04 14:35:42,907 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch6-loss0.2894308249587598-acc0.7328629032258065.pth
+2021-09-04 14:38:19,336 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 7, time cost 156.42931509017944s ,with loss 0.2394815471590213
+2021-09-04 14:39:05,406 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 7, time cost 46.069177865982056s ,with acc 0.7368951612903226
+2021-09-04 14:39:05,488 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch7-loss0.2394815471590213-acc0.7368951612903226.pth
+2021-09-04 14:41:28,225 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 8, time cost 142.73726773262024s ,with loss 0.1915400112553945
+2021-09-04 14:42:13,290 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 8, time cost 45.06501340866089s ,with acc 0.7560483870967742
+2021-09-04 14:42:13,354 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch8-loss0.1915400112553945-acc0.7560483870967742.pth
+2021-09-04 14:44:35,191 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 9, time cost 141.83613324165344s ,with loss 0.16156339826588723
+2021-09-04 14:45:20,046 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 9, time cost 44.8548150062561s ,with acc 0.7217741935483871
+2021-09-04 14:45:20,123 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch9-loss0.16156339826588723-acc0.7217741935483871.pth
+2021-09-04 14:47:43,518 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 10, time cost 143.39364385604858s ,with loss 0.13824268252305363
+2021-09-04 14:48:29,069 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 10, time cost 45.55134296417236s ,with acc 0.7278225806451613
+2021-09-04 14:48:29,364 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch10-loss0.13824268252305363-acc0.7278225806451613.pth
+2021-09-04 14:50:52,801 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 11, time cost 143.4369831085205s ,with loss 0.12040401686428358
+2021-09-04 14:51:36,027 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 11, time cost 43.22529411315918s ,with acc 0.7338709677419355
+2021-09-04 14:51:36,289 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch11-loss0.12040401686428358-acc0.7338709677419355.pth
+2021-09-04 14:53:53,389 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 12, time cost 137.09949707984924s ,with loss 0.08291031955235192
+2021-09-04 14:54:37,135 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 12, time cost 43.74600005149841s ,with acc 0.7298387096774194
+2021-09-04 14:54:37,187 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch12-loss0.08291031955235192-acc0.7298387096774194.pth
+2021-09-04 14:56:51,018 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 13, time cost 133.83138012886047s ,with loss 0.09060230998843706
+2021-09-04 14:57:33,978 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 13, time cost 42.959866523742676s ,with acc 0.7358870967741935
+2021-09-04 14:57:34,044 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch13-loss0.09060230998843706-acc0.7358870967741935.pth
+2021-09-04 14:59:50,200 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 14, time cost 136.15580773353577s ,with loss 0.07576890071884365
+2021-09-04 15:00:33,177 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 14, time cost 42.97711968421936s ,with acc 0.7429435483870968
+2021-09-04 15:00:33,229 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch14-loss0.07576890071884365-acc0.7429435483870968.pth
+2021-09-04 15:02:50,686 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 15, time cost 137.4572250843048s ,with loss 0.06635971158570812
+2021-09-04 15:03:33,459 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 15, time cost 42.77252745628357s ,with acc 0.7389112903225806
+2021-09-04 15:03:33,745 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch15-loss0.06635971158570812-acc0.7389112903225806.pth
+2021-09-04 15:05:51,779 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 16, time cost 138.03364515304565s ,with loss 0.0693921874057117
+2021-09-04 15:06:36,682 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 16, time cost 44.90246605873108s ,with acc 0.7328629032258065
+2021-09-04 15:06:36,742 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch16-loss0.0693921874057117-acc0.7328629032258065.pth
+2021-09-04 15:08:59,103 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 17, time cost 142.3610155582428s ,with loss 0.06329151131491095
+2021-09-04 15:09:44,133 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 17, time cost 45.03082036972046s ,with acc 0.7560483870967742
+2021-09-04 15:09:44,194 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch17-loss0.06329151131491095-acc0.7560483870967742.pth
+2021-09-04 15:12:06,621 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 18, time cost 142.42637515068054s ,with loss 0.043693245351871315
+2021-09-04 15:12:51,707 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 18, time cost 45.0864782333374s ,with acc 0.7439516129032258
+2021-09-04 15:12:51,796 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch18-loss0.043693245351871315-acc0.7439516129032258.pth
+2021-09-04 15:15:14,461 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 19, time cost 142.66459107398987s ,with loss 0.0401762905691968
+2021-09-04 15:15:59,574 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 19, time cost 45.11271119117737s ,with acc 0.7479838709677419
+2021-09-04 15:15:59,871 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch19-loss0.0401762905691968-acc0.7479838709677419.pth
+2021-09-04 15:18:22,165 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 0/4, epoch 20, time cost 142.29406762123108s ,with loss 0.04198875107787266
+2021-09-04 15:19:07,347 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 0/4, epoch 20, time cost 45.181604623794556s ,with acc 0.7328629032258065
+2021-09-04 15:19:07,417 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold0_4-epoch20-loss0.04198875107787266-acc0.7328629032258065.pth
+2021-09-04 15:19:07,417 - train_MSM_joint_model.py[line:366] - INFO: Finish training the general model for fold 0.
+2021-09-04 15:19:07,553 - train_MSM_joint_model.py[line:239] - INFO: Load weight weight\20210903_230628\MFCC\fold1_4-epoch9-loss0.09261391252603701-acc0.6310483870967742.pth for MFCC.
+2021-09-04 15:19:07,589 - train_MSM_joint_model.py[line:239] - INFO: Load weight weight\20210903_230628\Spectrogram\fold1_4-epoch15-loss0.022810556306768516-acc0.5977822580645161.pth for Spectrogram.
+2021-09-04 15:19:07,631 - train_MSM_joint_model.py[line:239] - INFO: Load weight weight\20210903_230628\MelSpectrogram\fold1_4-epoch19-loss0.021754477738892733-acc0.5473790322580645.pth for MelSpectrogram.
+2021-09-04 15:19:07,631 - train_MSM_joint_model.py[line:247] - INFO: In mode training, freeze the extractor layers.
+2021-09-04 15:21:30,297 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 1, time cost 142.6655011177063s ,with loss 0.9633259705227354
+2021-09-04 15:22:14,602 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 1, time cost 44.30464196205139s ,with acc 0.561491935483871
+2021-09-04 15:22:14,898 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch1-loss0.9633259705227354-acc0.561491935483871.pth
+2021-09-04 15:24:37,683 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 2, time cost 142.78464198112488s ,with loss 0.7275179208296797
+2021-09-04 15:25:22,391 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 2, time cost 44.70710062980652s ,with acc 0.6108870967741935
+2021-09-04 15:25:22,460 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch2-loss0.7275179208296797-acc0.6108870967741935.pth
+2021-09-04 15:27:49,232 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 3, time cost 146.77133703231812s ,with loss 0.5482434999683629
+2021-09-04 15:28:33,634 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 3, time cost 44.402740716934204s ,with acc 0.6643145161290323
+2021-09-04 15:28:33,744 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch3-loss0.5482434999683629-acc0.6643145161290323.pth
+2021-09-04 15:30:56,758 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 4, time cost 143.01346731185913s ,with loss 0.4050206715322059
+2021-09-04 15:31:41,111 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 4, time cost 44.35351085662842s ,with acc 0.6633064516129032
+2021-09-04 15:31:41,181 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch4-loss0.4050206715322059-acc0.6633064516129032.pth
+2021-09-04 15:34:07,081 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 5, time cost 145.9000368118286s ,with loss 0.3106954861432314
+2021-09-04 15:34:51,453 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 5, time cost 44.37230968475342s ,with acc 0.625
+2021-09-04 15:34:51,556 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch5-loss0.3106954861432314-acc0.625.pth
+2021-09-04 15:37:14,378 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 6, time cost 142.82109212875366s ,with loss 0.24316216310810135
+2021-09-04 15:37:58,676 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 6, time cost 44.297945499420166s ,with acc 0.6491935483870968
+2021-09-04 15:37:58,973 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch6-loss0.24316216310810135-acc0.6491935483870968.pth
+2021-09-04 15:40:22,089 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 7, time cost 143.11525344848633s ,with loss 0.190468680397
+2021-09-04 15:41:06,575 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 7, time cost 44.48586845397949s ,with acc 0.6854838709677419
+2021-09-04 15:41:06,635 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch7-loss0.190468680397-acc0.6854838709677419.pth
+2021-09-04 15:43:29,790 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 8, time cost 143.15501618385315s ,with loss 0.1550225769928859
+2021-09-04 15:44:14,093 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 8, time cost 44.30298066139221s ,with acc 0.6713709677419355
+2021-09-04 15:44:14,467 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch8-loss0.1550225769928859-acc0.6713709677419355.pth
+2021-09-04 15:46:37,158 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 9, time cost 142.68975281715393s ,with loss 0.13410019813328172
+2021-09-04 15:47:21,475 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 9, time cost 44.317492723464966s ,with acc 0.6320564516129032
+2021-09-04 15:47:21,546 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch9-loss0.13410019813328172-acc0.6320564516129032.pth
+2021-09-04 15:49:44,272 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 10, time cost 142.7259440422058s ,with loss 0.10834520640175628
+2021-09-04 15:50:28,804 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 10, time cost 44.532458543777466s ,with acc 0.6915322580645161
+2021-09-04 15:50:28,869 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch10-loss0.10834520640175628-acc0.6915322580645161.pth
+2021-09-04 15:52:51,932 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 11, time cost 143.06301403045654s ,with loss 0.08698434438860125
+2021-09-04 15:53:36,415 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 11, time cost 44.48295450210571s ,with acc 0.6401209677419355
+2021-09-04 15:53:36,497 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch11-loss0.08698434438860125-acc0.6401209677419355.pth
+2021-09-04 15:55:58,853 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 12, time cost 142.35638308525085s ,with loss 0.09385267742555184
+2021-09-04 15:56:43,004 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 12, time cost 44.15049147605896s ,with acc 0.6824596774193549
+2021-09-04 15:56:43,333 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch12-loss0.09385267742555184-acc0.6824596774193549.pth
+2021-09-04 15:59:05,575 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 13, time cost 142.24218463897705s ,with loss 0.06396856882834666
+2021-09-04 15:59:49,763 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 13, time cost 44.188557624816895s ,with acc 0.65625
+2021-09-04 15:59:49,832 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch13-loss0.06396856882834666-acc0.65625.pth
+2021-09-04 16:02:12,141 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 14, time cost 142.3079915046692s ,with loss 0.0707198800974647
+2021-09-04 16:02:56,368 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 14, time cost 44.226646423339844s ,with acc 0.6713709677419355
+2021-09-04 16:02:56,492 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch14-loss0.0707198800974647-acc0.6713709677419355.pth
+2021-09-04 16:05:18,884 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 15, time cost 142.39284873008728s ,with loss 0.05802078743695545
+2021-09-04 16:06:03,106 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 15, time cost 44.22106671333313s ,with acc 0.6330645161290323
+2021-09-04 16:06:03,175 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch15-loss0.05802078743695545-acc0.6330645161290323.pth
+2021-09-04 16:08:25,393 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 16, time cost 142.21675753593445s ,with loss 0.04852407323620434
+2021-09-04 16:09:09,628 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 16, time cost 44.2346305847168s ,with acc 0.6139112903225806
+2021-09-04 16:09:09,729 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch16-loss0.04852407323620434-acc0.6139112903225806.pth
+2021-09-04 16:11:32,083 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 17, time cost 142.35280966758728s ,with loss 0.03778500584936093
+2021-09-04 16:12:19,487 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 17, time cost 47.403509855270386s ,with acc 0.6441532258064516
+2021-09-04 16:12:19,742 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch17-loss0.03778500584936093-acc0.6441532258064516.pth
+2021-09-04 16:14:43,022 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 18, time cost 143.280353307724s ,with loss 0.03337590919276725
+2021-09-04 16:15:27,452 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 18, time cost 44.429800271987915s ,with acc 0.5877016129032258
+2021-09-04 16:15:27,522 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch18-loss0.03337590919276725-acc0.5877016129032258.pth
+2021-09-04 16:17:52,852 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 19, time cost 145.3287250995636s ,with loss 0.05013304578618693
+2021-09-04 16:18:38,912 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 19, time cost 46.06002712249756s ,with acc 0.6270161290322581
+2021-09-04 16:18:38,998 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch19-loss0.05013304578618693-acc0.6270161290322581.pth
+2021-09-04 16:21:11,030 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 1/4, epoch 20, time cost 152.0321056842804s ,with loss 0.03852646798686297
+2021-09-04 16:21:59,760 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 1/4, epoch 20, time cost 48.729105710983276s ,with acc 0.6118951612903226
+2021-09-04 16:21:59,834 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold1_4-epoch20-loss0.03852646798686297-acc0.6118951612903226.pth
+2021-09-04 16:21:59,834 - train_MSM_joint_model.py[line:366] - INFO: Finish training the general model for fold 1.
+2021-09-04 16:21:59,956 - train_MSM_joint_model.py[line:239] - INFO: Load weight weight\20210903_230628\MFCC\fold2_4-epoch9-loss0.12377177163252352-acc0.7620967741935484.pth for MFCC.
+2021-09-04 16:22:00,002 - train_MSM_joint_model.py[line:239] - INFO: Load weight weight\20210903_230628\Spectrogram\fold2_4-epoch15-loss0.0477966607046631-acc0.7741935483870968.pth for Spectrogram.
+2021-09-04 16:22:00,043 - train_MSM_joint_model.py[line:239] - INFO: Load weight weight\20210903_230628\MelSpectrogram\fold2_4-epoch9-loss0.0651434302929813-acc0.7872983870967742.pth for MelSpectrogram.
+2021-09-04 16:22:00,043 - train_MSM_joint_model.py[line:247] - INFO: In mode training, freeze the extractor layers.
+2021-09-04 16:24:20,754 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 1, time cost 140.71024084091187s ,with loss 0.9849262584162795
+2021-09-04 16:25:20,537 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 1, time cost 59.7831072807312s ,with acc 0.6381048387096774
+2021-09-04 16:25:20,889 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch1-loss0.9849262584162795-acc0.6381048387096774.pth
+2021-09-04 16:27:44,133 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 2, time cost 143.24455165863037s ,with loss 0.7669703717464986
+2021-09-04 16:28:42,918 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 2, time cost 58.784515380859375s ,with acc 0.6703629032258065
+2021-09-04 16:28:42,985 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch2-loss0.7669703717464986-acc0.6703629032258065.pth
+2021-09-04 16:30:58,296 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 3, time cost 135.3110282421112s ,with loss 0.6252985774822857
+2021-09-04 16:31:58,122 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 3, time cost 59.82648682594299s ,with acc 0.6804435483870968
+2021-09-04 16:31:58,206 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch3-loss0.6252985774822857-acc0.6804435483870968.pth
+2021-09-04 16:34:15,199 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 4, time cost 136.99160599708557s ,with loss 0.48953051217224286
+2021-09-04 16:35:14,436 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 4, time cost 59.2370982170105s ,with acc 0.7076612903225806
+2021-09-04 16:35:14,524 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch4-loss0.48953051217224286-acc0.7076612903225806.pth
+2021-09-04 16:37:29,912 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 5, time cost 135.38759970664978s ,with loss 0.38966240272249864
+2021-09-04 16:38:28,571 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 5, time cost 58.65858221054077s ,with acc 0.7137096774193549
+2021-09-04 16:38:28,637 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch5-loss0.38966240272249864-acc0.7137096774193549.pth
+2021-09-04 16:40:43,792 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 6, time cost 135.15510439872742s ,with loss 0.30615787657544663
+2021-09-04 16:41:42,567 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 6, time cost 58.77390098571777s ,with acc 0.6804435483870968
+2021-09-04 16:41:42,638 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch6-loss0.30615787657544663-acc0.6804435483870968.pth
+2021-09-04 16:43:57,836 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 7, time cost 135.19654321670532s ,with loss 0.2607471567133199
+2021-09-04 16:44:56,416 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 7, time cost 58.57987999916077s ,with acc 0.7328629032258065
+2021-09-04 16:44:56,524 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch7-loss0.2607471567133199-acc0.7328629032258065.pth
+2021-09-04 16:47:10,978 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 8, time cost 134.4527325630188s ,with loss 0.22617087063744015
+2021-09-04 16:48:10,005 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 8, time cost 59.02725672721863s ,with acc 0.7147177419354839
+2021-09-04 16:48:10,111 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch8-loss0.22617087063744015-acc0.7147177419354839.pth
+2021-09-04 16:50:25,359 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 9, time cost 135.24850130081177s ,with loss 0.16200367463550167
+2021-09-04 16:51:23,757 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 9, time cost 58.39691114425659s ,with acc 0.7530241935483871
+2021-09-04 16:51:23,862 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch9-loss0.16200367463550167-acc0.7530241935483871.pth
+2021-09-04 16:53:38,600 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 10, time cost 134.73754167556763s ,with loss 0.15453926792732722
+2021-09-04 16:54:37,254 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 10, time cost 58.65470862388611s ,with acc 0.7167338709677419
+2021-09-04 16:54:37,366 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch10-loss0.15453926792732722-acc0.7167338709677419.pth
+2021-09-04 16:56:51,169 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 11, time cost 133.8024709224701s ,with loss 0.1250563247240675
+2021-09-04 16:57:48,106 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 11, time cost 56.93573570251465s ,with acc 0.7530241935483871
+2021-09-04 16:57:48,178 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch11-loss0.1250563247240675-acc0.7530241935483871.pth
+2021-09-04 16:59:59,312 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 12, time cost 131.1336488723755s ,with loss 0.1201629682783159
+2021-09-04 17:00:56,305 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 12, time cost 56.993653297424316s ,with acc 0.7379032258064516
+2021-09-04 17:00:56,370 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch12-loss0.1201629682783159-acc0.7379032258064516.pth
+2021-09-04 17:03:07,605 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 13, time cost 131.2353320121765s ,with loss 0.10951724537374938
+2021-09-04 17:04:04,689 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 13, time cost 57.08321952819824s ,with acc 0.719758064516129
+2021-09-04 17:04:04,806 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch13-loss0.10951724537374938-acc0.719758064516129.pth
+2021-09-04 17:06:16,177 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 14, time cost 131.3706874847412s ,with loss 0.10532682441154738
+2021-09-04 17:07:12,775 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 14, time cost 56.59844899177551s ,with acc 0.7560483870967742
+2021-09-04 17:07:12,867 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch14-loss0.10532682441154738-acc0.7560483870967742.pth
+2021-09-04 17:09:23,257 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 15, time cost 130.38988399505615s ,with loss 0.08197640968517036
+2021-09-04 17:10:20,167 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 15, time cost 56.90904474258423s ,with acc 0.7540322580645161
+2021-09-04 17:10:20,242 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch15-loss0.08197640968517036-acc0.7540322580645161.pth
+2021-09-04 17:12:30,364 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 16, time cost 130.12109756469727s ,with loss 0.06136638378856056
+2021-09-04 17:13:26,922 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 16, time cost 56.558011531829834s ,with acc 0.7439516129032258
+2021-09-04 17:13:26,984 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch16-loss0.06136638378856056-acc0.7439516129032258.pth
+2021-09-04 17:15:37,116 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 17, time cost 130.13242101669312s ,with loss 0.07550454258339216
+2021-09-04 17:16:33,855 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 17, time cost 56.737872838974s ,with acc 0.751008064516129
+2021-09-04 17:16:33,945 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch17-loss0.07550454258339216-acc0.751008064516129.pth
+2021-09-04 17:18:47,474 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 18, time cost 133.52939462661743s ,with loss 0.05366308827639011
+2021-09-04 17:19:44,446 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 18, time cost 56.97142291069031s ,with acc 0.7701612903225806
+2021-09-04 17:19:44,572 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch18-loss0.05366308827639011-acc0.7701612903225806.pth
+2021-09-04 17:21:55,724 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 19, time cost 131.15118789672852s ,with loss 0.04884094702909984
+2021-09-04 17:22:52,816 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 19, time cost 57.09193134307861s ,with acc 0.7721774193548387
+2021-09-04 17:22:52,909 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch19-loss0.04884094702909984-acc0.7721774193548387.pth
+2021-09-04 17:25:04,031 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 2/4, epoch 20, time cost 131.12213850021362s ,with loss 0.04543504360528617
+2021-09-04 17:26:00,992 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 2/4, epoch 20, time cost 56.959892988204956s ,with acc 0.7651209677419355
+2021-09-04 17:26:01,051 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold2_4-epoch20-loss0.04543504360528617-acc0.7651209677419355.pth
+2021-09-04 17:26:01,051 - train_MSM_joint_model.py[line:366] - INFO: Finish training the general model for fold 2.
+2021-09-04 17:26:01,163 - train_MSM_joint_model.py[line:239] - INFO: Load weight weight\20210903_230628\MFCC\fold3_4-epoch3-loss0.3631502442001151-acc0.6822916666666666.pth for MFCC.
+2021-09-04 17:26:01,200 - train_MSM_joint_model.py[line:239] - INFO: Load weight weight\20210903_230628\Spectrogram\fold3_4-epoch6-loss0.13587625618548332-acc0.625.pth for Spectrogram.
+2021-09-04 17:26:01,240 - train_MSM_joint_model.py[line:239] - INFO: Load weight weight\20210903_230628\MelSpectrogram\fold3_4-epoch19-loss0.029134586646059887-acc0.646875.pth for MelSpectrogram.
+2021-09-04 17:26:01,240 - train_MSM_joint_model.py[line:247] - INFO: In mode training, freeze the extractor layers.
+2021-09-04 17:28:28,967 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 1, time cost 147.72749185562134s ,with loss 0.9598786254082957
+2021-09-04 17:29:08,887 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 1, time cost 39.919002294540405s ,with acc 0.55
+2021-09-04 17:29:08,984 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch1-loss0.9598786254082957-acc0.55.pth
+2021-09-04 17:31:37,438 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 2, time cost 148.4526388645172s ,with loss 0.73285908532399
+2021-09-04 17:32:17,499 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 2, time cost 40.06045413017273s ,with acc 0.575
+2021-09-04 17:32:17,596 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch2-loss0.73285908532399-acc0.575.pth
+2021-09-04 17:34:45,999 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 3, time cost 148.4018862247467s ,with loss 0.6053525223847358
+2021-09-04 17:35:25,951 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 3, time cost 39.95252871513367s ,with acc 0.6677083333333333
+2021-09-04 17:35:26,073 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch3-loss0.6053525223847358-acc0.6677083333333333.pth
+2021-09-04 17:37:54,312 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 4, time cost 148.23822140693665s ,with loss 0.4910709812275825
+2021-09-04 17:38:34,956 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 4, time cost 40.64380240440369s ,with acc 0.6802083333333333
+2021-09-04 17:38:35,248 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch4-loss0.4910709812275825-acc0.6802083333333333.pth
+2021-09-04 17:41:03,061 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 5, time cost 147.8128526210785s ,with loss 0.36540997364828665
+2021-09-04 17:41:42,867 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 5, time cost 39.80639958381653s ,with acc 0.671875
+2021-09-04 17:41:42,941 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch5-loss0.36540997364828665-acc0.671875.pth
+2021-09-04 17:44:14,447 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 6, time cost 151.50536155700684s ,with loss 0.30679096688105856
+2021-09-04 17:44:54,389 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 6, time cost 39.941646337509155s ,with acc 0.690625
+2021-09-04 17:44:54,467 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch6-loss0.30679096688105856-acc0.690625.pth
+2021-09-04 17:47:22,964 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 7, time cost 148.49633526802063s ,with loss 0.2559680163219411
+2021-09-04 17:48:02,830 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 7, time cost 39.864593505859375s ,with acc 0.7385416666666667
+2021-09-04 17:48:02,956 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch7-loss0.2559680163219411-acc0.7385416666666667.pth
+2021-09-04 17:50:30,937 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 8, time cost 147.98073506355286s ,with loss 0.2270798727028793
+2021-09-04 17:51:10,844 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 8, time cost 39.9062557220459s ,with acc 0.6947916666666667
+2021-09-04 17:51:10,912 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch8-loss0.2270798727028793-acc0.6947916666666667.pth
+2021-09-04 17:53:38,774 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 9, time cost 147.86147952079773s ,with loss 0.17804401161109087
+2021-09-04 17:54:18,547 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 9, time cost 39.77279496192932s ,with acc 0.7114583333333333
+2021-09-04 17:54:18,656 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch9-loss0.17804401161109087-acc0.7114583333333333.pth
+2021-09-04 17:56:46,340 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 10, time cost 147.68332147598267s ,with loss 0.1684779897407298
+2021-09-04 17:57:26,134 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 10, time cost 39.79416012763977s ,with acc 0.7229166666666667
+2021-09-04 17:57:26,214 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch10-loss0.1684779897407298-acc0.7229166666666667.pth
+2021-09-04 17:59:55,185 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 11, time cost 148.97093725204468s ,with loss 0.12321600715018889
+2021-09-04 18:00:36,719 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 11, time cost 41.53455328941345s ,with acc 0.6864583333333333
+2021-09-04 18:00:36,793 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch11-loss0.12321600715018889-acc0.6864583333333333.pth
+2021-09-04 18:03:03,288 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 12, time cost 146.49542689323425s ,with loss 0.14622391883023483
+2021-09-04 18:03:42,043 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 12, time cost 38.75512194633484s ,with acc 0.7104166666666667
+2021-09-04 18:03:42,110 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch12-loss0.14622391883023483-acc0.7104166666666667.pth
+2021-09-04 18:06:09,616 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 13, time cost 147.5056631565094s ,with loss 0.10201696027821351
+2021-09-04 18:06:48,028 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 13, time cost 38.41228365898132s ,with acc 0.66875
+2021-09-04 18:06:48,133 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch13-loss0.10201696027821351-acc0.66875.pth
+2021-09-04 18:09:11,710 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 14, time cost 143.57584714889526s ,with loss 0.09857155597563433
+2021-09-04 18:09:50,375 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 14, time cost 38.664143085479736s ,with acc 0.7125
+2021-09-04 18:09:50,430 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch14-loss0.09857155597563433-acc0.7125.pth
+2021-09-04 18:12:08,991 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 15, time cost 138.5602068901062s ,with loss 0.08312544499001946
+2021-09-04 18:12:46,426 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 15, time cost 37.43532061576843s ,with acc 0.7385416666666667
+2021-09-04 18:12:46,479 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch15-loss0.08312544499001946-acc0.7385416666666667.pth
+2021-09-04 18:15:04,714 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 16, time cost 138.23466753959656s ,with loss 0.07251911339167286
+2021-09-04 18:15:42,134 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 16, time cost 37.42041301727295s ,with acc 0.7197916666666667
+2021-09-04 18:15:42,196 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch16-loss0.07251911339167286-acc0.7197916666666667.pth
+2021-09-04 18:18:00,103 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 17, time cost 137.90588092803955s ,with loss 0.06354183974044939
+2021-09-04 18:18:37,600 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 17, time cost 37.49783992767334s ,with acc 0.7395833333333334
+2021-09-04 18:18:37,726 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch17-loss0.06354183974044939-acc0.7395833333333334.pth
+2021-09-04 18:20:55,971 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 18, time cost 138.24464297294617s ,with loss 0.04951611638034103
+2021-09-04 18:21:33,654 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 18, time cost 37.683106899261475s ,with acc 0.7229166666666667
+2021-09-04 18:21:33,707 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch18-loss0.04951611638034103-acc0.7229166666666667.pth
+2021-09-04 18:23:52,094 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 19, time cost 138.38742017745972s ,with loss 0.0489468979827624
+2021-09-04 18:24:29,692 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 19, time cost 37.59663009643555s ,with acc 0.7291666666666666
+2021-09-04 18:24:29,744 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch19-loss0.0489468979827624-acc0.7291666666666666.pth
+2021-09-04 18:26:48,141 - train_MSM_joint_model.py[line:297] - INFO: Finish training general model, for fold 3/4, epoch 20, time cost 138.39730095863342s ,with loss 0.0562592620832435
+2021-09-04 18:27:25,699 - train_MSM_joint_model.py[line:351] - INFO: Finish testing general model, for fold 3/4, epoch 20, time cost 37.55781292915344s ,with acc 0.6885416666666667
+2021-09-04 18:27:25,766 - train_MSM_joint_model.py[line:365] - INFO: Saving weight to weight\20210904_141710\General\fold3_4-epoch20-loss0.0562592620832435-acc0.6885416666666667.pth
+2021-09-04 18:27:25,766 - train_MSM_joint_model.py[line:366] - INFO: Finish training the general model for fold 3.
+2021-09-04 18:27:25,767 - train_MSM_joint_model.py[line:373] - INFO: Fine-tune general models.
+2021-09-04 18:27:26,102 - train_MSM_joint_model.py[line:396] - INFO: Load weight weight\20210904_141710\General\fold0_4-epoch8-loss0.1915400112553945-acc0.7560483870967742.pth for fine-tuning.
+2021-09-04 18:27:26,102 - train_MSM_joint_model.py[line:415] - INFO: In mode fine-tune, unfreeze the extractor layers.
+2021-09-04 18:29:42,812 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 1, time cost 136.7086043357849s ,with loss 0.30256441340822243
+2021-09-04 18:30:25,394 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 1, time cost 42.58168578147888s ,with acc 0.7066532258064516
+2021-09-04 18:30:25,461 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch1-loss0.30256441340822243-acc0.7066532258064516.pth
+2021-09-04 18:32:42,342 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 2, time cost 136.88102316856384s ,with loss 0.15790467868741279
+2021-09-04 18:33:24,793 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 2, time cost 42.45113134384155s ,with acc 0.7681451612903226
+2021-09-04 18:33:25,076 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch2-loss0.15790467868741279-acc0.7681451612903226.pth
+2021-09-04 18:35:42,135 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 3, time cost 137.05783414840698s ,with loss 0.11935982078759243
+2021-09-04 18:36:24,430 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 3, time cost 42.29498839378357s ,with acc 0.7368951612903226
+2021-09-04 18:36:24,710 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch3-loss0.11935982078759243-acc0.7368951612903226.pth
+2021-09-04 18:38:42,465 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 4, time cost 137.7547857761383s ,with loss 0.10140964035046003
+2021-09-04 18:39:24,888 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 4, time cost 42.423019886016846s ,with acc 0.6703629032258065
+2021-09-04 18:39:24,998 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch4-loss0.10140964035046003-acc0.6703629032258065.pth
+2021-09-04 18:41:41,608 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 5, time cost 136.60990142822266s ,with loss 0.08520017197968074
+2021-09-04 18:42:24,156 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 5, time cost 42.54694128036499s ,with acc 0.6995967741935484
+2021-09-04 18:42:24,211 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch5-loss0.08520017197968074-acc0.6995967741935484.pth
+2021-09-04 18:44:41,275 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 6, time cost 137.0645191669464s ,with loss 0.058054013959759766
+2021-09-04 18:45:23,721 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 6, time cost 42.44600558280945s ,with acc 0.7237903225806451
+2021-09-04 18:45:24,004 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch6-loss0.058054013959759766-acc0.7237903225806451.pth
+2021-09-04 18:47:40,918 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 7, time cost 136.91381406784058s ,with loss 0.03467187277198283
+2021-09-04 18:48:23,509 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 7, time cost 42.59170722961426s ,with acc 0.7550403225806451
+2021-09-04 18:48:23,795 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch7-loss0.03467187277198283-acc0.7550403225806451.pth
+2021-09-04 18:50:40,788 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 8, time cost 136.99259543418884s ,with loss 0.02876979237075632
+2021-09-04 18:51:23,468 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 8, time cost 42.678550004959106s ,with acc 0.7247983870967742
+2021-09-04 18:51:23,776 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch8-loss0.02876979237075632-acc0.7247983870967742.pth
+2021-09-04 18:53:40,788 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 9, time cost 137.01283645629883s ,with loss 0.045975403119012735
+2021-09-04 18:54:23,288 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 9, time cost 42.499277114868164s ,with acc 0.7469758064516129
+2021-09-04 18:54:23,554 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch9-loss0.045975403119012735-acc0.7469758064516129.pth
+2021-09-04 18:56:40,485 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 10, time cost 136.92953252792358s ,with loss 0.03133961890647618
+2021-09-04 18:57:22,959 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 10, time cost 42.47374773025513s ,with acc 0.7449596774193549
+2021-09-04 18:57:23,012 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch10-loss0.03133961890647618-acc0.7449596774193549.pth
+2021-09-04 18:59:39,917 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 11, time cost 136.90484142303467s ,with loss 0.024991098918848285
+2021-09-04 19:00:22,418 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 11, time cost 42.5005259513855s ,with acc 0.7268145161290323
+2021-09-04 19:00:22,687 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch11-loss0.024991098918848285-acc0.7268145161290323.pth
+2021-09-04 19:02:39,679 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 12, time cost 136.99090099334717s ,with loss 0.02035690408956725
+2021-09-04 19:03:22,279 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 12, time cost 42.59979295730591s ,with acc 0.7368951612903226
+2021-09-04 19:03:22,538 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch12-loss0.02035690408956725-acc0.7368951612903226.pth
+2021-09-04 19:05:39,609 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 13, time cost 137.07158732414246s ,with loss 0.01683867864306629
+2021-09-04 19:06:21,945 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 13, time cost 42.335564613342285s ,with acc 0.7278225806451613
+2021-09-04 19:06:22,286 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch13-loss0.01683867864306629-acc0.7278225806451613.pth
+2021-09-04 19:08:38,709 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 14, time cost 136.421480178833s ,with loss 0.015200369094521233
+2021-09-04 19:09:21,093 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 14, time cost 42.38455080986023s ,with acc 0.7852822580645161
+2021-09-04 19:09:21,356 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch14-loss0.015200369094521233-acc0.7852822580645161.pth
+2021-09-04 19:11:39,411 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 15, time cost 138.05480098724365s ,with loss 0.015162906601013357
+2021-09-04 19:12:21,760 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 15, time cost 42.34904646873474s ,with acc 0.748991935483871
+2021-09-04 19:12:22,042 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch15-loss0.015162906601013357-acc0.748991935483871.pth
+2021-09-04 19:15:01,675 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 16, time cost 159.63257932662964s ,with loss 0.01494358863417643
+2021-09-04 19:15:57,480 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 16, time cost 55.80452346801758s ,with acc 0.7328629032258065
+2021-09-04 19:15:57,590 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch16-loss0.01494358863417643-acc0.7328629032258065.pth
+2021-09-04 19:18:47,821 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 17, time cost 170.23081135749817s ,with loss 0.005716902416481943
+2021-09-04 19:19:41,897 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 17, time cost 54.07653522491455s ,with acc 0.7409274193548387
+2021-09-04 19:19:42,148 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch17-loss0.005716902416481943-acc0.7409274193548387.pth
+2021-09-04 19:22:44,935 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 18, time cost 182.78680682182312s ,with loss 0.011381235687701479
+2021-09-04 19:23:47,787 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 18, time cost 62.85248923301697s ,with acc 0.7641129032258065
+2021-09-04 19:23:48,211 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch18-loss0.011381235687701479-acc0.7641129032258065.pth
+2021-09-04 19:27:41,587 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 19, time cost 233.37470483779907s ,with loss 0.023296740884827315
+2021-09-04 19:28:50,691 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 19, time cost 69.1036696434021s ,with acc 0.7076612903225806
+2021-09-04 19:28:50,949 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch19-loss0.023296740884827315-acc0.7076612903225806.pth
+2021-09-04 19:32:33,192 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 0/4, epoch 20, time cost 222.2424578666687s ,with loss 0.009605409501743808
+2021-09-04 19:33:38,848 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 0/4, epoch 20, time cost 65.65575432777405s ,with acc 0.7379032258064516
+2021-09-04 19:33:39,105 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold0_4-epoch20-loss0.009605409501743808-acc0.7379032258064516.pth
+2021-09-04 19:33:39,105 - train_MSM_joint_model.py[line:532] - INFO: Finish fine-tuning fold 0.
+2021-09-04 19:33:39,381 - train_MSM_joint_model.py[line:396] - INFO: Load weight weight\20210904_141710\General\fold1_4-epoch10-loss0.10834520640175628-acc0.6915322580645161.pth for fine-tuning.
+2021-09-04 19:33:39,381 - train_MSM_joint_model.py[line:415] - INFO: In mode fine-tune, unfreeze the extractor layers.
+2021-09-04 19:37:13,875 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 1, time cost 214.49366331100464s ,with loss 0.16335098458322414
+2021-09-04 19:38:15,041 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 1, time cost 61.165892362594604s ,with acc 0.6421370967741935
+2021-09-04 19:38:15,311 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch1-loss0.16335098458322414-acc0.6421370967741935.pth
+2021-09-04 19:41:28,124 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 2, time cost 192.81316256523132s ,with loss 0.07479242443198177
+2021-09-04 19:42:18,269 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 2, time cost 50.1447639465332s ,with acc 0.6421370967741935
+2021-09-04 19:42:18,377 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch2-loss0.07479242443198177-acc0.6421370967741935.pth
+2021-09-04 19:45:46,291 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 3, time cost 207.91277408599854s ,with loss 0.05744059389943014
+2021-09-04 19:46:58,893 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 3, time cost 72.60248279571533s ,with acc 0.6280241935483871
+2021-09-04 19:46:59,161 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch3-loss0.05744059389943014-acc0.6280241935483871.pth
+2021-09-04 19:50:25,853 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 4, time cost 206.69274497032166s ,with loss 0.03745593045080212
+2021-09-04 19:51:13,284 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 4, time cost 47.43047833442688s ,with acc 0.6118951612903226
+2021-09-04 19:51:13,541 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch4-loss0.03745593045080212-acc0.6118951612903226.pth
+2021-09-04 19:54:30,818 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 5, time cost 197.27567410469055s ,with loss 0.03856540381599663
+2021-09-04 19:55:42,128 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 5, time cost 71.30903768539429s ,with acc 0.6663306451612904
+2021-09-04 19:55:42,389 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch5-loss0.03856540381599663-acc0.6663306451612904.pth
+2021-09-04 19:59:25,687 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 6, time cost 223.2979907989502s ,with loss 0.037289981852233686
+2021-09-04 20:00:33,621 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 6, time cost 67.93402099609375s ,with acc 0.6139112903225806
+2021-09-04 20:00:34,015 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch6-loss0.037289981852233686-acc0.6139112903225806.pth
+2021-09-04 20:03:47,144 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 7, time cost 193.12970733642578s ,with loss 0.025834978573544977
+2021-09-04 20:04:46,835 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 7, time cost 59.69061207771301s ,with acc 0.6723790322580645
+2021-09-04 20:04:47,094 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch7-loss0.025834978573544977-acc0.6723790322580645.pth
+2021-09-04 20:08:29,054 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 8, time cost 221.9593300819397s ,with loss 0.02551789500443113
+2021-09-04 20:09:32,941 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 8, time cost 63.886735677719116s ,with acc 0.6320564516129032
+2021-09-04 20:09:33,201 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch8-loss0.02551789500443113-acc0.6320564516129032.pth
+2021-09-04 20:12:28,145 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 9, time cost 174.94431948661804s ,with loss 0.022274019158509833
+2021-09-04 20:13:15,952 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 9, time cost 47.80691456794739s ,with acc 0.6542338709677419
+2021-09-04 20:13:16,248 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch9-loss0.022274019158509833-acc0.6542338709677419.pth
+2021-09-04 20:16:49,417 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 10, time cost 213.1674518585205s ,with loss 0.009119415842653088
+2021-09-04 20:18:05,203 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 10, time cost 75.78667116165161s ,with acc 0.6330645161290323
+2021-09-04 20:18:05,464 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch10-loss0.009119415842653088-acc0.6330645161290323.pth
+2021-09-04 20:21:48,397 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 11, time cost 222.93264198303223s ,with loss 0.010735505100001319
+2021-09-04 20:22:52,009 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 11, time cost 63.6120023727417s ,with acc 0.6340725806451613
+2021-09-04 20:22:52,268 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch11-loss0.010735505100001319-acc0.6340725806451613.pth
+2021-09-04 20:26:24,274 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 12, time cost 212.00567412376404s ,with loss 0.01180777413881752
+2021-09-04 20:27:16,275 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 12, time cost 52.00093388557434s ,with acc 0.6391129032258065
+2021-09-04 20:27:16,335 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch12-loss0.01180777413881752-acc0.6391129032258065.pth
+2021-09-04 20:30:06,844 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 13, time cost 170.50973296165466s ,with loss 0.006290014099299104
+2021-09-04 20:31:09,922 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 13, time cost 63.07663345336914s ,with acc 0.6471774193548387
+2021-09-04 20:31:10,268 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch13-loss0.006290014099299104-acc0.6471774193548387.pth
+2021-09-04 20:34:51,414 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 14, time cost 221.14582896232605s ,with loss 0.013524920946684173
+2021-09-04 20:36:05,114 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 14, time cost 73.70044708251953s ,with acc 0.6824596774193549
+2021-09-04 20:36:05,532 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch14-loss0.013524920946684173-acc0.6824596774193549.pth
+2021-09-04 20:39:32,384 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 15, time cost 206.85089206695557s ,with loss 0.007297813727543302
+2021-09-04 20:40:31,497 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 15, time cost 59.11289882659912s ,with acc 0.6602822580645161
+2021-09-04 20:40:31,758 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch15-loss0.007297813727543302-acc0.6602822580645161.pth
+2021-09-04 20:43:29,751 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 16, time cost 177.9920003414154s ,with loss 0.007402580716287681
+2021-09-04 20:44:20,419 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 16, time cost 50.66686820983887s ,with acc 0.655241935483871
+2021-09-04 20:44:20,678 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch16-loss0.007402580716287681-acc0.655241935483871.pth
+2021-09-04 20:47:59,012 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 17, time cost 218.3334023952484s ,with loss 0.010573718168169089
+2021-09-04 20:49:13,647 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 17, time cost 74.63414716720581s ,with acc 0.6451612903225806
+2021-09-04 20:49:14,040 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch17-loss0.010573718168169089-acc0.6451612903225806.pth
+2021-09-04 20:53:32,369 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 18, time cost 258.32847332954407s ,with loss 0.005318219032974609
+2021-09-04 20:55:03,141 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 18, time cost 90.77117967605591s ,with acc 0.6391129032258065
+2021-09-04 20:55:03,482 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch18-loss0.005318219032974609-acc0.6391129032258065.pth
+2021-09-04 20:58:38,338 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 19, time cost 214.85544753074646s ,with loss 0.009361689530064525
+2021-09-04 20:59:30,969 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 19, time cost 52.63094115257263s ,with acc 0.6391129032258065
+2021-09-04 20:59:31,238 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch19-loss0.009361689530064525-acc0.6391129032258065.pth
+2021-09-04 21:02:00,872 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 1/4, epoch 20, time cost 149.6324315071106s ,with loss 0.007922372616685212
+2021-09-04 21:02:43,021 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 1/4, epoch 20, time cost 42.149258613586426s ,with acc 0.6370967741935484
+2021-09-04 21:02:43,120 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold1_4-epoch20-loss0.007922372616685212-acc0.6370967741935484.pth
+2021-09-04 21:02:43,120 - train_MSM_joint_model.py[line:532] - INFO: Finish fine-tuning fold 1.
+2021-09-04 21:02:43,410 - train_MSM_joint_model.py[line:396] - INFO: Load weight weight\20210904_141710\General\fold2_4-epoch19-loss0.04884094702909984-acc0.7721774193548387.pth for fine-tuning.
+2021-09-04 21:02:43,411 - train_MSM_joint_model.py[line:415] - INFO: In mode fine-tune, unfreeze the extractor layers.
+2021-09-04 21:04:50,299 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 1, time cost 126.88838982582092s ,with loss 0.14217176704424556
+2021-09-04 21:05:44,136 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 1, time cost 53.835143089294434s ,with acc 0.7570564516129032
+2021-09-04 21:05:44,205 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch1-loss0.14217176704424556-acc0.7570564516129032.pth
+2021-09-04 21:07:51,234 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 2, time cost 127.02842688560486s ,with loss 0.05387323765709247
+2021-09-04 21:08:44,681 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 2, time cost 53.44746470451355s ,with acc 0.7469758064516129
+2021-09-04 21:08:44,935 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch2-loss0.05387323765709247-acc0.7469758064516129.pth
+2021-09-04 21:10:52,121 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 3, time cost 127.18529868125916s ,with loss 0.06128373217918282
+2021-09-04 21:11:45,398 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 3, time cost 53.27660036087036s ,with acc 0.7580645161290323
+2021-09-04 21:11:45,762 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch3-loss0.06128373217918282-acc0.7580645161290323.pth
+2021-09-04 21:14:01,753 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 4, time cost 135.98913025856018s ,with loss 0.04238582170681026
+2021-09-04 21:15:01,969 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 4, time cost 60.216933488845825s ,with acc 0.7449596774193549
+2021-09-04 21:15:02,224 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch4-loss0.04238582170681026-acc0.7449596774193549.pth
+2021-09-04 21:17:26,662 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 5, time cost 144.4375514984131s ,with loss 0.04411500805176531
+2021-09-04 21:18:26,729 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 5, time cost 60.066588163375854s ,with acc 0.7691532258064516
+2021-09-04 21:18:27,074 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch5-loss0.04411500805176531-acc0.7691532258064516.pth
+2021-09-04 21:20:51,536 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 6, time cost 144.46249866485596s ,with loss 0.010982712949914023
+2021-09-04 21:21:51,665 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 6, time cost 60.12884306907654s ,with acc 0.7651209677419355
+2021-09-04 21:21:51,919 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch6-loss0.010982712949914023-acc0.7651209677419355.pth
+2021-09-04 21:24:16,053 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 7, time cost 144.1335289478302s ,with loss 0.023811329895302744
+2021-09-04 21:25:12,448 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 7, time cost 56.394609212875366s ,with acc 0.7782258064516129
+2021-09-04 21:25:12,500 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch7-loss0.023811329895302744-acc0.7782258064516129.pth
+2021-09-04 21:27:27,123 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 8, time cost 134.62148261070251s ,with loss 0.018006026938129926
+2021-09-04 21:28:23,860 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 8, time cost 56.73674964904785s ,with acc 0.7711693548387096
+2021-09-04 21:28:23,913 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch8-loss0.018006026938129926-acc0.7711693548387096.pth
+2021-09-04 21:30:36,488 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 9, time cost 132.57504296302795s ,with loss 0.014618695913035797
+2021-09-04 21:31:31,264 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 9, time cost 54.775012493133545s ,with acc 0.7469758064516129
+2021-09-04 21:31:31,534 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch9-loss0.014618695913035797-acc0.7469758064516129.pth
+2021-09-04 21:33:42,965 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 10, time cost 131.43023777008057s ,with loss 0.035708890098011696
+2021-09-04 21:34:39,331 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 10, time cost 56.36590099334717s ,with acc 0.7782258064516129
+2021-09-04 21:34:39,399 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch10-loss0.035708890098011696-acc0.7782258064516129.pth
+2021-09-04 21:36:50,738 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 11, time cost 131.3398084640503s ,with loss 0.0081986330799183
+2021-09-04 21:37:46,699 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 11, time cost 55.96055054664612s ,with acc 0.782258064516129
+2021-09-04 21:37:46,753 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch11-loss0.0081986330799183-acc0.782258064516129.pth
+2021-09-04 21:40:01,500 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 12, time cost 134.74690961837769s ,with loss 0.006485034175650229
+2021-09-04 21:41:00,279 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 12, time cost 58.77951741218567s ,with acc 0.7772177419354839
+2021-09-04 21:41:00,466 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch12-loss0.006485034175650229-acc0.7772177419354839.pth
+2021-09-04 21:43:13,829 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 13, time cost 133.36219239234924s ,with loss 0.00792413965670043
+2021-09-04 21:44:08,911 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 13, time cost 55.08213186264038s ,with acc 0.7610887096774194
+2021-09-04 21:44:09,244 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch13-loss0.00792413965670043-acc0.7610887096774194.pth
+2021-09-04 21:46:22,281 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 14, time cost 133.03635835647583s ,with loss 0.005984984035777692
+2021-09-04 21:47:17,861 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 14, time cost 55.58017611503601s ,with acc 0.7681451612903226
+2021-09-04 21:47:18,111 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch14-loss0.005984984035777692-acc0.7681451612903226.pth
+2021-09-04 21:49:29,735 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 15, time cost 131.62399792671204s ,with loss 0.0033198917467218607
+2021-09-04 21:50:26,147 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 15, time cost 56.411754846572876s ,with acc 0.7651209677419355
+2021-09-04 21:50:26,215 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch15-loss0.0033198917467218607-acc0.7651209677419355.pth
+2021-09-04 21:52:39,116 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 16, time cost 132.90092206001282s ,with loss 0.002605223754274092
+2021-09-04 21:53:32,953 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 16, time cost 53.83613204956055s ,with acc 0.7772177419354839
+2021-09-04 21:53:33,356 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch16-loss0.002605223754274092-acc0.7772177419354839.pth
+2021-09-04 21:55:44,667 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 17, time cost 131.30965542793274s ,with loss 0.0022065840626648583
+2021-09-04 21:56:41,747 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 17, time cost 57.079914569854736s ,with acc 0.7832661290322581
+2021-09-04 21:56:41,824 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch17-loss0.0022065840626648583-acc0.7832661290322581.pth
+2021-09-04 21:59:02,521 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 18, time cost 140.69648385047913s ,with loss 0.0023027059656056813
+2021-09-04 22:00:01,107 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 18, time cost 58.58450388908386s ,with acc 0.7762096774193549
+2021-09-04 22:00:01,442 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch18-loss0.0023027059656056813-acc0.7762096774193549.pth
+2021-09-04 22:02:20,272 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 19, time cost 138.82846355438232s ,with loss 0.004208964913864886
+2021-09-04 22:03:20,177 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 19, time cost 59.905463218688965s ,with acc 0.7862903225806451
+2021-09-04 22:03:20,251 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch19-loss0.004208964913864886-acc0.7862903225806451.pth
+2021-09-04 22:05:38,834 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 2/4, epoch 20, time cost 138.58320999145508s ,with loss 0.0022392509202528227
+2021-09-04 22:06:37,639 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 2/4, epoch 20, time cost 58.80432868003845s ,with acc 0.7671370967741935
+2021-09-04 22:06:37,700 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold2_4-epoch20-loss0.0022392509202528227-acc0.7671370967741935.pth
+2021-09-04 22:06:37,701 - train_MSM_joint_model.py[line:532] - INFO: Finish fine-tuning fold 2.
+2021-09-04 22:06:37,965 - train_MSM_joint_model.py[line:396] - INFO: Load weight weight\20210904_141710\General\fold3_4-epoch17-loss0.06354183974044939-acc0.7395833333333334.pth for fine-tuning.
+2021-09-04 22:06:37,966 - train_MSM_joint_model.py[line:415] - INFO: In mode fine-tune, unfreeze the extractor layers.
+2021-09-04 22:09:13,800 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 1, time cost 155.8338499069214s ,with loss 0.173765740804224
+2021-09-04 22:09:55,358 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 1, time cost 41.558605670928955s ,with acc 0.7447916666666666
+2021-09-04 22:09:55,454 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch1-loss0.173765740804224-acc0.7447916666666666.pth
+2021-09-04 22:12:31,544 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 2, time cost 156.0900375843048s ,with loss 0.06875218763372921
+2021-09-04 22:13:12,729 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 2, time cost 41.185242891311646s ,with acc 0.721875
+2021-09-04 22:13:13,107 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch2-loss0.06875218763372921-acc0.721875.pth
+2021-09-04 22:15:48,639 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 3, time cost 155.53043723106384s ,with loss 0.04863419683001715
+2021-09-04 22:16:29,855 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 3, time cost 41.21608328819275s ,with acc 0.7041666666666667
+2021-09-04 22:16:29,928 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch3-loss0.04863419683001715-acc0.7041666666666667.pth
+2021-09-04 22:19:05,325 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 4, time cost 155.39785718917847s ,with loss 0.04290233746450144
+2021-09-04 22:19:48,614 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 4, time cost 43.28848075866699s ,with acc 0.7208333333333333
+2021-09-04 22:19:48,724 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch4-loss0.04290233746450144-acc0.7208333333333333.pth
+2021-09-04 22:22:26,452 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 5, time cost 157.72757863998413s ,with loss 0.04263138814446872
+2021-09-04 22:23:07,147 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 5, time cost 40.69498658180237s ,with acc 0.7375
+2021-09-04 22:23:07,448 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch5-loss0.04263138814446872-acc0.7375.pth
+2021-09-04 22:25:40,740 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 6, time cost 153.29195857048035s ,with loss 0.024699132045341646
+2021-09-04 22:26:21,573 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 6, time cost 40.83261275291443s ,with acc 0.7125
+2021-09-04 22:26:21,670 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch6-loss0.024699132045341646-acc0.7125.pth
+2021-09-04 22:28:55,449 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 7, time cost 153.77937698364258s ,with loss 0.02489283159882943
+2021-09-04 22:29:36,016 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 7, time cost 40.566091775894165s ,with acc 0.7052083333333333
+2021-09-04 22:29:36,114 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch7-loss0.02489283159882943-acc0.7052083333333333.pth
+2021-09-04 22:32:09,296 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 8, time cost 153.18273830413818s ,with loss 0.020824590686696797
+2021-09-04 22:32:50,076 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 8, time cost 40.77982711791992s ,with acc 0.6520833333333333
+2021-09-04 22:32:50,389 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch8-loss0.020824590686696797-acc0.6520833333333333.pth
+2021-09-04 22:35:23,583 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 9, time cost 153.1934633255005s ,with loss 0.020979192390504685
+2021-09-04 22:36:04,186 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 9, time cost 40.60137152671814s ,with acc 0.7322916666666667
+2021-09-04 22:36:04,259 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch9-loss0.020979192390504685-acc0.7322916666666667.pth
+2021-09-04 22:38:37,273 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 10, time cost 153.0126495361328s ,with loss 0.025736495782292614
+2021-09-04 22:39:17,804 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 10, time cost 40.53068017959595s ,with acc 0.7114583333333333
+2021-09-04 22:39:17,898 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch10-loss0.025736495782292614-acc0.7114583333333333.pth
+2021-09-04 22:41:50,984 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 11, time cost 153.0864508152008s ,with loss 0.014886684304734464
+2021-09-04 22:42:32,074 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 11, time cost 41.0895037651062s ,with acc 0.7166666666666667
+2021-09-04 22:42:32,364 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch11-loss0.014886684304734464-acc0.7166666666666667.pth
+2021-09-04 22:45:04,107 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 12, time cost 151.7428240776062s ,with loss 0.012402114456524022
+2021-09-04 22:45:44,464 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 12, time cost 40.35704517364502s ,with acc 0.73125
+2021-09-04 22:45:44,534 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch12-loss0.012402114456524022-acc0.73125.pth
+2021-09-04 22:48:16,372 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 13, time cost 151.83663821220398s ,with loss 0.016352931689486653
+2021-09-04 22:48:56,508 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 13, time cost 40.135674238204956s ,with acc 0.7322916666666667
+2021-09-04 22:48:56,617 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch13-loss0.016352931689486653-acc0.7322916666666667.pth
+2021-09-04 22:51:28,429 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 14, time cost 151.81042528152466s ,with loss 0.004446408931383508
+2021-09-04 22:52:08,586 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 14, time cost 40.15739560127258s ,with acc 0.740625
+2021-09-04 22:52:08,673 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch14-loss0.004446408931383508-acc0.740625.pth
+2021-09-04 22:54:40,097 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 15, time cost 151.4239902496338s ,with loss 0.014363819311901968
+2021-09-04 22:55:20,235 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 15, time cost 40.13737916946411s ,with acc 0.721875
+2021-09-04 22:55:20,418 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch15-loss0.014363819311901968-acc0.721875.pth
+2021-09-04 22:57:51,800 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 16, time cost 151.3811173439026s ,with loss 0.007014893440207997
+2021-09-04 22:58:31,899 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 16, time cost 40.098849058151245s ,with acc 0.75
+2021-09-04 22:58:31,969 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch16-loss0.007014893440207997-acc0.75.pth
+2021-09-04 23:01:03,483 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 17, time cost 151.51420497894287s ,with loss 0.0035376811940334854
+2021-09-04 23:01:43,623 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 17, time cost 40.13985085487366s ,with acc 0.7177083333333333
+2021-09-04 23:01:43,737 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch17-loss0.0035376811940334854-acc0.7177083333333333.pth
+2021-09-04 23:04:15,286 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 18, time cost 151.5476038455963s ,with loss 0.0013176757909468017
+2021-09-04 23:04:55,488 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 18, time cost 40.201741456985474s ,with acc 0.7229166666666667
+2021-09-04 23:04:55,612 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch18-loss0.0013176757909468017-acc0.7229166666666667.pth
+2021-09-04 23:07:27,114 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 19, time cost 151.50134301185608s ,with loss 0.0017715343473629287
+2021-09-04 23:08:07,302 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 19, time cost 40.187713861465454s ,with acc 0.7333333333333333
+2021-09-04 23:08:07,375 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch19-loss0.0017715343473629287-acc0.7333333333333333.pth
+2021-09-04 23:10:38,870 - train_MSM_joint_model.py[line:463] - INFO: Finish fine-tune general model, for fold 3/4, epoch 20, time cost 151.49395871162415s ,with loss 0.0017851842830295742
+2021-09-04 23:11:18,992 - train_MSM_joint_model.py[line:517] - INFO: Finish testing general model, for fold 3/4, epoch 20, time cost 40.12288999557495s ,with acc 0.715625
+2021-09-04 23:11:19,136 - train_MSM_joint_model.py[line:531] - INFO: Saving weight to weight\20210904_141710\Fine_tune\fold3_4-epoch20-loss0.0017851842830295742-acc0.715625.pth
+2021-09-04 23:11:19,136 - train_MSM_joint_model.py[line:532] - INFO: Finish fine-tuning fold 3.
+2021-09-04 23:11:19,136 - train_MSM_joint_model.py[line:533] - INFO: Finish fine-tuning the model.

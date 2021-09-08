@@ -19,7 +19,7 @@ dataset:
   process:
     sr: 16000     # sample rate, 16000 by default
     dim: 3        # dimensions, 3 means expand dims to tuple of shape 4 to process in image-like ways, 2 means not expand and process in test-embedding way, 3 by default
-    crop_length: 6 # sample seconds, 5 by default
+    crop_length: 25 # sample seconds, 5 by default
     normalized: true  # normalized, true by default
     pre_emphasis:
       coefficient: 0.95
@@ -48,11 +48,7 @@ dataset:
       percent_high_nrg: 0.5
 
 
-image:
-  image_dir: "image"
 
-output:
-  output_dir: "output"
 
 log:
   log_dir: "log"
