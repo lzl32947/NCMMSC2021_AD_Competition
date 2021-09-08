@@ -53,6 +53,34 @@ class SpecificTrainResNetLongLSTMModel(BaseModel):
 
 
 @Registers.model.register
+class SpecificTrainModifiedResNetLongLSTMModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super(SpecificTrainModifiedResNetLongLSTMModel, self).__init__()
+        self.extractor = Registers.module["ResNetBackbone"](18)
+        self.avg_pool = nn.AdaptiveAvgPool2d((1, None))
+        self.layer_dim = 2
+        self.hidden_dim = 600
+        self.lstm = nn.LSTM(input_size=512, hidden_size=self.hidden_dim, num_layers=self.layer_dim, bidirectional=True
+                            , batch_first=True)
+        self.fc = nn.Linear(self.hidden_dim * 2, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        output = self.avg_pool(output)
+
+        length = output.shape[3]
+        channel = output.shape[1]
+        output = output.permute((0, 3, 1, 2))
+
+        output = output.view(batch_size, length, channel)
+        lstm_out, (h_n, c_n) = self.lstm(output)
+
+        lstm_out = self.fc(lstm_out[:, -1, :])
+        return lstm_out
+
+
+@Registers.model.register
 class SpecificTrainResNetLongModel(BaseModel):
     def __init__(self, input_shape: Tuple):
         super(SpecificTrainResNetLongModel, self).__init__()
