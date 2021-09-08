@@ -69,7 +69,7 @@ class SpecificTrainResNet18BackboneLongLSTMModel(BaseModel):
         output = self.avg_pool(output)
         output = output.squeeze(2).permute([2, 0, 1]).contiguous()
         lstm_out, (h_n, c_n) = self.lstm(output)
-        lstm_out = lstm_out.view(batch_size, -1)
+        lstm_out = lstm_out[-1, :, :].view(batch_size, -1).contiguous()
         lstm_out = self.fc(lstm_out)
         return lstm_out
 
