@@ -278,6 +278,6 @@ if __name__ == '__main__':
     #                       [AudioFeatures.MFCC, AudioFeatures.SPECS, AudioFeatures.MELSPECS], weight_identifier,
     #                       "Fine_tune", input_shape=())
     c, p = evaluate_specific(time_identifier, configs, model_name,
-                             AudioFeatures.SPECS_VAD, weight_identifier, input_shape=(),input_channels=1)
+                             AudioFeatures.MFCC_VAD, weight_identifier, input_shape=(),input_channels=1)
     logger.info("Analysis results for {} with {}".format(model_name, weight_identifier))
     analysis_result(time_identifier, configs, c, p, model_name)
