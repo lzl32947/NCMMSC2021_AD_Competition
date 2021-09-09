@@ -277,7 +277,7 @@ if __name__ == '__main__':
     c, p = evaluate_joint(time_identifier, configs, model_name,
                           [AudioFeatures.MFCC_VAD, AudioFeatures.SPECS_VAD, AudioFeatures.MELSPECS_VAD],
                           weight_identifier,
-                          "General", input_shape=())
+                          "Fine_tune", input_shape=())
     # c, p = evaluate_specific(time_identifier, configs, model_name,
     #                          AudioFeatures.MFCC_VAD, weight_identifier, input_shape=(),input_channels=1)
     logger.info("Analysis results for {} with {}".format(model_name, weight_identifier))

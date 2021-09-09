@@ -39,5 +39,5 @@ if __name__ == '__main__':
     logger = GlobalLogger().get_logger()
 
     target_directory = "20210907_230704"
-    feature_name = "General"
+    feature_name = "Fine_tune"
     get_acc_for_log(configs, target_directory, feature_name)
