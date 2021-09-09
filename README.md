@@ -218,6 +218,15 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 
     ![MSMJointConcatFineTuneLongModel](image/20210908_235454/MSMJointConcatFineTuneLongModel_3-4_Fold_Results_Accuracy_75.19_Percent.png)
 
+* [20210907_230640](log/20210907_230640)  <span id="longdetail14">MSMJointConcatFineTuneLongModel</span> with Fine-tune
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_103922/MSMJointConcatFineTuneLongModel_0-4_Fold_Results_Accuracy_76.23_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_103922/MSMJointConcatFineTuneLongModel_1-4_Fold_Results_Accuracy_65.69_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_103922/MSMJointConcatFineTuneLongModel_2-4_Fold_Results_Accuracy_75.36_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_103922/MSMJointConcatFineTuneLongModel_3-4_Fold_Results_Accuracy_74.00_Percent.png)
 
 
 ### General
@@ -283,3 +292,7 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 * [20210907_230640](log/20210907_230640)  <span id="longgeneral13">MSMJointConcatFineTuneLongModel</span> with General
 
     ![MSMJointConcatFineTuneLongModel](image/20210908_235454/MSMJointConcatFineTuneLongModel_Results_Accuracy_73.17_Percent.png)
+
+* [20210907_230640](log/20210907_230640)  <span id="longgeneral14">MSMJointConcatFineTuneLongModel</span> with Fine-tune
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_103922/MSMJointConcatFineTuneLongModel_Results_Accuracy_72.81_Percent.png)
