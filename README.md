@@ -208,6 +208,16 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 
     ![SpecificTrainResNet18BackboneLongModel](image/20210908_155528/SpecificTrainResNet18BackboneLongModel_3-4_Fold_Results_Accuracy_64.73_Percent.png)
 
+* [20210907_230640](log/20210907_230640)  <span id="longdetail13">MSMJointConcatFineTuneLongModel</span> with General
+
+    ![MSMJointConcatFineTuneLongModel](image/20210908_235454/MSMJointConcatFineTuneLongModel_0-4_Fold_Results_Accuracy_78.91_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210908_235454/MSMJointConcatFineTuneLongModel_1-4_Fold_Results_Accuracy_62.52_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210908_235454/MSMJointConcatFineTuneLongModel_2-4_Fold_Results_Accuracy_76.11_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210908_235454/MSMJointConcatFineTuneLongModel_3-4_Fold_Results_Accuracy_75.19_Percent.png)
+
 
 
 ### General
@@ -269,3 +279,7 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 * [20210908_121607](log/20210908_121607)  <span id="longgeneral12">SpecificTrainResNet18BackboneLongModel</span> with MELSPEC_VAD
 
     ![SpecificTrainResNet18BackboneLongModel](image/20210908_155528/SpecificTrainResNet18BackboneLongModel_Results_Accuracy_69.49_Percent.png)
+
+* [20210907_230640](log/20210907_230640)  <span id="longgeneral13">MSMJointConcatFineTuneLongModel</span> with General
+
+    ![MSMJointConcatFineTuneLongModel](image/20210908_235454/MSMJointConcatFineTuneLongModel_Results_Accuracy_73.17_Percent.png)
