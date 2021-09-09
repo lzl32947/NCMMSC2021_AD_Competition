@@ -71,6 +71,7 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 |[20210908_121607](log/20210908_121607)| 25s|SpecificTrainResNet18BackboneLongModel|MELSPEC_VAD|4|[70.46%](weight/20210908_121607/MelSpectrogram_VAD/fold0_4-epoch8-loss0.0007008382593322376-acc0.7046370967741935.pth),[65.83%](weight/20210908_121607/MelSpectrogram_VAD/fold1_4-epoch4-loss0.009402812518680508-acc0.6582661290322581.pth),[79.54%](weight/20210908_121607/MelSpectrogram_VAD/fold2_4-epoch2-loss0.10287831783669231-acc0.7953629032258065.pth),[64.79%](weight/20210908_121607/MelSpectrogram_VAD/fold3_4-epoch6-loss0.002103926696035678-acc0.6479166666666667.pth)|73.77%| |[Detail](#longdetail12) [General](#longgeneral12)|
 |[20210907_230640](log/20210907_230640)| 25s|MSMJointConcatFineTuneLongModel|General|4|[80.04%](weight/20210907_230640/General/fold0_4-epoch17-loss0.004639386917282853-acc0.8004032258064516.pth),[63.61%](weight/20210907_230640/General/fold1_4-epoch6-loss0.05025758121527084-acc0.6360887096774194.pth),[76.51%](weight/20210907_230640/General/fold2_4-epoch8-loss0.020449309752186073-acc0.7651209677419355.pth),[74.90%](weight/20210907_230640/General/fold3_4-epoch5-loss0.10975683429929357-acc0.7489583333333333.pth) | 73.92%| MFCC,SPECS,MELSPEC for training|[Detail](#longdetail13) [General](#longgeneral13)|
 |[20210907_230640](log/20210907_230640)| 25s|MSMJointConcatFineTuneLongModel|Fine-tune|4|[77.42%](weight/20210907_230640/Fine_tune/fold0_4-epoch16-loss0.00031449106786171995-acc0.7741935483870968.pth),[65.12%](weight/20210907_230640/Fine_tune/fold1_4-epoch5-loss0.0026477884619690367-acc0.6512096774193549.pth),[76.11%](weight/20210907_230640/Fine_tune/fold2_4-epoch14-loss0.0035135104489318505-acc0.7610887096774194.pth),[74.79%](weight/20210907_230640/Fine_tune/fold3_4-epoch4-loss0.007959074192112111-acc0.7479166666666667.pth) | 73.36%| MFCC,SPECS,MELSPEC for training|[Detail](#longdetail4) [General](#longgeneral14)|
+|[20210907_230704](log/20210907_230704)| 25s|SpecificTrainLongModel|MELSPEC_VAD|4|[68.15%](weight/20210907_230704/MelSpectrogram_VAD/fold0_4-epoch10-loss0.03768929171138038-acc0.6814516129032258.pth),[64.01%](weight/20210907_230704/MelSpectrogram_VAD/fold1_4-epoch15-loss0.007877903156954942-acc0.6401209677419355.pth),[69.15%](weight/20210907_230704/MelSpectrogram_VAD/fold2_4-epoch11-loss0.013715556814175849-acc0.6915322580645161.pth),[70.21%](weight/20210907_230704/MelSpectrogram_VAD/fold3_4-epoch10-loss0.028328277380956758-acc0.7020833333333333.pth)| 67.88%| | [Detail](#longdetail5) [General](#longgeneral15)|
 
 ## Evaluation
 
@@ -228,6 +229,16 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 
     ![MSMJointConcatFineTuneLongModel](image/20210909_103922/MSMJointConcatFineTuneLongModel_3-4_Fold_Results_Accuracy_74.00_Percent.png)
 
+* [20210907_230704](log/20210907_230704)  <span id="longdetail15">SpecificTrainLongModel</span> with MELSPEC_VAD
+
+    ![SpecificTrainLongModel](image/20210909_121950/SpecificTrainLongModel_0-4_Fold_Results_Accuracy_67.18_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210909_121950/SpecificTrainLongModel_1-4_Fold_Results_Accuracy_64.70_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210909_121950/SpecificTrainLongModel_2-4_Fold_Results_Accuracy_68.93_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210909_121950/SpecificTrainLongModel_3-4_Fold_Results_Accuracy_69.96_Percent.png)
+
 
 ### General
 
@@ -296,3 +307,9 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 * [20210907_230640](log/20210907_230640)  <span id="longgeneral14">MSMJointConcatFineTuneLongModel</span> with Fine-tune
 
     ![MSMJointConcatFineTuneLongModel](image/20210909_103922/MSMJointConcatFineTuneLongModel_Results_Accuracy_72.81_Percent.png)
+
+* [20210907_230704](log/20210907_230704)  <span id="longgeneral15">SpecificTrainLongModel</span> with MELSPEC_VAD
+
+    ![SpecificTrainLongModel](image/20210909_121950/SpecificTrainLongModel_Results_Accuracy_67.67_Percent.png)
+
+

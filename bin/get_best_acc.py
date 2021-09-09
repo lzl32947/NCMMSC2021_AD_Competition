@@ -38,6 +38,6 @@ if __name__ == '__main__':
     time_identifier, configs = global_init()
     logger = GlobalLogger().get_logger()
 
-    target_directory = "20210907_230640"
-    feature_name = "Fine_tune"
+    target_directory = "20210907_230704"
+    feature_name = AudioFeatures.MELSPECS_VAD.value
     get_acc_for_log(configs, target_directory, feature_name)
