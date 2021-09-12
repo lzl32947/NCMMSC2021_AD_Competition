@@ -149,8 +149,13 @@ def get_best_loss_weight(weight_dir: str, fold: int, current_fold: int,
     assert fold == total_list.mean()
     # Get the current list and transform to np.ndarray
     current_list = np.array(current_list)
-    acc_list = np.array(loss_list)
-    # Get the index of the least loss file
-    acc_index = np.argmin(acc_list[current_list == current_fold])
+    loss_list = np.array(loss_list)
+    # Get the index of the best accuracy file
+    min_loss = 1e9
+    loss_index = None
+    for index, losses in enumerate(loss_list):
+        if current_list[index] == current_fold and losses <=min_loss:
+            min_loss = losses
+            loss_index = index
     # Return the path to that file
-    return file_list[acc_index]
+    return file_list[loss_index]

@@ -1,3 +1,5 @@
+from typing import Dict, Union
+
 from configs.types import AudioFeatures
 from util.log_util.logger import GlobalLogger
 from util.tools.files_util import global_init
@@ -6,7 +8,14 @@ import os
 import re
 
 
-def get_acc_only(config, target_directory, feature_name):
+def get_acc_only(config: Dict, target_directory: str, feature_name: Union[AudioFeatures, str]) -> None:
+    """
+    Get and print the best accuracy in folder
+    :param config: Dict, the configs
+    :param target_directory: str, the identifier of the selected directory
+    :param feature_name: AudioFeatures or str, the selected feature
+    :return: None
+    """
     fold = config["dataset"]["k_fold"]
 
     for i in range(fold):
@@ -16,7 +25,14 @@ def get_acc_only(config, target_directory, feature_name):
         print(weight_file.replace("\\", "/"))
 
 
-def get_acc_for_log(config, target_directory, feature_name):
+def get_acc_for_log(config: Dict, target_directory: str, feature_name: Union[AudioFeatures, str]) -> None:
+    """
+    Get and print the best accuracy in folder and format into the MarkDown mode
+    :param config: Dict, the configs
+    :param target_directory: str, the identifier of the selected directory
+    :param feature_name: AudioFeatures or str, the selected feature
+    :return: None
+    """
     fold = config["dataset"]["k_fold"]
 
     format_str = ""

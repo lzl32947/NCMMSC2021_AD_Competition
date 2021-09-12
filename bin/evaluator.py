@@ -238,6 +238,10 @@ def plot_image(identifier, config, cm, classes, title: str, cmap=plt.cm.Blues):
                 ax.text(j, i, format(int(cm[i, j] * 100 + 0.5), fmt) + '%',
                         ha="center", va="center",
                         color="white" if cm[i, j] > thresh else "black")
+            else:
+                ax.text(j, i, format(0, fmt) + '%',
+                        ha="center", va="center",
+                        color="white" if cm[i, j] > thresh else "black")
     fig.tight_layout()
     fig.savefig(os.path.join(config["image"]["image_dir"], identifier,
                              "{}.png".format(title.replace(" ", "_").replace("\n", "_"))),

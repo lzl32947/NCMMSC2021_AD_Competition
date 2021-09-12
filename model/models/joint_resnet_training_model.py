@@ -140,14 +140,14 @@ class ConcatModel(nn.Module):
         batch_size = input_tensor.shape[0]
 
         output = self.conv_layer_1(input_tensor)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
 
         output = self.conv_layer_2(output)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
         output = self.maxpooling_2(output)
 
         output = self.conv_layer_3(output)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
         output = self.maxpooling_3(output)
 
         output = output.view((batch_size, -1))

@@ -21,7 +21,7 @@ class DenseModel(nn.Module):
         output = input_tensor.view((batch_size, -1))
 
         output = self.linear_1(output)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
         output = self.dropout(output)
 
         output = self.linear_2(output)
@@ -48,17 +48,17 @@ class ExtractionModel(nn.Module):
         batch_size = input_tensor.shape[0]
 
         output = self.conv_layer_1(input_tensor)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
         output = self.maxpooling_1(output)
         output = self.batchnorm_1(output)
 
         output = self.conv_layer_2(output)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
         output = self.maxpooling_2(output)
         output = self.batchnorm_2(output)
 
         output = self.conv_layer_3(output)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
         output = self.maxpooling_3(output)
         output = self.batchnorm_3(output)
 
@@ -85,14 +85,14 @@ class ConcatModel(nn.Module):
         batch_size = input_tensor.shape[0]
 
         output = self.conv_layer_1(input_tensor)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
 
         output = self.conv_layer_2(output)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
         output = self.maxpooling_2(output)
 
         output = self.conv_layer_3(output)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
         output = self.maxpooling_3(output)
 
         output = output.view((batch_size, -1))
@@ -122,14 +122,14 @@ class FusionDenseModel(nn.Module):
         batch_size = input_tensor.shape[0]
 
         output = self.conv_layer_1(input_tensor)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
 
         output = self.conv_layer_2(output)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
         output = self.maxpooling_2(output)
 
         output = self.conv_layer_3(output)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
         output = self.maxpooling_3(output)
 
         output = output.view((batch_size, -1))
