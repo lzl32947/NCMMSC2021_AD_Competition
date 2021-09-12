@@ -120,6 +120,53 @@ class SpecificTrainResNet18BackboneLongModel(BaseModel):
         return long_out3
 
 
+@Registers.model.register
+class MSMJointConcatFineTuneResNet18BackboneLongModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super().__init__()
+        self.extractor_mfcc = Registers.module["ResNetBackbone"](18)
+        self.extractor_spec = Registers.module["ResNetBackbone"](18)
+        self.extractor_mel = Registers.module["ResNetBackbone"](18)
+        self.dense = ResNet18ConcatModel()
+        self.set_expected_input(input_shape)
+        self.set_description("MFCC SPEC MELSPEC Joint 2D Fine-tune Model")
+
+    def forward(self, input_mfcc: torch.Tensor, input_spec: torch.Tensor, input_mel: torch.Tensor):
+        output_mfcc = self.extractor_mfcc(input_mfcc)
+        output_spec = self.extractor_spec(input_spec)
+        output_mel = self.extractor_mel(input_mel)
+        concat_output = torch.cat([output_spec, output_mel, output_mfcc], dim=1)
+        output = self.dense(concat_output)
+        return output
+
+
+class ResNet18ConcatModel(nn.Module):
+
+    def __init__(self):
+        super().__init__()
+        self.conv_layer_1 = nn.Conv2d(512 * 3, 512, (3, 3))
+
+        self.maxpooling_2 = nn.MaxPool2d((2, 2))
+
+        self.linear_1 = nn.Linear(512*11, 512)
+        self.dropout_1 = nn.Dropout(0.3)
+        self.linear_2 = nn.Linear(512, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+
+        output = self.conv_layer_1(input_tensor)
+        output = func.relu(output)
+
+        output = self.maxpooling_2(output)
+
+        output = output.view((batch_size, -1))
+        output = self.linear_1(output)
+        output = self.dropout_1(output)
+        output = self.linear_2(output)
+        return output
+
+
 class ConcatModel(nn.Module):
 
     def __init__(self):
@@ -181,15 +228,15 @@ if __name__ == '__main__':
     import torchinfo
 
     #
-    # model = SpecificTrainResNetLongLSTMModel(input_shape=())
-    # model.cuda()
-    # torchinfo.summary(model, (4, 1, 128, 782))
-    model = torchvision.models.resnet18(pretrained=True)
-    state_dict = model_zoo.load_url('https://download.pytorch.org/models/resnet18-f37072fd.pth')
-    model.load_state_dict(state_dict, strict=False)
-    backbone = list(
-        [model.conv1, model.bn1, model.relu, model.maxpool, model.layer1, model.layer2, model.layer3, model.layer4,
-         model.avgpool]
-    )
-    model = nn.Sequential(*backbone)
-    torchinfo.summary(model.cuda(), (4, 3, 128, 782))
+    model = MSMJointConcatFineTuneResNet18BackboneLongModel(input_shape=())
+    model.cuda()
+    torchinfo.summary(model,((4, 3, 128, 782),(4, 3, 128, 782),(4, 3, 128, 782)))
+    # model = torchvision.models.resnet18(pretrained=True)
+    # state_dict = model_zoo.load_url('https://download.pytorch.org/models/resnet18-f37072fd.pth')
+    # model.load_state_dict(state_dict, strict=False)
+    # backbone = list(
+    #     [model.conv1, model.bn1, model.relu, model.maxpool, model.layer1, model.layer2, model.layer3, model.layer4,
+    #      model.avgpool]
+    # )
+    # model = nn.Sequential(*backbone)
+    # torchinfo.summary(model.cuda(), (4, 3, 128, 782))
