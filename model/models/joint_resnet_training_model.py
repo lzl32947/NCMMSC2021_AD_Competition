@@ -8,6 +8,7 @@ from torch.utils import model_zoo
 
 from model.base_model import BaseModel
 from model.manager import Register, Registers
+# from model.modules.resnet import ResNet
 
 
 @Registers.model.register
@@ -119,6 +120,28 @@ class SpecificTrainResNet18BackboneLongModel(BaseModel):
         long_out3 = self.fc3(long_out3)
         return long_out3
 
+@Registers.model.register
+class SpecificTrainResNet34BackboneLongModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super(SpecificTrainResNet34BackboneLongModel, self).__init__()
+        # self.extractor = ResNet(34)
+        self.extractor = Registers.module["ResNetBackbone"](34)
+        self.avg_pool = nn.AdaptiveAvgPool2d((1, 6))
+        self.fc = nn.Linear(512 * 6, 512)
+        self.fc2 = nn.Linear(512, 64)
+        self.fc3 = nn.Linear(64, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        output = self.avg_pool(output)
+        long_out = output.view(batch_size, -1)
+        long_out = self.fc(long_out)
+        long_out2 = func.relu(long_out)
+        long_out2 = self.fc2(long_out2)
+        long_out3 = func.relu(long_out2)
+        long_out3 = self.fc3(long_out3)
+        return long_out3
 
 @Registers.model.register
 class MSMJointConcatFineTuneResNet18BackboneLongModel(BaseModel):
@@ -228,9 +251,12 @@ if __name__ == '__main__':
     import torchinfo
 
     #
-    model = MSMJointConcatFineTuneResNet18BackboneLongModel(input_shape=())
-    model.cuda()
-    torchinfo.summary(model,((4, 3, 128, 782),(4, 3, 128, 782),(4, 3, 128, 782)))
+    # model = SpecificTrainResNet34BackboneLongModel(input_shape=())
+    # model.cuda()
+    # torchinfo.summary(model,((4, 3, 128, 782),(4, 3, 128, 782),(4, 3, 128, 782)))
+    model = SpecificTrainResNet34BackboneLongModel(input_shape=())
+    # model.cuda()
+    torchinfo.summary(model, (4, 1, 128, 782))
     # model = torchvision.models.resnet18(pretrained=True)
     # state_dict = model_zoo.load_url('https://download.pytorch.org/models/resnet18-f37072fd.pth')
     # model.load_state_dict(state_dict, strict=False)

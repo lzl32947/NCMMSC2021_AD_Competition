@@ -179,7 +179,7 @@ if __name__ == '__main__':
     # Read the fold from config
     total_fold = configs['dataset']['k_fold']
     # Train the general model
-    model_name = "SpecificTrainResNet18BackboneLongLSTMModel"
+    model_name = "SpecificTrainResNet34BackboneLongModel"
     logger.info("Training with model {}.".format(model_name))
-    train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS_VAD,
+    train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS,
                            model_name, input_shape=(1, 128, 782), input_channels=3)
