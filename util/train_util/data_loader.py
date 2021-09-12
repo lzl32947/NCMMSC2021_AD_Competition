@@ -17,7 +17,8 @@ class AldsDataset(Dataset):
 
     def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, use_vad: bool = False,
                  repeat_times: int = 1, random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
-                 current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN) -> None:
+                 current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN,
+                 balance: bool = True) -> None:
         """
         Init the Dataset with the given parameters
         :param use_features: List[AudioFeatures], the features to use and to be processed in this dataset
@@ -29,6 +30,7 @@ class AldsDataset(Dataset):
         :param k_fold: int, the number to use k-fold validation, 0 by default and mean do not use k-fold validation
         :param current_fold: int, the current fold, used when k-fold is enable(k_fold > 0)
         :param run_for: DatasetMode, default is DatasetMode.Train and determine the aim of the dataset
+        :param balance: bool, whether to balance the dataset
         """
         # Set audio backend for torch if used
         torchaudio.set_audio_backend("soundfile")
@@ -48,6 +50,8 @@ class AldsDataset(Dataset):
         self.sample_length = configs['crop_length']
         # Transform the dict to list
         data, label = self.dict2list(k_fold, current_fold, run_for)
+        if balance:
+            data, label = self.balance_data(data, label)
         if random_disruption:
             data, label = self.random_disruption(data, label)
         self.train_list = data
@@ -57,6 +61,38 @@ class AldsDataset(Dataset):
         self.use_features = use_features
 
         self.configs = configs
+
+    @staticmethod
+    def balance_data(data: List, label: List) -> (List, List):
+        """
+        Balance the given data to 1 : 1
+        :param data: List, the data
+        :param label: List, the label
+        :return: (List, List), the data and the label
+        """
+        # Convert to np.ndarray
+        label_array = np.array(label)
+        data_array = np.array(data)
+        # Get the keys
+        label_set = set(label)
+        dicts = dict()
+        # Find the maximum label and its count
+        max_label = None
+        max_count = 0
+        for item in label_set:
+            dicts[item] = len(label_array[label_array == item])
+            if len(label_array[label_array == item]) > max_count:
+                max_label = item
+                max_count = len(label_array[label_array == item])
+        # Balance the other labels to same count of the max_label
+        for item in label_set:
+            if item != max_label:
+                counts = max_count - dicts[item]
+                found = np.random.randint(0, len(label_array[label_array == item]), counts)
+                for founded in found:
+                    data.append(str(data_array[label_array == item][founded]))
+                    label.append(int(label_array[label_array == item][founded]))
+        return data, label
 
     def init_files(self, use_merge: bool) -> None:
         """

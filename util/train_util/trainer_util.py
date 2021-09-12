@@ -43,13 +43,15 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
     batch_size = configs['batch_size'] if 'batch_size' not in kwargs.keys() else kwargs['batch_size']
     random_disruption = configs['random_disruption'] if 'random_disruption' not in kwargs.keys() else kwargs[
         'random_disruption']
+    balance = configs['balance'] if 'balance' not in kwargs.keys() else kwargs[
+        'balance']
     if k_fold != 0:
         # Generate the k_fold dataloader
         for fold in range(k_fold):
             dataset = AldsDataset(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
                                   repeat_times=repeat_times, configs=configs['process'], k_fold=k_fold,
                                   current_fold=fold, random_disruption=random_disruption,
-                                  run_for=run_for)
+                                  run_for=run_for, balance=balance)
 
             dataloader = DataLoader(dataset, batch_size=batch_size)
             yield dataloader
@@ -59,7 +61,7 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
             dataset = AldsDataset(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
                                   repeat_times=repeat_times, configs=configs['process'],
                                   random_disruption=random_disruption,
-                                  run_for=run_for)
+                                  run_for=run_for, balance=balance)
 
             dataloader = DataLoader(dataset, batch_size=batch_size)
             yield dataloader
@@ -154,7 +156,7 @@ def get_best_loss_weight(weight_dir: str, fold: int, current_fold: int,
     min_loss = 1e9
     loss_index = None
     for index, losses in enumerate(loss_list):
-        if current_list[index] == current_fold and losses <=min_loss:
+        if current_list[index] == current_fold and losses <= min_loss:
             min_loss = losses
             loss_index = index
     # Return the path to that file
