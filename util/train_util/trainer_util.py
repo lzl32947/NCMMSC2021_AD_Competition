@@ -43,13 +43,15 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
     batch_size = configs['batch_size'] if 'batch_size' not in kwargs.keys() else kwargs['batch_size']
     random_disruption = configs['random_disruption'] if 'random_disruption' not in kwargs.keys() else kwargs[
         'random_disruption']
+    balance = configs['balance'] if 'balance' not in kwargs.keys() else kwargs[
+        'balance']
     if k_fold != 0:
         # Generate the k_fold dataloader
         for fold in range(k_fold):
             dataset = AldsDataset(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
                                   repeat_times=repeat_times, configs=configs['process'], k_fold=k_fold,
                                   current_fold=fold, random_disruption=random_disruption,
-                                  run_for=run_for)
+                                  run_for=run_for, balance=balance)
 
             dataloader = DataLoader(dataset, batch_size=batch_size)
             yield dataloader
@@ -59,7 +61,7 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
             dataset = AldsDataset(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
                                   repeat_times=repeat_times, configs=configs['process'],
                                   random_disruption=random_disruption,
-                                  run_for=run_for)
+                                  run_for=run_for, balance=balance)
 
             dataloader = DataLoader(dataset, batch_size=batch_size)
             yield dataloader
@@ -149,8 +151,13 @@ def get_best_loss_weight(weight_dir: str, fold: int, current_fold: int,
     assert fold == total_list.mean()
     # Get the current list and transform to np.ndarray
     current_list = np.array(current_list)
-    acc_list = np.array(loss_list)
-    # Get the index of the least loss file
-    acc_index = np.argmin(acc_list[current_list == current_fold])
+    loss_list = np.array(loss_list)
+    # Get the index of the best accuracy file
+    min_loss = 1e9
+    loss_index = None
+    for index, losses in enumerate(loss_list):
+        if current_list[index] == current_fold and losses <= min_loss:
+            min_loss = losses
+            loss_index = index
     # Return the path to that file
-    return file_list[acc_index]
+    return file_list[loss_index]

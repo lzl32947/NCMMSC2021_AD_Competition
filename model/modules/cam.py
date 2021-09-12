@@ -43,7 +43,7 @@ class MSCAMFusion(nn.Module):
         left = self.global_average_pooling(input_feature)
         left = self.point_wise_conv(left)
         left = self.bn(left)
-        left = func.relu(left, inplace=True)
+        left = func.relu(left)
         left = self.point_wise_conv_upsample(left)
         left = self.bn_upsample(left)
 

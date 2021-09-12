@@ -73,6 +73,14 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 |[20210905_133648](log/20210905_133648)| 25s|MSMJointConcatFineTuneLongModel|Fine-tune|4|[73.29%](weight/20210905_133648/Fine_tune/fold0_4-epoch3-loss0.006180769617260566-acc0.7328629032258065.pth),[64.21%](weight/20210905_133648/Fine_tune/fold1_4-epoch2-loss0.012040591682307422-acc0.6421370967741935.pth),[79.94%](weight/20210905_133648/Fine_tune/fold2_4-epoch12-loss0.0006443048127948714-acc0.7993951612903226.pth),[74.79%](weight/20210905_133648/Fine_tune/fold3_4-epoch14-loss0.000780794843008788-acc0.7479166666666667.pth)| 73.06%| MFCC,SPECS,MELSPEC for training|[Detail](#longdetail9) [General](#longgeneral9)|
 |[20210906_215527](log/20210906_215527)| 25s|SpecificTrainLongModel|MELSPEC_VAD|4|[68.45%](weight/20210906_215527/MelSpectrogram_VAD/fold0_4-epoch20-loss0.005048008708004288-acc0.6844758064516129.pth),[66.13%](weight/20210906_215527/MelSpectrogram_VAD/fold1_4-epoch4-loss0.11396426730789244-acc0.6612903225806451.pth),[68.85%](weight/20210906_215527/MelSpectrogram_VAD/fold2_4-epoch17-loss0.016430959921189755-acc0.688508064516129.pth),[73.12%](weight/20210906_215527/MelSpectrogram_VAD/fold3_4-epoch20-loss0.011851182989591497-acc0.73125.pth)| 69.14%| | [Detail](#longdetail10) [General](#longgeneral10)|
 |[20210906_185221](log/20210906_185221)| 25s|SpecificTrainLongTransformerEncoderModel|MELSPEC|4|[67.94%](weight/20210906_185221/MelSpectrogram/fold0_4-epoch3-loss0.15268928052872702-acc0.6794354838709677.pth),[65.02%](weight/20210906_185221/MelSpectrogram/fold1_4-epoch10-loss0.030885360165800946-acc0.6502016129032258.pth),[74.40%](weight/20210906_185221/MelSpectrogram/fold2_4-epoch11-loss0.000771018819744748-acc0.7439516129032258.pth),[69.06%](weight/20210906_185221/MelSpectrogram/fold3_4-epoch8-loss0.05979630712814684-acc0.690625.pth)| 69.11%| | [Detail](#longdetail11) [General](#longgeneral11)|
+|[20210908_121607](log/20210908_121607)| 25s|SpecificTrainResNet18BackboneLongModel|MELSPEC_VAD|4|[70.46%](weight/20210908_121607/MelSpectrogram_VAD/fold0_4-epoch8-loss0.0007008382593322376-acc0.7046370967741935.pth),[65.83%](weight/20210908_121607/MelSpectrogram_VAD/fold1_4-epoch4-loss0.009402812518680508-acc0.6582661290322581.pth),[79.54%](weight/20210908_121607/MelSpectrogram_VAD/fold2_4-epoch2-loss0.10287831783669231-acc0.7953629032258065.pth),[64.79%](weight/20210908_121607/MelSpectrogram_VAD/fold3_4-epoch6-loss0.002103926696035678-acc0.6479166666666667.pth)|73.77%| |[Detail](#longdetail12) [General](#longgeneral12)|
+|[20210907_230640](log/20210907_230640)| 25s|MSMJointConcatFineTuneLongModel|General|4|[80.04%](weight/20210907_230640/General/fold0_4-epoch17-loss0.004639386917282853-acc0.8004032258064516.pth),[63.61%](weight/20210907_230640/General/fold1_4-epoch6-loss0.05025758121527084-acc0.6360887096774194.pth),[76.51%](weight/20210907_230640/General/fold2_4-epoch8-loss0.020449309752186073-acc0.7651209677419355.pth),[74.90%](weight/20210907_230640/General/fold3_4-epoch5-loss0.10975683429929357-acc0.7489583333333333.pth) | 73.92%| MFCC,SPECS,MELSPEC for training|[Detail](#longdetail13) [General](#longgeneral13)|
+|[20210907_230640](log/20210907_230640)| 25s|MSMJointConcatFineTuneLongModel|Fine-tune|4|[77.42%](weight/20210907_230640/Fine_tune/fold0_4-epoch16-loss0.00031449106786171995-acc0.7741935483870968.pth),[65.12%](weight/20210907_230640/Fine_tune/fold1_4-epoch5-loss0.0026477884619690367-acc0.6512096774193549.pth),[76.11%](weight/20210907_230640/Fine_tune/fold2_4-epoch14-loss0.0035135104489318505-acc0.7610887096774194.pth),[74.79%](weight/20210907_230640/Fine_tune/fold3_4-epoch4-loss0.007959074192112111-acc0.7479166666666667.pth) | 73.36%| MFCC,SPECS,MELSPEC for training|[Detail](#longdetail4) [General](#longgeneral14)|
+|[20210907_230704](log/20210907_230704)| 25s|SpecificTrainLongModel|MELSPEC_VAD|4|[68.15%](weight/20210907_230704/MelSpectrogram_VAD/fold0_4-epoch10-loss0.03768929171138038-acc0.6814516129032258.pth),[64.01%](weight/20210907_230704/MelSpectrogram_VAD/fold1_4-epoch15-loss0.007877903156954942-acc0.6401209677419355.pth),[69.15%](weight/20210907_230704/MelSpectrogram_VAD/fold2_4-epoch11-loss0.013715556814175849-acc0.6915322580645161.pth),[70.21%](weight/20210907_230704/MelSpectrogram_VAD/fold3_4-epoch10-loss0.028328277380956758-acc0.7020833333333333.pth)| 67.88%| | [Detail](#longdetail5) [General](#longgeneral15)|
+|[20210907_230704](log/20210907_230704)| 25s|SpecificTrainLongModel|SPECS_VAD|4|[70.87%](weight/20210907_230704/Spectrogram_VAD/fold0_4-epoch2-loss0.3224336070453991-acc0.7086693548387096.pth),[68.65%](weight/20210907_230704/Spectrogram_VAD/fold1_4-epoch6-loss0.056907686666818336-acc0.686491935483871.pth),[64.82%](weight/20210907_230704/Spectrogram_VAD/fold2_4-epoch20-loss0.007898257525242947-acc0.6481854838709677.pth),[71.25%](weight/20210907_230704/Spectrogram_VAD/fold3_4-epoch19-loss0.008848778591478763-acc0.7125.pth)| 68.90%| | [Detail](#longdetail16) [General](#longgeneral16)|
+|[20210907_230704](log/20210907_230704)| 25s|SpecificTrainLongModel|MFCC_VAD|4|[67.94%](weight/20210907_230704/MFCC_VAD/fold0_4-epoch13-loss0.0171057377238353-acc0.6794354838709677.pth),[63.00%](weight/20210907_230704/MFCC_VAD/fold1_4-epoch3-loss0.2565434914406227-acc0.6300403225806451.pth),[69.15%](weight/20210907_230704/MFCC_VAD/fold2_4-epoch9-loss0.034415889523781676-acc0.6915322580645161.pth),[64.27%](weight/20210907_230704/MFCC_VAD/fold3_4-epoch6-loss0.10468367105149613-acc0.6427083333333333.pth) |66.09% | | [Detail](#longdetail17) [General](#longgeneral17)|
+|[20210907_230704](log/20210907_230704)| 25s|MSMJointConcatFineTuneLongModel|General|4|[71.37%](weight/20210907_230704/General/fold0_4-epoch17-loss0.021520300520933233-acc0.7137096774193549.pth),[62.50%](weight/20210907_230704/General/fold1_4-epoch14-loss0.03671111866930479-acc0.625.pth),[67.04%](weight/20210907_230704/General/fold2_4-epoch20-loss0.018662136247376507-acc0.6703629032258065.pth),[64.90%](weight/20210907_230704/General/fold3_4-epoch14-loss0.05942454429403428-acc0.6489583333333333.pth)| 66.45%| MFCC_VAD, SPECS_VAD and MELSPEC_VAD for training|[Detail](#longdetail18) [General](#longgeneral18)|
+|[20210907_230704](log/20210907_230704)| 25s|MSMJointConcatFineTuneLongModel|Fine-tune|4|[67.04%](weight/20210907_230704/Fine_tune/fold0_4-epoch19-loss0.0006361513321142253-acc0.6703629032258065.pth),[66.73%](weight/20210907_230704/Fine_tune/fold1_4-epoch12-loss0.018077083243003035-acc0.6673387096774194.pth),[69.15%](weight/20210907_230704/Fine_tune/fold2_4-epoch4-loss0.009594945272945788-acc0.6915322580645161.pth),[66.77%](weight/20210907_230704/Fine_tune/fold3_4-epoch9-loss0.012511203791917225-acc0.6677083333333333.pth)| 67.42%| MFCC_VAD, SPECS_VAD and MELSPEC_VAD for training|[Detail](#longdetail19) [General](#longgeneral19)|
 
 
 ## Evaluation
@@ -201,7 +209,85 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 
     ![SpecificTrainLongTransformerEncoderModel](image/20210907_192510/SpecificTrainLongTransformerEncoderModel_3-4_Fold_Results_Accuracy_68.54_Percent.png)
 
+* [20210908_121607](log/20210908_121607)  <span id="longdetail12">SpecificTrainResNet18BackboneLongModel</span> with MELSPEC_VAD
 
+    ![SpecificTrainResNet18BackboneLongModel](image/20210908_155528/SpecificTrainResNet18BackboneLongModel_0-4_Fold_Results_Accuracy_69.42_Percent.png)
+
+    ![SpecificTrainResNet18BackboneLongModel](image/20210908_155528/SpecificTrainResNet18BackboneLongModel_1-4_Fold_Results_Accuracy_66.11_Percent.png)
+
+    ![SpecificTrainResNet18BackboneLongModel](image/20210908_155528/SpecificTrainResNet18BackboneLongModel_2-4_Fold_Results_Accuracy_77.56_Percent.png)
+
+    ![SpecificTrainResNet18BackboneLongModel](image/20210908_155528/SpecificTrainResNet18BackboneLongModel_3-4_Fold_Results_Accuracy_64.73_Percent.png)
+
+* [20210907_230640](log/20210907_230640)  <span id="longdetail13">MSMJointConcatFineTuneLongModel</span> with General
+
+    ![MSMJointConcatFineTuneLongModel](image/20210908_235454/MSMJointConcatFineTuneLongModel_0-4_Fold_Results_Accuracy_78.91_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210908_235454/MSMJointConcatFineTuneLongModel_1-4_Fold_Results_Accuracy_62.52_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210908_235454/MSMJointConcatFineTuneLongModel_2-4_Fold_Results_Accuracy_76.11_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210908_235454/MSMJointConcatFineTuneLongModel_3-4_Fold_Results_Accuracy_75.19_Percent.png)
+
+* [20210907_230640](log/20210907_230640)  <span id="longdetail14">MSMJointConcatFineTuneLongModel</span> with Fine-tune
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_103922/MSMJointConcatFineTuneLongModel_0-4_Fold_Results_Accuracy_76.23_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_103922/MSMJointConcatFineTuneLongModel_1-4_Fold_Results_Accuracy_65.69_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_103922/MSMJointConcatFineTuneLongModel_2-4_Fold_Results_Accuracy_75.36_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_103922/MSMJointConcatFineTuneLongModel_3-4_Fold_Results_Accuracy_74.00_Percent.png)
+
+* [20210907_230704](log/20210907_230704)  <span id="longdetail15">SpecificTrainLongModel</span> with MELSPEC_VAD
+
+    ![SpecificTrainLongModel](image/20210909_121950/SpecificTrainLongModel_0-4_Fold_Results_Accuracy_67.18_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210909_121950/SpecificTrainLongModel_1-4_Fold_Results_Accuracy_64.70_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210909_121950/SpecificTrainLongModel_2-4_Fold_Results_Accuracy_68.93_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210909_121950/SpecificTrainLongModel_3-4_Fold_Results_Accuracy_69.96_Percent.png)
+
+* [20210907_230704](log/20210907_230704)  <span id="longdetail16">SpecificTrainLongModel</span> with SPECS_VAD
+
+    ![SpecificTrainLongModel](image/20210909_124246/SpecificTrainLongModel_0-4_Fold_Results_Accuracy_70.56_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210909_124246/SpecificTrainLongModel_1-4_Fold_Results_Accuracy_67.90_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210909_124246/SpecificTrainLongModel_2-4_Fold_Results_Accuracy_64.13_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210909_124246/SpecificTrainLongModel_3-4_Fold_Results_Accuracy_70.69_Percent.png)
+
+* [20210907_230704](log/20210907_230704)  <span id="longdetail17">SpecificTrainLongModel</span> with MFCC_VAD
+
+    ![SpecificTrainLongModel](image/20210909_130955/SpecificTrainLongModel_0-4_Fold_Results_Accuracy_67.26_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210909_130955/SpecificTrainLongModel_1-4_Fold_Results_Accuracy_62.96_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210909_130955/SpecificTrainLongModel_2-4_Fold_Results_Accuracy_68.65_Percent.png)
+
+    ![SpecificTrainLongModel](image/20210909_130955/SpecificTrainLongModel_3-4_Fold_Results_Accuracy_64.44_Percent.png)
+
+* [20210907_230704](log/20210907_230704)  <span id="longdetail18">MSMJointConcatFineTuneLongModel</span> with General VAD
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_142350/MSMJointConcatFineTuneLongModel_0-4_Fold_Results_Accuracy_70.48_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_142350/MSMJointConcatFineTuneLongModel_1-4_Fold_Results_Accuracy_61.19_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_142350/MSMJointConcatFineTuneLongModel_2-4_Fold_Results_Accuracy_67.18_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_142350/MSMJointConcatFineTuneLongModel_3-4_Fold_Results_Accuracy_63.04_Percent.png)
+
+* [20210907_230704](log/20210907_230704)  <span id="longdetail19">MSMJointConcatFineTuneLongModel</span> with Fine tune VAD
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_152527/MSMJointConcatFineTuneLongModel_0-4_Fold_Results_Accuracy_66.57_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_152527/MSMJointConcatFineTuneLongModel_1-4_Fold_Results_Accuracy_66.83_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_152527/MSMJointConcatFineTuneLongModel_2-4_Fold_Results_Accuracy_68.97_Percent.png)
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_152527/MSMJointConcatFineTuneLongModel_3-4_Fold_Results_Accuracy_66.23_Percent.png)
 
 ### General
 
@@ -257,3 +343,36 @@ There are two given tasks, predicting on 5 seconds audio and on 30 seconds audio
 * [20210906_185221](log/20210906_185221)  <span id="longgeneral11">SpecificTrainLongTransformerEncoderModel</span> with MELSPEC
 
     ![SpecificTrainLongTransformerEncoderModel](image/20210907_192510/SpecificTrainLongTransformerEncoderModel_Results_Accuracy_68.99_Percent.png)
+
+
+* [20210908_121607](log/20210908_121607)  <span id="longgeneral12">SpecificTrainResNet18BackboneLongModel</span> with MELSPEC_VAD
+
+    ![SpecificTrainResNet18BackboneLongModel](image/20210908_155528/SpecificTrainResNet18BackboneLongModel_Results_Accuracy_69.49_Percent.png)
+
+* [20210907_230640](log/20210907_230640)  <span id="longgeneral13">MSMJointConcatFineTuneLongModel</span> with General
+
+    ![MSMJointConcatFineTuneLongModel](image/20210908_235454/MSMJointConcatFineTuneLongModel_Results_Accuracy_73.17_Percent.png)
+
+* [20210907_230640](log/20210907_230640)  <span id="longgeneral14">MSMJointConcatFineTuneLongModel</span> with Fine-tune
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_103922/MSMJointConcatFineTuneLongModel_Results_Accuracy_72.81_Percent.png)
+
+* [20210907_230704](log/20210907_230704)  <span id="longgeneral15">SpecificTrainLongModel</span> with MELSPEC_VAD
+
+    ![SpecificTrainLongModel](image/20210909_121950/SpecificTrainLongModel_Results_Accuracy_67.67_Percent.png)
+
+* [20210907_230704](log/20210907_230704)  <span id="longgeneral16">SpecificTrainLongModel</span> with SPECS_VAD
+
+    ![SpecificTrainLongModel](image/20210909_124246/SpecificTrainLongModel_Results_Accuracy_68.30_Percent.png)
+
+* [20210907_230704](log/20210907_230704)  <span id="longgeneral17">SpecificTrainLongModel</span> with MFCC_VAD
+
+    ![SpecificTrainLongModel](image/20210909_130955/SpecificTrainLongModel_Results_Accuracy_65.84_Percent.png)
+
+* [20210907_230704](log/20210907_230704)  <span id="longgeneral18">MSMJointConcatFineTuneLongModel</span> with Gereral VAD
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_142350/MSMJointConcatFineTuneLongModel_Results_Accuracy_65.49_Percent.png)
+
+* [20210907_230704](log/20210907_230704)  <span id="longgeneral19">MSMJointConcatFineTuneLongModel</span> with Fine tune VAD
+
+    ![MSMJointConcatFineTuneLongModel](image/20210909_152527/MSMJointConcatFineTuneLongModel_Results_Accuracy_67.16_Percent.png)

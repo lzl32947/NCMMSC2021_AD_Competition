@@ -89,30 +89,24 @@ class SpecificTrainResNetLongLSTMModel(BaseModel):
 
 
 @Registers.model.register
-class SpecificTrainModifiedResNetLongLSTMModel(BaseModel):
+class SpecificTrainResNet18BackboneLongLSTMModel(BaseModel):
     def __init__(self, input_shape: Tuple):
-        super(SpecificTrainModifiedResNetLongLSTMModel, self).__init__()
+        super(SpecificTrainResNet18BackboneLongLSTMModel, self).__init__()
         self.extractor = Registers.module["ResNetBackbone"](18)
         self.avg_pool = nn.AdaptiveAvgPool2d((1, None))
         self.layer_dim = 2
         self.hidden_dim = 600
-        self.lstm = nn.LSTM(input_size=512, hidden_size=self.hidden_dim, num_layers=self.layer_dim, bidirectional=True
-                            , batch_first=True)
+        self.lstm = nn.LSTM(input_size=512, hidden_size=self.hidden_dim, num_layers=self.layer_dim, bidirectional=True)
         self.fc = nn.Linear(self.hidden_dim * 2, 3)
 
     def forward(self, input_tensor: torch.Tensor):
         batch_size = input_tensor.shape[0]
         output = self.extractor(input_tensor)
         output = self.avg_pool(output)
-
-        length = output.shape[3]
-        channel = output.shape[1]
-        output = output.permute((0, 3, 1, 2))
-
-        output = output.view(batch_size, length, channel)
+        output = output.squeeze(2).permute([2, 0, 1]).contiguous()
         lstm_out, (h_n, c_n) = self.lstm(output)
-
-        lstm_out = self.fc(lstm_out[:, -1, :])
+        lstm_out = lstm_out[-1, :, :].squeeze(0).view(batch_size, -1).contiguous()
+        lstm_out = self.fc(lstm_out)
         return lstm_out
 
 
@@ -275,14 +269,14 @@ class ConcatModel(nn.Module):
         batch_size = input_tensor.shape[0]
 
         output = self.conv_layer_1(input_tensor)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
 
         output = self.conv_layer_2(output)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
         output = self.maxpooling_2(output)
 
         output = self.conv_layer_3(output)
-        output = func.relu(output, inplace=True)
+        output = func.relu(output)
         output = self.maxpooling_3(output)
 
         output = output.view((batch_size, -1))

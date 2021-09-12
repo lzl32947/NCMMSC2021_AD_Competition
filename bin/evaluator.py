@@ -17,7 +17,7 @@ import pickle
 
 
 def evaluate_specific(identifier: str, config: Dict, model_name: str, use_feature: Union[AudioFeatures, str],
-                      weight_identifier: str, **kwargs):
+                      weight_identifier: str, input_channels: int = 1, **kwargs):
     correct_label = []
     predicted_label = []
     total = 0
@@ -64,6 +64,9 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
 
                 feature, label = data[use_feature], data[AudioFeatures.LABEL]
 
+                if input_channels != 1:
+                    feature = torch.cat([feature] * input_channels, dim=1)
+
                 correct_label_fold.append(label.numpy())
 
                 feature = feature.cuda()
@@ -102,7 +105,7 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
 
 
 def evaluate_joint(identifier: str, config: Dict, model_name: str, use_feature: List[AudioFeatures],
-                   weight_identifier: str, weight_description: str, **kwargs):
+                   weight_identifier: str, weight_description: str, input_channels: int = 1, **kwargs):
     correct_label = []
     predicted_label = []
     total = 0
@@ -149,7 +152,11 @@ def evaluate_joint(identifier: str, config: Dict, model_name: str, use_feature: 
                 feature_list = []
                 label = data[AudioFeatures.LABEL]
                 for item in use_feature:
-                    feature = data[item].cuda()
+
+                    feature = data[item]
+                    if input_channels != 1:
+                        feature = torch.cat([feature] * input_channels, dim=1)
+                    feature = feature.cuda()
                     feature_list.append(feature)
                 correct_label_fold.append(label.numpy())
 
@@ -231,6 +238,10 @@ def plot_image(identifier, config, cm, classes, title: str, cmap=plt.cm.Blues):
                 ax.text(j, i, format(int(cm[i, j] * 100 + 0.5), fmt) + '%',
                         ha="center", va="center",
                         color="white" if cm[i, j] > thresh else "black")
+            else:
+                ax.text(j, i, format(0, fmt) + '%',
+                        ha="center", va="center",
+                        color="white" if cm[i, j] > thresh else "black")
     fig.tight_layout()
     fig.savefig(os.path.join(config["image"]["image_dir"], identifier,
                              "{}.png".format(title.replace(" ", "_").replace("\n", "_"))),
@@ -265,12 +276,13 @@ def analysis_result(identifier, config, correct_label, predicted_label, model_na
 if __name__ == '__main__':
     time_identifier, configs = global_init(True)
     logger = GlobalLogger().get_logger()
-    model_name = "SpecificTrainLongLSTMModel"
-    weight_identifier = "20210905_151007"
-    # c, p = evaluate_joint(time_identifier, configs, model_name,
-    #                       [AudioFeatures.SPECS, AudioFeatures.MELSPECS, AudioFeatures.MFCC], weight_identifier,
-    #                       "Fine_tune", input_shape=())
-    c, p = evaluate_specific(time_identifier, configs, model_name,
-                             AudioFeatures.MELSPECS, weight_identifier, input_shape=())
+    model_name = "MSMJointConcatFineTuneLongModel"
+    weight_identifier = "20210907_230704"
+    c, p = evaluate_joint(time_identifier, configs, model_name,
+                          [AudioFeatures.MFCC_VAD, AudioFeatures.SPECS_VAD, AudioFeatures.MELSPECS_VAD],
+                          weight_identifier,
+                          "Fine_tune", input_shape=())
+    # c, p = evaluate_specific(time_identifier, configs, model_name,
+    #                          AudioFeatures.MFCC_VAD, weight_identifier, input_shape=(),input_channels=1)
     logger.info("Analysis results for {} with {}".format(model_name, weight_identifier))
     analysis_result(time_identifier, configs, c, p, model_name)
