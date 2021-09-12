@@ -1,5 +1,5 @@
 import random
-from typing import List, Optional, Dict, Union, Tuple, Any
+from typing import List, Optional, Dict, Union, Tuple, Any, Callable
 
 import numpy as np
 from PIL import Image
@@ -8,6 +8,7 @@ from torch.utils.data.dataset import Dataset
 import os
 import librosa
 from configs.types import ADType, AudioFeatures, DatasetMode
+from audiomentations import Compose, AddGaussianNoise, TimeStretch, PitchShift, Shift
 
 # dataloader
 class AldsDataset(Dataset):
@@ -18,7 +19,7 @@ class AldsDataset(Dataset):
     def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, use_vad: bool = False,
                  repeat_times: int = 1, random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
                  current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN,
-                 balance: bool = True) -> None:
+                 balance: bool = True, argumentation: bool = False) -> None:
         """
         Init the Dataset with the given parameters
         :param use_features: List[AudioFeatures], the features to use and to be processed in this dataset
@@ -31,6 +32,7 @@ class AldsDataset(Dataset):
         :param current_fold: int, the current fold, used when k-fold is enable(k_fold > 0)
         :param run_for: DatasetMode, default is DatasetMode.Train and determine the aim of the dataset
         :param balance: bool, whether to balance the dataset
+        :param argumentation: bool, whether to do the argumentation
         """
         # Set audio backend for torch if used
         torchaudio.set_audio_backend("soundfile")
@@ -61,6 +63,8 @@ class AldsDataset(Dataset):
         self.use_features = use_features
 
         self.configs = configs
+        self.argumentation = self.generate_argumentation(configs['argumentation'])
+        self.use_argumentation = argumentation
 
     @staticmethod
     def balance_data(data: List, label: List) -> (List, List):
@@ -191,10 +195,12 @@ class AldsDataset(Dataset):
         return self.count * self.repeat_times
 
     @staticmethod
-    def resample_wav(file_path: str, sample_length: int, sr: int, use_vad: bool) -> Union[
-        Tuple[Any, np.ndarray], Any]:
+    def resample_wav(file_path: str, sample_length: int, sr: int, use_vad: bool, use_argumentation: bool,
+                     argumentation_func: Callable) -> Union[Tuple[Any, np.ndarray], Any]:
         """
         Crop part of the audio and return
+        :param use_argumentation: bool, whether to use the argumentation functions
+        :param argumentation_func: Callable, the argumentation function to use
         :param use_vad: bool, if True, extra audio will be return
         :param file_path: str, the path to the audio file
         :param sample_length: int, the sample length, and be in format of seconds, e.g. 5s
@@ -202,6 +208,9 @@ class AldsDataset(Dataset):
         :return: np.ndarray, the cropped audio
         """
         waveform, sample_rate = librosa.load(file_path, sr=sr)
+        if use_argumentation and argumentation_func is not None:
+            waveform = argumentation_func(samples=waveform, sample_rate=sample_rate)
+
         start = int(random.random() * (len(waveform) - sample_length * sample_rate))
         cropped = waveform[start: start + sample_length * sample_rate]
         if use_vad:
@@ -404,12 +413,14 @@ class AldsDataset(Dataset):
         # Read and crop the audio
         if self.use_vad:
 
-            cropped_wav, vad_cropped = self.resample_wav(file, self.sample_length, self.sr, self.use_vad)
+            cropped_wav, vad_cropped = self.resample_wav(file, self.sample_length, self.sr, self.use_vad,
+                                                         self.use_argumentation, self.argumentation)
             # Pre-emphasis the audio
             output_wav = self.pre_emphasis(cropped_wav, self.configs['pre_emphasis'])
             output_vad = self.pre_emphasis(vad_cropped, self.configs['pre_emphasis'])
         else:
-            cropped_wav: np.ndarray = self.resample_wav(file, self.sample_length, self.sr, self.use_vad)
+            cropped_wav: np.ndarray = self.resample_wav(file, self.sample_length, self.sr, self.use_vad,
+                                                        self.use_argumentation, self.argumentation)
             # Pre-emphasis the audio
             output_wav = self.pre_emphasis(cropped_wav, self.configs['pre_emphasis'])
             output_vad = None
@@ -458,6 +469,19 @@ class AldsDataset(Dataset):
         if self.use_vad:
             output_dict[AudioFeatures.VAD] = output_vad
         return output_dict
+
+    @staticmethod
+    def generate_argumentation(config: Dict):
+        return Compose([
+            AddGaussianNoise(min_amplitude=config["gaussian_noise"]["min_amplitude"],
+                             max_amplitude=config["gaussian_noise"]["max_amplitude"], p=config["gaussian_noise"]["p"]),
+            TimeStretch(min_rate=config["time_stretch"]["min_rate"], max_rate=config["time_stretch"]["max_rate"],
+                        p=config["time_stretch"]["p"]),
+            PitchShift(min_semitones=config["pitch_shift"]["min_semitones"],
+                       max_semitones=config["pitch_shift"]["max_semitones"], p=config["pitch_shift"]["p"]),
+            Shift(min_fraction=config["shift"]["min_fraction"], max_fraction=config["shift"]["max_fraction"],
+                  p=config["shift"]["p"]),
+        ])
 
 
 def audio_collate_fn(batch):

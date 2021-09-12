@@ -14,13 +14,31 @@ dataset:
   use_vad: true     # whether to generate the vad features, true by default
   random_disruption: true # whether to randomize, notice that this will not change the file for k-fold and is safe, true by default
   batch_size: 16     # batch size, 16 by default
-
+  balance: true # balance the dataset, true by default
 
   process:
     sr: 16000     # sample rate, 16000 by default
     dim: 3        # dimensions, 3 means expand dims to tuple of shape 4 to process in image-like ways, 2 means not expand and process in test-embedding way, 3 by default
     crop_length: 6 # sample seconds, 5 by default
     normalized: true  # normalized, true by default
+
+    argumentation:
+      gaussian_noise:
+        min_amplitude: 0.001
+        max_amplitude: 0.015
+        p: 0.5
+      time_stretch:
+        min_rate: 0.8
+        max_rate: 1.25
+        p: 0.5
+      pitch_shift:
+        min_semitones: -4
+        max_semitones: 4
+        p: 0.5
+      shift:
+        min_fraction: -0.5
+        max_fraction: 0.5
+        p: 0.5
     pre_emphasis:
       coefficient: 0.95
     mfcc:

@@ -576,12 +576,12 @@ if __name__ == '__main__':
     time_identifier, configs = global_init()
     logger = GlobalLogger().get_logger()
     # Train the general model
-    model_name = "MSMJointConcatFineTuneLongModel"
-    base_model_name = "SpecificTrainLongModel"
+    model_name = "MSMJointConcatFineTuneResNet18BackboneLongModel"
+    base_model_name = "SpecificTrainResNet18BackboneLongModel"
     logger.info("Training with model {}.".format(model_name))
     train_joint(configs, time_identifier, model_name, base_model_name,
-                train_specific=False, train_specific_epoch=20,
+                train_specific=True, train_specific_epoch=20,
                 specific_weight={AudioFeatures.SPECS: "20210905_133648", AudioFeatures.MFCC: "20210905_133648",
                                  AudioFeatures.MELSPECS: "20210905_133648"},
                 train_general=True, train_general_epoch=20,
-                fine_tune=True, fine_tune_epoch=20)
+                fine_tune=True, fine_tune_epoch=20, input_channels=3)
