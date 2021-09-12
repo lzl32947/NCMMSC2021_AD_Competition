@@ -24,7 +24,7 @@ if __name__ == '__main__':
     use_features = prepare_feature(configs['features'])
 
     # Get the dataloader from the generator
-    for dataloader in prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN, k_fold=0):
+    for dataloader in prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN, k_fold=0,argumentation=True):
         logger.info("Using config:" + json.dumps(configs['dataset']['process'], ensure_ascii=False))
         # Calculate the process time
         now_time = time.time()
