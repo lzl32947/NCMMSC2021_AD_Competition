@@ -1,4 +1,5 @@
 import json
+import os
 
 import librosa
 import numpy as np
@@ -22,15 +23,19 @@ if __name__ == '__main__':
     # Get the logger
     logger = GlobalLogger().get_logger()
     # Whether to show the images
-    show_img = False
+    show_img = True
     # Init the features to use
     use_features = prepare_feature(configs['features'])
     # use_features = [AudioFeatures.MFCC]
 
+    # Save image to output
+    save = True
+    output_dir = os.path.join(configs["output"]["output_dir"], time_identifier)
+    count = 0
     # Get the dataloader from the generator
     for dataloader in prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN, k_fold=0,
                                          dataset_func=AldsTorchDataset,
-                                         argumentation=False):
+                                         use_argumentation=False):
         logger.info("Using config:" + json.dumps(configs['dataset']['process'], ensure_ascii=False))
         # Calculate the process time
         now_time = time.time()
@@ -74,7 +79,15 @@ if __name__ == '__main__':
                         ax.set_title("{}".format(list(item.keys())[index].value))
                     # Plot the image
                     plt.tight_layout()
-                    fig.show()
+                    if save:
+                        fig.savefig(os.path.join(output_dir, "{}-{}.png".format(count,batch_num)))
+                    else:
+                        fig.show()
                     plt.close(fig)
             # Update the time
             now_time = time.time()
+            if save:
+                if count > 10:
+                    break
+                else:
+                    count += 1

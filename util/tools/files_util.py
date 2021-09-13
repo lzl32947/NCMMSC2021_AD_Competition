@@ -91,6 +91,7 @@ def global_init(for_evaluate: bool = False) -> (str, Dict):
     register_model(config["model"]["module_path"])
     # Check and create the necessary directories
     create_dir(os.path.join(config['log']['log_dir'], run_time))
+    create_dir(os.path.join(config['output']['output_dir'], run_time))
     # Create the global logger and init the log with the previous config
     logger = GlobalLogger()
     logger.init_config(config['log'], run_time)
@@ -101,7 +102,6 @@ def global_init(for_evaluate: bool = False) -> (str, Dict):
         # Create the specific weight dir
         create_dir(os.path.join(config['weight']['weight_dir'], run_time))
     else:
-        create_dir(os.path.join(config['output']['output_dir'], run_time))
         create_dir(os.path.join(config['image']['image_dir'], run_time))
     # return the runtime identifier and the configs
     shutil.copy(os.path.join("configs", "config.yaml"), os.path.join(config['log']["log_dir"], run_time, "config.yaml"))

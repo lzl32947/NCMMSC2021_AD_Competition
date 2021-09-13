@@ -37,11 +37,11 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
 
     # Getting the dataloader from the generator
     for current_fold, (train_dataloader, test_dataloader) in enumerate(
-            zip(prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TRAIN, dataset_func),
-                prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TEST, dataset_func))):
+            zip(prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TRAIN, dataset_func, **kwargs),
+                prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TEST, dataset_func, **kwargs))):
 
         # If not running on GPU
-        model = Registers.model[model_name](**kwargs)
+        model = Registers.model[model_name](input_shape=())
         model = model.cuda()
 
         # Init the criterion, CE by default
@@ -189,4 +189,5 @@ if __name__ == '__main__':
     model_name = "SpecificTrainResNet18BackboneLongModel"
     logger.info("Training with model {}.".format(model_name))
     train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS,
-                           model_name, input_shape=(1, 128, 782), input_channels=3, dataset_func=datasets)
+                           model_name, input_shape=(1, 128, 782), input_channels=3, dataset_func=datasets,
+                           use_argumentation=False)

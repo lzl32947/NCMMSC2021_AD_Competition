@@ -46,13 +46,15 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
         'random_disruption']
     balance = configs['balance'] if 'balance' not in kwargs.keys() else kwargs[
         'balance']
+    use_argumentation = configs['use_argumentation'] if 'use_argumentation' not in kwargs.keys() else kwargs[
+        'use_argumentation']
     if k_fold != 0:
         # Generate the k_fold dataloader
         for fold in range(k_fold):
             dataset = dataset_func(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
                                    repeat_times=repeat_times, configs=configs['process'], k_fold=k_fold,
                                    current_fold=fold, random_disruption=random_disruption,
-                                   run_for=run_for, balance=balance)
+                                   run_for=run_for, balance=balance, use_argumentation=use_argumentation)
 
             dataloader = DataLoader(dataset, batch_size=batch_size)
             yield dataloader
@@ -62,7 +64,7 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
             dataset = dataset_func(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
                                    repeat_times=repeat_times, configs=configs['process'],
                                    random_disruption=random_disruption,
-                                   run_for=run_for, balance=balance)
+                                   run_for=run_for, balance=balance, use_argumentation=use_argumentation)
 
             dataloader = DataLoader(dataset, batch_size=batch_size)
             yield dataloader

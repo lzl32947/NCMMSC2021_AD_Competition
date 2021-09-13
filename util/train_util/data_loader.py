@@ -25,7 +25,7 @@ class BaseDataset(Dataset, ABC):
     def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, use_vad: bool = False,
                  repeat_times: int = 1, random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
                  current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN,
-                 balance: bool = True, argumentation: bool = False) -> None:
+                 balance: bool = True, use_argumentation: bool = False) -> None:
         """
         Init the Dataset with the given parameters
         :param use_features: List[AudioFeatures], the features to use and to be processed in this dataset
@@ -38,7 +38,7 @@ class BaseDataset(Dataset, ABC):
         :param current_fold: int, the current fold, used when k-fold is enable(k_fold > 0)
         :param run_for: DatasetMode, default is DatasetMode.Train and determine the aim of the dataset
         :param balance: bool, whether to balance the dataset
-        :param argumentation: bool, whether to do the argumentation
+        :param use_argumentation: bool, whether to do the argumentation
         """
         # Init the target dict
         self.target_dic = {}
@@ -56,6 +56,7 @@ class BaseDataset(Dataset, ABC):
         self.sample_length = configs['crop_length']
         # Transform the dict to list
         data, label = self.dict2list(k_fold, current_fold, run_for)
+        self.run_for = run_for
         if balance:
             data, label = self.balance_data(data, label)
         if random_disruption:
@@ -65,7 +66,7 @@ class BaseDataset(Dataset, ABC):
         self.sr = configs['sr']
         self.expand_dim = configs['dim'] == 3
         self.use_features = use_features
-
+        self.use_argumentation = use_argumentation
         self.configs = configs
 
     @staticmethod
@@ -201,11 +202,10 @@ class AldsDataset(BaseDataset):
     def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, use_vad: bool = False,
                  repeat_times: int = 1, random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
                  current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN,
-                 balance: bool = True, argumentation: bool = False):
+                 balance: bool = True, use_argumentation: bool = False):
         super().__init__(use_features, use_merge, use_vad, repeat_times, random_disruption, configs, k_fold,
-                         current_fold, run_for, balance, argumentation)
+                         current_fold, run_for, balance, use_argumentation)
         self.argumentation = self.generate_argumentation(configs['argumentation'])
-        self.use_argumentation = argumentation
 
     @staticmethod
     def generate_argumentation(config: Dict):
@@ -501,13 +501,9 @@ class AldsTorchDataset(BaseDataset):
     def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, use_vad: bool = False,
                  repeat_times: int = 1, random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
                  current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN,
-                 balance: bool = True, argumentation: bool = False):
+                 balance: bool = True, use_argumentation: bool = False):
         super().__init__(use_features, use_merge, use_vad, repeat_times, random_disruption, configs, k_fold,
-                         current_fold, run_for, balance, argumentation)
-        # Set audio backend for torch if used
-
-        # Load argumentation
-        self.use_argumentation = argumentation
+                         current_fold, run_for, balance, use_argumentation)
 
     @staticmethod
     def resample_wav(file_path: str, sample_length: int, sr: int, use_vad: bool) -> Union[Tuple[Any, np.ndarray], Any]:
@@ -554,17 +550,19 @@ class AldsTorchDataset(BaseDataset):
             # Add the MFCC feature to output if used
             if AudioFeatures.MFCC == item:
                 mfcc_out = self.mfcc(output_wav, self.sr, self.configs['mfcc'],
-                                     normalized=self.configs['normalized'], expand_dim=self.expand_dim)
+                                     normalized=self.configs['normalized'], expand_dim=self.expand_dim,
+                                     use_argumentation=self.use_argumentation and self.run_for == DatasetMode.TRAIN)
                 output_dict[AudioFeatures.MFCC] = mfcc_out
             # Add the Spectrogram feature to output if used
             if AudioFeatures.SPECS == item:
                 spec_out = self.spec(output_wav, self.configs['specs'], normalized=self.configs['normalized'],
-                                     expand_dim=self.expand_dim)
+                                     expand_dim=self.expand_dim, use_argumentation=self.use_argumentation and self.run_for == DatasetMode.TRAIN)
                 output_dict[AudioFeatures.SPECS] = spec_out
             # Add the Mel-Spectrogram feature to output if used
             if AudioFeatures.MELSPECS == item:
                 melspec_out = self.melspec(output_wav, self.sr, self.configs['melspecs'],
-                                           normalized=self.configs['normalized'], expand_dim=self.expand_dim)
+                                           normalized=self.configs['normalized'], expand_dim=self.expand_dim,
+                                           use_argumentation=self.use_argumentation and self.run_for == DatasetMode.TRAIN)
                 output_dict[AudioFeatures.MELSPECS] = melspec_out
         if self.use_vad:
             assert output_vad is not None
@@ -573,17 +571,19 @@ class AldsTorchDataset(BaseDataset):
                 # Add the MFCC feature to output if used
                 if AudioFeatures.MFCC == item or AudioFeatures.MFCC_VAD == item:
                     mfcc_out = self.mfcc(output_vad, self.sr, self.configs['mfcc'],
-                                         normalized=self.configs['normalized'], expand_dim=self.expand_dim)
+                                         normalized=self.configs['normalized'], expand_dim=self.expand_dim,
+                                         use_argumentation=self.use_argumentation and self.run_for == DatasetMode.TRAIN)
                     output_dict[AudioFeatures.MFCC_VAD] = mfcc_out
                 # Add the Spectrogram feature to output if used
                 if AudioFeatures.SPECS == item or AudioFeatures.SPECS_VAD == item:
                     spec_out = self.spec(output_vad, self.configs['specs'], normalized=self.configs['normalized'],
-                                         expand_dim=self.expand_dim)
+                                         expand_dim=self.expand_dim, use_argumentation=self.use_argumentation and self.run_for == DatasetMode.TRAIN)
                     output_dict[AudioFeatures.SPECS_VAD] = spec_out
                 # Add the Mel-Spectrogram feature to output if used
                 if AudioFeatures.MELSPECS == item or AudioFeatures.MELSPECS_VAD == item:
                     melspec_out = self.melspec(output_vad, self.sr, self.configs['melspecs'],
-                                               normalized=self.configs['normalized'], expand_dim=self.expand_dim)
+                                               normalized=self.configs['normalized'], expand_dim=self.expand_dim,
+                                               use_argumentation=self.use_argumentation and self.run_for == DatasetMode.TRAIN)
                     output_dict[AudioFeatures.MELSPECS_VAD] = melspec_out
 
         # Add the label to output
