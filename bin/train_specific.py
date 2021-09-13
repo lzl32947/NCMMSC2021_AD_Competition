@@ -1,6 +1,6 @@
 import os
 import time
-from typing import Dict
+from typing import Dict, Callable
 import torch.nn.functional as func
 from torch import optim, nn
 from tqdm import tqdm
@@ -8,12 +8,15 @@ from configs.types import AudioFeatures, DatasetMode
 from model.manager import Registers
 from util.log_util.logger import GlobalLogger
 from util.tools.files_util import global_init, create_dir
+from util.train_util.data_loader import AldsTorchDataset, AldsDataset
 from util.train_util.trainer_util import prepare_feature, prepare_dataloader, read_weight, get_best_acc_weight
 import torch
 
 
 def train_specific_feature(configs: Dict, time_identifier: str, specific_feature: AudioFeatures,
-                           model_name: str, epoch: int = 20, input_channels: int = 1, **kwargs) -> None:
+                           model_name: str, epoch: int = 20, input_channels: int = 1,
+                           dataset_func: Callable = AldsDataset,
+                           **kwargs) -> None:
     """
     This is the trainer of training only with one specific features.
     :param input_channels: int, the input channels of the model, default is 1
@@ -34,8 +37,8 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
 
     # Getting the dataloader from the generator
     for current_fold, (train_dataloader, test_dataloader) in enumerate(
-            zip(prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TRAIN),
-                prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TEST))):
+            zip(prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TRAIN, dataset_func),
+                prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TEST, dataset_func))):
 
         # If not running on GPU
         model = Registers.model[model_name](**kwargs)
@@ -95,7 +98,7 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
             now_time = time.time()
             # Write logs
             logger.info(
-                "Finish training feature {}, for fold {}/{}, epoch {}, time cost {}s ,with loss {}".format(
+                "Finish training feature {}, for fold {}/{}, epoch {}, time cost {:.2f}s ,with loss {:.5f}".format(
                     specific_feature,
                     current_fold,
                     total_fold,
@@ -151,13 +154,13 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
             now_time = time.time()
             # Write the log
             logger.info(
-                "Finish testing feature {}, for fold {}/{}, epoch {}, time cost {}s ,with acc {}".format(
+                "Finish testing feature {}, for fold {}/{}, epoch {}, time cost {:.2f}s ,with acc {:.2f}%".format(
                     specific_feature,
                     current_fold,
                     total_fold,
                     current_epoch,
                     now_time - current_time,
-                    final))
+                    final * 100))
             # Save the weight to the directory
             save_name = os.path.join(save_dir, "fold{}_{}-epoch{}-loss{}-acc{}.pth").format(current_fold,
                                                                                             total_fold,
@@ -178,8 +181,12 @@ if __name__ == '__main__':
     use_features = prepare_feature(configs['features'])
     # Read the fold from config
     total_fold = configs['dataset']['k_fold']
+    # Dataset selection
+    datasets = AldsTorchDataset
+    if datasets != AldsDataset:
+        logger.info("Using {} for training!".format(datasets.__name__))
     # Train the general model
     model_name = "SpecificTrainResNet18BackboneLongModel"
     logger.info("Training with model {}.".format(model_name))
-    train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS_VAD,
-                           model_name, input_shape=(1, 128, 782), input_channels=3)
+    train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS,
+                           model_name, input_shape=(1, 128, 782), input_channels=3, dataset_func=datasets)

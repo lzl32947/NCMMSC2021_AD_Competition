@@ -633,11 +633,11 @@ class AldsTorchDataset(BaseDataset):
                 mfcc_out = torch.unsqueeze(mfcc_out, dim=0)
             if random.random() > 0.5:
                 time_masking = torchaudio.transforms.TimeMasking(
-                    int(mfcc_out.shape[2] * (random.random() + 0.01) * 0.2))
+                    int(mfcc_out.shape[2] * 0.2))
                 mfcc_out = time_masking(mfcc_out)
             if random.random() > 0.5:
                 frequency_masking = torchaudio.transforms.FrequencyMasking(
-                    int(mfcc_out.shape[1] * (random.random() + 0.01) * 0.2))
+                    int(mfcc_out.shape[1] * 0.2))
                 mfcc_out = frequency_masking(mfcc_out)
         if expand_dim:
             # Expand dimension to 3 to process it as the image
@@ -677,11 +677,11 @@ class AldsTorchDataset(BaseDataset):
                 spec_out = torch.unsqueeze(spec_out, dim=0)
             if random.random() > 0.5:
                 time_masking = torchaudio.transforms.TimeMasking(
-                    int(spec_out.shape[2] * (random.random() + 0.01) * 0.2))
+                    int(spec_out.shape[2] * 0.2))
                 spec_out = time_masking(spec_out)
             if random.random() > 0.5:
                 frequency_masking = torchaudio.transforms.FrequencyMasking(
-                    int(spec_out.shape[1] * (random.random() + 0.01) * 0.2))
+                    int(spec_out.shape[1] * 0.2))
                 spec_out = frequency_masking(spec_out)
         if expand_dim:
             # Expand dimension to 3 to process it as the image
@@ -722,11 +722,11 @@ class AldsTorchDataset(BaseDataset):
                 melspec_out = torch.unsqueeze(melspec_out, dim=0)
             if random.random() > 0.5:
                 time_masking = torchaudio.transforms.TimeMasking(
-                    int(melspec_out.shape[2] * (random.random() + 0.01) * 0.2))
+                    int(melspec_out.shape[2] * 0.2))
                 melspec_out = time_masking(melspec_out)
             if random.random() > 0.5:
                 frequency_masking = torchaudio.transforms.FrequencyMasking(
-                    int(melspec_out.shape[1] * (random.random() + 0.01) * 0.2))
+                    int(melspec_out.shape[1] * 0.2))
                 melspec_out = frequency_masking(melspec_out)
         if expand_dim:
             # Expand dimension to 3 to process it as the image

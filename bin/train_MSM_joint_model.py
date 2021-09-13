@@ -113,7 +113,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     now_time = time.time()
                     # Write logs
                     logger.info(
-                        "Finish training feature {}, for fold {}/{}, epoch {}, time cost {}s ,with loss {}".format(
+                        "Finish training feature {}, for fold {}/{}, epoch {}, time cost {:.2f}s ,with loss {:.5f}".format(
                             specific_feature,
                             current_fold,
                             total_fold,
@@ -169,13 +169,13 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     now_time = time.time()
                     # Write the log
                     logger.info(
-                        "Finish testing feature {}, for fold {}/{}, epoch {}, time cost {}s ,with acc {}".format(
+                        "Finish testing feature {}, for fold {}/{}, epoch {}, time cost {:.2f}s ,with acc {:.2f}%".format(
                             specific_feature,
                             current_fold,
                             total_fold,
                             current_epoch,
                             now_time - current_time,
-                            final))
+                            final * 100))
                     # Save the weight to the directory
                     save_name = os.path.join(save_dir, "fold{}_{}-epoch{}-loss{}-acc{}.pth").format(current_fold,
                                                                                                     total_fold,
@@ -311,7 +311,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 now_time = time.time()
                 # Write logs
                 logger.info(
-                    "Finish training general model, for fold {}/{}, epoch {}, time cost {}s ,with loss {}".format(
+                    "Finish training general model, for fold {}/{}, epoch {}, time cost {:.2f}s ,with loss {:.5f}".format(
                         current_fold,
                         total_fold,
                         current_epoch,
@@ -369,12 +369,12 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 now_time = time.time()
                 # Write the log
                 logger.info(
-                    "Finish testing general model, for fold {}/{}, epoch {}, time cost {}s ,with acc {}".format(
+                    "Finish testing general model, for fold {}/{}, epoch {}, time cost {:.2f}s ,with acc {:.2f}%".format(
                         current_fold,
                         total_fold,
                         current_epoch,
                         now_time - current_time,
-                        final))
+                        final * 100))
                 # Save the weight to the directory
                 save_name = os.path.join(save_dir, "fold{}_{}-epoch{}-loss{}-acc{}.pth").format(current_fold,
                                                                                                 total_fold,
@@ -488,7 +488,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 now_time = time.time()
                 # Write logs
                 logger.info(
-                    "Finish fine-tune general model, for fold {}/{}, epoch {}, time cost {}s ,with loss {}".format(
+                    "Finish fine-tune general model, for fold {}/{}, epoch {}, time cost {:.2f}s ,with loss {:.5f}".format(
                         current_fold,
                         total_fold,
                         current_epoch,
@@ -548,12 +548,12 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 now_time = time.time()
                 # Write the log
                 logger.info(
-                    "Finish testing general model, for fold {}/{}, epoch {}, time cost {}s ,with acc {}".format(
+                    "Finish testing general model, for fold {}/{}, epoch {}, time cost {:.2f}s ,with acc {:.2f}%".format(
                         current_fold,
                         total_fold,
                         current_epoch,
                         now_time - current_time,
-                        final))
+                        final * 100))
                 # Save the weight to the directory
                 save_name = os.path.join(save_dir, "fold{}_{}-epoch{}-loss{}-acc{}.pth").format(current_fold,
                                                                                                 total_fold,
