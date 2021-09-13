@@ -556,7 +556,8 @@ class AldsTorchDataset(BaseDataset):
             # Add the Spectrogram feature to output if used
             if AudioFeatures.SPECS == item:
                 spec_out = self.spec(output_wav, self.configs['specs'], normalized=self.configs['normalized'],
-                                     expand_dim=self.expand_dim, use_argumentation=self.use_argumentation and self.run_for == DatasetMode.TRAIN)
+                                     expand_dim=self.expand_dim,
+                                     use_argumentation=self.use_argumentation and self.run_for == DatasetMode.TRAIN)
                 output_dict[AudioFeatures.SPECS] = spec_out
             # Add the Mel-Spectrogram feature to output if used
             if AudioFeatures.MELSPECS == item:
@@ -577,7 +578,8 @@ class AldsTorchDataset(BaseDataset):
                 # Add the Spectrogram feature to output if used
                 if AudioFeatures.SPECS == item or AudioFeatures.SPECS_VAD == item:
                     spec_out = self.spec(output_vad, self.configs['specs'], normalized=self.configs['normalized'],
-                                         expand_dim=self.expand_dim, use_argumentation=self.use_argumentation and self.run_for == DatasetMode.TRAIN)
+                                         expand_dim=self.expand_dim,
+                                         use_argumentation=self.use_argumentation and self.run_for == DatasetMode.TRAIN)
                     output_dict[AudioFeatures.SPECS_VAD] = spec_out
                 # Add the Mel-Spectrogram feature to output if used
                 if AudioFeatures.MELSPECS == item or AudioFeatures.MELSPECS_VAD == item:
@@ -620,6 +622,7 @@ class AldsTorchDataset(BaseDataset):
             }
         )
         mfcc_out = mfcc(input_wav)
+        mfcc_out = (mfcc_out - mfcc_out.min()) / (mfcc_out.max() - mfcc_out.min())
         # Resize the data to the target shape with the help of PIL.Image
         if configs['resize']:
             resize_height = mfcc_out.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
@@ -664,6 +667,7 @@ class AldsTorchDataset(BaseDataset):
         )
         # Convert an amplitude spectrogram to dB-scaled spectrogram
         spec_out = spec(input_wav)
+
         # Resize the data to the target shape with the help of PIL.Image
         if configs['resize']:
             resize_height = spec_out.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
@@ -683,6 +687,9 @@ class AldsTorchDataset(BaseDataset):
                 frequency_masking = torchaudio.transforms.FrequencyMasking(
                     int(spec_out.shape[1] * 0.2))
                 spec_out = frequency_masking(spec_out)
+            spec_out = torch.squeeze(spec_out)
+        spec_out = torchaudio.transforms.AmplitudeToDB()(spec_out)
+        spec_out = (spec_out - spec_out.min()) / (spec_out.max() - spec_out.min())
         if expand_dim:
             # Expand dimension to 3 to process it as the image
             if len(spec_out.shape) != 3:
@@ -709,6 +716,7 @@ class AldsTorchDataset(BaseDataset):
             sample_rate=sr, n_fft=n_fft, n_mels=n_mels, hop_length=hop_length, normalized=normalized
         )
         melspec_out = melspec(input_wav)
+
         # Resize the data to the target shape with the help of PIL.Image
         if configs['resize']:
             resize_height = melspec_out.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
@@ -728,6 +736,9 @@ class AldsTorchDataset(BaseDataset):
                 frequency_masking = torchaudio.transforms.FrequencyMasking(
                     int(melspec_out.shape[1] * 0.2))
                 melspec_out = frequency_masking(melspec_out)
+            torch.squeeze(melspec_out)
+        melspec_out = torchaudio.transforms.AmplitudeToDB()(melspec_out)
+        melspec_out = (melspec_out - melspec_out.min()) / (melspec_out.max() - melspec_out.min())
         if expand_dim:
             # Expand dimension to 3 to process it as the image
             if len(melspec_out.shape) != 3:

@@ -61,7 +61,10 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 # Init the criterion, CE by default
                 criterion = nn.CrossEntropyLoss()
                 # Init the optimizer, SGD by default
-                optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+                optimizer = optim.AdamW(model.parameters(), lr=2e-4)
+                scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=2e-4, epochs=train_specific_epoch,
+                                                                steps_per_epoch=len(train_dataloader),
+                                                                anneal_strategy="linear")
 
                 for current_epoch in range(1, train_specific_epoch + 1):
                     # Setting the model to train mode
@@ -94,6 +97,8 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                         loss.backward()
                         # Update the optimizer
                         optimizer.step()
+                        # Update the scheduler
+                        scheduler.step()
                         # Sum up the losses
                         running_loss += loss.item()
                         # Visualize the loss
@@ -200,7 +205,10 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
             # Init the criterion, CE by default
             criterion = nn.CrossEntropyLoss()
             # Init the optimizer, SGD by default
-            optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+            optimizer = optim.AdamW(model.parameters(), lr=2e-4)
+            scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=2e-4, epochs=train_general_epoch,
+                                                            steps_per_epoch=len(train_dataloader),
+                                                            anneal_strategy="linear")
 
             # Load weight
             if train_specific:
@@ -282,6 +290,8 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     loss.backward()
                     # Update the optimizer
                     optimizer.step()
+                    # Update the scheduler
+                    scheduler.step()
                     # Sum up the losses
                     running_loss += loss.item()
                     # Visualize the loss
@@ -384,7 +394,10 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
             # Init the criterion, CE by default
             criterion = nn.CrossEntropyLoss()
             # Init the optimizer, SGD by default
-            optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+            optimizer = optim.AdamW(model.parameters(), lr=2e-4)
+            scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=2e-4, epochs=train_general_epoch,
+                                                            steps_per_epoch=len(train_dataloader),
+                                                            anneal_strategy="linear")
 
             if train_general:
 
@@ -448,6 +461,8 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     loss.backward()
                     # Update the optimizer
                     optimizer.step()
+                    # Update the scheduler
+                    scheduler.step()
                     # Sum up the losses
                     running_loss += loss.item()
                     # Visualize the loss

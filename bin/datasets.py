@@ -29,7 +29,7 @@ if __name__ == '__main__':
     # use_features = [AudioFeatures.MFCC]
 
     # Save image to output
-    save = True
+    save = False
     output_dir = os.path.join(configs["output"]["output_dir"], time_identifier)
     count = 0
     # Get the dataloader from the generator
@@ -71,7 +71,7 @@ if __name__ == '__main__':
                         # In format of Image(3 dimension) and use the imshow()
                         elif len(item[features][batch_num].shape) == 3:
                             img = np.transpose(item[features][batch_num], (1, 2, 0))
-                            ax.imshow(librosa.power_to_db(img), aspect='auto')
+                            ax.imshow(img, aspect='auto')
                         # In format of Audio(1 dimension) and use the plot()
                         elif len(item[features][batch_num].shape) == 1:
                             ax.plot(range(len(item[features][batch_num])), item[features][batch_num])

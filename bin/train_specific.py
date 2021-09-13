@@ -47,7 +47,9 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
         # Init the criterion, CE by default
         criterion = nn.CrossEntropyLoss()
         # Init the optimizer, SGD by default
-        optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+        optimizer = optim.AdamW(model.parameters(), lr=2e-4)
+        scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=2e-4, epochs=epoch,
+                                                        steps_per_epoch=len(train_dataloader), anneal_strategy="linear")
 
         for current_epoch in range(1, epoch + 1):
             # Setting the model to train mode
@@ -84,6 +86,8 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
                 loss.backward()
                 # Update the optimizer
                 optimizer.step()
+                # Update the scheduler
+                scheduler.step()
                 # Sum up the losses
                 running_loss += loss.item()
                 # Visualize the loss
@@ -186,8 +190,8 @@ if __name__ == '__main__':
     if datasets != AldsDataset:
         logger.info("Using {} for training!".format(datasets.__name__))
     # Train the general model
-    model_name = "SpecificTrainResNet18BackboneLongModel"
+    model_name = "SpecificTrainLongModel"
     logger.info("Training with model {}.".format(model_name))
     train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS,
-                           model_name, input_shape=(1, 128, 782), input_channels=3, dataset_func=datasets,
-                           use_argumentation=False)
+                           model_name, input_shape=(1, 128, 782), input_channels=1, dataset_func=datasets,
+                           use_argumentation=True)
