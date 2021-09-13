@@ -8,7 +8,7 @@ from configs.types import AudioFeatures, DatasetMode
 from model.manager import Registers
 from util.log_util.logger import GlobalLogger
 from util.tools.files_util import global_init, create_dir
-from util.train_util.trainer_util import prepare_feature, prepare_dataloader, read_weight, get_best_acc_weight
+from util.train_util.trainer_util import prepare_feature, prepare_dataloader
 import torch
 
 
@@ -44,7 +44,7 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
         # Init the criterion, CE by default
         criterion = nn.CrossEntropyLoss()
         # Init the optimizer, SGD by default
-        optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+        optimizer = optim.SGD(model.parameters(), lr=0.0001, momentum=0.9)
 
         for current_epoch in range(1, epoch + 1):
             # Setting the model to train mode
@@ -179,7 +179,7 @@ if __name__ == '__main__':
     # Read the fold from config
     total_fold = configs['dataset']['k_fold']
     # Train the general model
-    model_name = "SpecificTrainVggNet19BackboneLongModel"
+    model_name = "SpecificTrainVggNet19BackboneAttentionLSTMModel"
     logger.info("Training with model {}.".format(model_name))
     train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS,
                            model_name, input_shape=(1, 128, 782), input_channels=3)

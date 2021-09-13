@@ -1,6 +1,6 @@
 import os
 import time
-from typing import Dict, Optional, List
+from typing import Dict, Optional
 import torch.nn.functional as func
 from torch import optim, nn
 from tqdm import tqdm
@@ -8,7 +8,7 @@ from configs.types import AudioFeatures, DatasetMode
 from model.manager import Registers
 from util.log_util.logger import GlobalLogger
 from util.tools.files_util import global_init, create_dir
-from util.train_util.trainer_util import prepare_feature, prepare_dataloader, read_weight, get_best_acc_weight
+from util.train_util.trainer_util import prepare_dataloader, get_best_acc_weight
 import torch
 
 
