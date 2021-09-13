@@ -8,6 +8,8 @@ from torch.utils import model_zoo
 
 from model.base_model import BaseModel
 from model.manager import Register, Registers
+
+
 # from model.modules.resnet import ResNet
 
 
@@ -120,6 +122,31 @@ class SpecificTrainResNet18BackboneLongModel(BaseModel):
         long_out3 = self.fc3(long_out3)
         return long_out3
 
+
+@Registers.model.register
+class SpecificTrainVggNet19BackboneLongModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super(SpecificTrainVggNet19BackboneLongModel, self).__init__()
+        self.extractor = Registers.module["VggNetBackbone"](19)
+        self.fc = nn.Linear(512*7*7, 512)
+        self.fc2 = nn.Linear(512, 64)
+        self.fc3 = nn.Linear(64, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        # print(batch_size)
+        output = self.extractor(input_tensor)
+        # print(output.shape)
+        # output = self.avg_pool(output)
+        long_out = output.view(batch_size, -1)
+        long_out = self.fc(long_out)
+        long_out2 = func.relu(long_out)
+        long_out2 = self.fc2(long_out2)
+        long_out3 = func.relu(long_out2)
+        long_out3 = self.fc3(long_out3)
+        return long_out3
+
+
 @Registers.model.register
 class SpecificTrainResNet34BackboneLongModel(BaseModel):
     def __init__(self, input_shape: Tuple):
@@ -142,6 +169,7 @@ class SpecificTrainResNet34BackboneLongModel(BaseModel):
         long_out3 = func.relu(long_out2)
         long_out3 = self.fc3(long_out3)
         return long_out3
+
 
 @Registers.model.register
 class MSMJointConcatFineTuneResNet18BackboneLongModel(BaseModel):
@@ -171,7 +199,7 @@ class ResNet18ConcatModel(nn.Module):
 
         self.maxpooling_2 = nn.MaxPool2d((2, 2))
 
-        self.linear_1 = nn.Linear(512*11, 512)
+        self.linear_1 = nn.Linear(512 * 11, 512)
         self.dropout_1 = nn.Dropout(0.3)
         self.linear_2 = nn.Linear(512, 3)
 
@@ -254,15 +282,15 @@ if __name__ == '__main__':
     # model = SpecificTrainResNet34BackboneLongModel(input_shape=())
     # model.cuda()
     # torchinfo.summary(model,((4, 3, 128, 782),(4, 3, 128, 782),(4, 3, 128, 782)))
-    model = SpecificTrainResNet34BackboneLongModel(input_shape=())
-    # model.cuda()
-    torchinfo.summary(model, (4, 1, 128, 782))
-    # model = torchvision.models.resnet18(pretrained=True)
-    # state_dict = model_zoo.load_url('https://download.pytorch.org/models/resnet18-f37072fd.pth')
-    # model.load_state_dict(state_dict, strict=False)
-    # backbone = list(
-    #     [model.conv1, model.bn1, model.relu, model.maxpool, model.layer1, model.layer2, model.layer3, model.layer4,
-    #      model.avgpool]
-    # )
-    # model = nn.Sequential(*backbone)
-    # torchinfo.summary(model.cuda(), (4, 3, 128, 782))
+    # model = SpecificTrainResNet34BackboneLongModel(input_shape=())
+    # # model.cuda()
+    # torchinfo.summary(model, (4, 1, 128, 782))
+    model = torchvision.models.vgg19(pretrained=True)
+    state_dict = model_zoo.load_url('https://download.pytorch.org/models/vgg19-dcbb9e9d.pth')
+    model.load_state_dict(state_dict, strict=False)
+    backbone = list(
+        [model.features, model.avgpool]
+    )
+    model = nn.Sequential(*backbone)
+    # print("ss")
+    torchinfo.summary(model, (4, 3, 128, 782))
