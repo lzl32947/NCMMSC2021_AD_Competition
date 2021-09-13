@@ -1,5 +1,5 @@
 import os
-from typing import List, Dict, Generic, Union, Optional
+from typing import List, Dict, Generic, Union, Optional, Callable
 from torch.utils.data.dataloader import DataLoader
 from configs.types import AudioFeatures, DatasetMode
 from util.log_util.logger import GlobalLogger
@@ -24,7 +24,7 @@ def prepare_feature(feature_list: List[str]) -> List[AudioFeatures]:
     return use_features
 
 
-def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for: DatasetMode, **kwargs):
+def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for: DatasetMode,dataset_func:Callable=AldsDataset, **kwargs):
     """
     This function returns the generator of dataloader.
     Considering the k-fold is used in the program so the function is design to be the generator.
@@ -48,7 +48,7 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
     if k_fold != 0:
         # Generate the k_fold dataloader
         for fold in range(k_fold):
-            dataset = AldsDataset(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
+            dataset = dataset_func(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
                                   repeat_times=repeat_times, configs=configs['process'], k_fold=k_fold,
                                   current_fold=fold, random_disruption=random_disruption,
                                   run_for=run_for, balance=balance)
@@ -58,7 +58,7 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
     else:
         # Generate the single dataloader
         for fold in range(1):
-            dataset = AldsDataset(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
+            dataset = dataset_func(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
                                   repeat_times=repeat_times, configs=configs['process'],
                                   random_disruption=random_disruption,
                                   run_for=run_for, balance=balance)

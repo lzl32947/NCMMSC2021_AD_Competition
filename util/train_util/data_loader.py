@@ -1,19 +1,25 @@
 import random
+from abc import ABC, abstractmethod
 from typing import List, Optional, Dict, Union, Tuple, Any, Callable
 
+import torch
+import torchvision.transforms
+from audiomentations import Compose, AddGaussianNoise, TimeStretch, PitchShift, Shift
 import numpy as np
 from PIL import Image
 import torchaudio
-from torch.utils.data.dataset import Dataset
+from torch.utils.data.dataset import Dataset, T_co
 import os
+from torch import nn
 import librosa
+from torchvision.transforms import InterpolationMode
+
 from configs.types import ADType, AudioFeatures, DatasetMode
-from audiomentations import Compose, AddGaussianNoise, TimeStretch, PitchShift, Shift
 
 
-class AldsDataset(Dataset):
+class BaseDataset(Dataset, ABC):
     """
-    This is the dataset overwrite the torch.utils.data.dataset.Dataset and create the dataset for this program
+    This is the base dataset overwrite the torch.utils.data.dataset.Dataset and create the dataset for this program
     """
 
     def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, use_vad: bool = False,
@@ -34,8 +40,6 @@ class AldsDataset(Dataset):
         :param balance: bool, whether to balance the dataset
         :param argumentation: bool, whether to do the argumentation
         """
-        # Set audio backend for torch if used
-        torchaudio.set_audio_backend("soundfile")
         # Init the target dict
         self.target_dic = {}
         for t in ADType:
@@ -63,8 +67,6 @@ class AldsDataset(Dataset):
         self.use_features = use_features
 
         self.configs = configs
-        self.argumentation = self.generate_argumentation(configs['argumentation'])
-        self.use_argumentation = argumentation
 
     @staticmethod
     def balance_data(data: List, label: List) -> (List, List):
@@ -193,6 +195,30 @@ class AldsDataset(Dataset):
         """
         # The repeat_times mean the re-randomized sample times
         return self.count * self.repeat_times
+
+
+class AldsDataset(BaseDataset):
+    def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, use_vad: bool = False,
+                 repeat_times: int = 1, random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
+                 current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN,
+                 balance: bool = True, argumentation: bool = False):
+        super().__init__(use_features, use_merge, use_vad, repeat_times, random_disruption, configs, k_fold,
+                         current_fold, run_for, balance, argumentation)
+        self.argumentation = self.generate_argumentation(configs['argumentation'])
+        self.use_argumentation = argumentation
+
+    @staticmethod
+    def generate_argumentation(config: Dict):
+        return Compose([
+            AddGaussianNoise(min_amplitude=config["gaussian_noise"]["min_amplitude"],
+                             max_amplitude=config["gaussian_noise"]["max_amplitude"], p=config["gaussian_noise"]["p"]),
+            TimeStretch(min_rate=config["time_stretch"]["min_rate"], max_rate=config["time_stretch"]["max_rate"],
+                        p=config["time_stretch"]["p"]),
+            PitchShift(min_semitones=config["pitch_shift"]["min_semitones"],
+                       max_semitones=config["pitch_shift"]["max_semitones"], p=config["pitch_shift"]["p"]),
+            Shift(min_fraction=config["shift"]["min_fraction"], max_fraction=config["shift"]["max_fraction"],
+                  p=config["shift"]["p"]),
+        ])
 
     @staticmethod
     def resample_wav(file_path: str, sample_length: int, sr: int, use_vad: bool, use_argumentation: bool,
@@ -400,7 +426,7 @@ class AldsDataset(Dataset):
         processed_wav = sample_output * input_wav
         return processed_wav
 
-    def __getitem__(self, item: int) -> Dict:
+    def __getitem__(self, item: int) -> T_co:
         """
         Get one item from the dataset
         :param item: int, the order of the given data
@@ -470,25 +496,240 @@ class AldsDataset(Dataset):
             output_dict[AudioFeatures.VAD] = output_vad
         return output_dict
 
+
+class AldsTorchDataset(BaseDataset):
+    def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, use_vad: bool = False,
+                 repeat_times: int = 1, random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
+                 current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN,
+                 balance: bool = True, argumentation: bool = False):
+        super().__init__(use_features, use_merge, use_vad, repeat_times, random_disruption, configs, k_fold,
+                         current_fold, run_for, balance, argumentation)
+        # Set audio backend for torch if used
+
+        # Load argumentation
+        self.use_argumentation = argumentation
+
     @staticmethod
-    def generate_argumentation(config: Dict):
-        return Compose([
-            AddGaussianNoise(min_amplitude=config["gaussian_noise"]["min_amplitude"],
-                             max_amplitude=config["gaussian_noise"]["max_amplitude"], p=config["gaussian_noise"]["p"]),
-            TimeStretch(min_rate=config["time_stretch"]["min_rate"], max_rate=config["time_stretch"]["max_rate"],
-                        p=config["time_stretch"]["p"]),
-            PitchShift(min_semitones=config["pitch_shift"]["min_semitones"],
-                       max_semitones=config["pitch_shift"]["max_semitones"], p=config["pitch_shift"]["p"]),
-            Shift(min_fraction=config["shift"]["min_fraction"], max_fraction=config["shift"]["max_fraction"],
-                  p=config["shift"]["p"]),
-        ])
+    def resample_wav(file_path: str, sample_length: int, sr: int, use_vad: bool) -> Union[Tuple[Any, np.ndarray], Any]:
+        """
+        Crop part of the audio and return
+        :param use_argumentation: bool, whether to use the argumentation functions
+        :param argumentation_func: Callable, the argumentation function to use
+        :param use_vad: bool, if True, extra audio will be return
+        :param file_path: str, the path to the audio file
+        :param sample_length: int, the sample length, and be in format of seconds, e.g. 5s
+        :param sr: int, the sample rate
+        :return: np.ndarray, the cropped audio
+        """
+        waveform, sample_rate = torchaudio.load(file_path)
+        waveform = torch.squeeze(waveform)
+        start = int(random.random() * (len(waveform) - sample_length * sample_rate))
+        cropped = waveform[start: start + sample_length * sample_rate]
+        if use_vad:
+            directory = file_path.split("/")[-3] if "/" in file_path else file_path.split("\\")[-3]
+            vad_cropped, sample_rate = torchaudio.load(file_path.replace(directory, directory + "_vad"),
+                                                       frame_offset=start, num_frames=sample_length * sample_rate)
+            return cropped, torch.squeeze(vad_cropped)
+        else:
+            return cropped
 
+    def __getitem__(self, item: int) -> T_co:
+        """
+        Get one item from the dataset
+        :param item: int, the order of the given data
+        :return: Dict, the data
+        """
+        # Get the file and the label
+        file = self.train_list[item % self.count]
+        label = self.label_list[item % self.count]
+        output_dict = {}
+        # Read and crop the audio
+        if self.use_vad:
+            output_wav, output_vad = self.resample_wav(file, self.sample_length, self.sr, self.use_vad)
+        else:
+            output_wav = self.resample_wav(file, self.sample_length, self.sr, self.use_vad)
+            output_vad = None
 
-def audio_collate_fn(batch):
-    # The custom the collate_fn function
-    # NOTICE: this function is not used in program and not been test
-    sizes = len(batch)
-    collate_list = [[] for i in range(sizes)]
-    for index, item in enumerate(batch):
-        collate_list[index].append(item[index])
-    return collate_list
+        for item in self.use_features:
+            # Add the MFCC feature to output if used
+            if AudioFeatures.MFCC == item:
+                mfcc_out = self.mfcc(output_wav, self.sr, self.configs['mfcc'],
+                                     normalized=self.configs['normalized'], expand_dim=self.expand_dim)
+                output_dict[AudioFeatures.MFCC] = mfcc_out
+            # Add the Spectrogram feature to output if used
+            if AudioFeatures.SPECS == item:
+                spec_out = self.spec(output_wav, self.configs['specs'], normalized=self.configs['normalized'],
+                                     expand_dim=self.expand_dim)
+                output_dict[AudioFeatures.SPECS] = spec_out
+            # Add the Mel-Spectrogram feature to output if used
+            if AudioFeatures.MELSPECS == item:
+                melspec_out = self.melspec(output_wav, self.sr, self.configs['melspecs'],
+                                           normalized=self.configs['normalized'], expand_dim=self.expand_dim)
+                output_dict[AudioFeatures.MELSPECS] = melspec_out
+        if self.use_vad:
+            assert output_vad is not None
+            for item in self.use_features:
+
+                # Add the MFCC feature to output if used
+                if AudioFeatures.MFCC == item or AudioFeatures.MFCC_VAD == item:
+                    mfcc_out = self.mfcc(output_vad, self.sr, self.configs['mfcc'],
+                                         normalized=self.configs['normalized'], expand_dim=self.expand_dim)
+                    output_dict[AudioFeatures.MFCC_VAD] = mfcc_out
+                # Add the Spectrogram feature to output if used
+                if AudioFeatures.SPECS == item or AudioFeatures.SPECS_VAD == item:
+                    spec_out = self.spec(output_vad, self.configs['specs'], normalized=self.configs['normalized'],
+                                         expand_dim=self.expand_dim)
+                    output_dict[AudioFeatures.SPECS_VAD] = spec_out
+                # Add the Mel-Spectrogram feature to output if used
+                if AudioFeatures.MELSPECS == item or AudioFeatures.MELSPECS_VAD == item:
+                    melspec_out = self.melspec(output_vad, self.sr, self.configs['melspecs'],
+                                               normalized=self.configs['normalized'], expand_dim=self.expand_dim)
+                    output_dict[AudioFeatures.MELSPECS_VAD] = melspec_out
+
+        # Add the label to output
+        output_dict[AudioFeatures.LABEL] = label
+        # Add raw audio to output
+        output_dict[AudioFeatures.RAW] = output_wav
+        # Add vad audio to output
+        if self.use_vad:
+            output_dict[AudioFeatures.VAD] = output_vad
+        return output_dict
+
+    @staticmethod
+    def mfcc(input_wav: torch.Tensor, sr: int, configs: Dict, normalized: bool = True,
+             expand_dim: bool = True, use_argumentation: bool = True) -> torch.Tensor:
+        """
+        Generate the MFCC features of the given audio
+        :param expand_dim: bool, whether to expand the dim
+        :param input_wav: torch.Tensor, the audio files
+        :param sr: int, sample rate
+        :param configs: Dict, the configs
+        :param normalized: str, whether to use the normalization
+        :return: torch.Tensor, the MFCC features
+        """
+        n_fft = configs['n_fft']
+        n_mfcc = configs['n_mfcc']
+        n_mels = configs['n_mels']
+        hop_length = configs['hop_length']
+        # Calculate the Mel-frequency cepstral coefficients (MFCCs)
+        mfcc = torchaudio.transforms.MFCC(
+            sample_rate=sr, n_mfcc=n_mfcc, norm="ortho" if normalized == True else None, melkwargs={
+                "hop_length": hop_length,
+                "n_fft": n_fft,
+                "n_mels": n_mels
+            }
+        )
+        mfcc_out = mfcc(input_wav)
+        # Resize the data to the target shape with the help of PIL.Image
+        if configs['resize']:
+            resize_height = mfcc_out.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
+            resize_width = mfcc_out.shape[1] if configs['resize_width'] < 0 else configs['resize_width']
+            mfcc_out = torch.unsqueeze(mfcc_out, 0)
+            resize_func = torchvision.transforms.Resize((resize_height, resize_width),
+                                                        interpolation=InterpolationMode.BICUBIC)
+            mfcc_out = resize_func(mfcc_out)
+        if use_argumentation:
+            if len(mfcc_out.shape) != 3:
+                mfcc_out = torch.unsqueeze(mfcc_out, dim=0)
+            if random.random() > 0.5:
+                time_masking = torchaudio.transforms.TimeMasking(
+                    int(mfcc_out.shape[2] * (random.random() + 0.01) * 0.2))
+                mfcc_out = time_masking(mfcc_out)
+            if random.random() > 0.5:
+                frequency_masking = torchaudio.transforms.FrequencyMasking(
+                    int(mfcc_out.shape[1] * (random.random() + 0.01) * 0.2))
+                mfcc_out = frequency_masking(mfcc_out)
+        if expand_dim:
+            # Expand dimension to 3 to process it as the image
+            if len(mfcc_out.shape) != 3:
+                mfcc_out = torch.unsqueeze(mfcc_out, dim=0)
+        return mfcc_out
+
+    @staticmethod
+    def spec(input_wav: torch.Tensor, configs: Dict, normalized: bool = True, expand_dim: bool = True,
+             use_argumentation: bool = True) -> torch.Tensor:
+        """
+        Generate the Spectrogram of the given audio
+        :param expand_dim: bool, whether to expand the dim
+        :param input_wav: torch.Tensor, the audio files
+        :param configs: Dict, the configs
+        :param normalized: bool, whether to normalized the audio with mean equals 0 and std equals 1
+        :return: torch.Tensor, the Spectrogram data
+        """
+        n_fft = configs['n_fft']
+        hop_length = configs['hop_length']
+        # Perform the Short-time Fourier transform (STFT)
+        spec = torchaudio.transforms.Spectrogram(
+            n_fft=n_fft, hop_length=hop_length, normalized=normalized
+        )
+        # Convert an amplitude spectrogram to dB-scaled spectrogram
+        spec_out = spec(input_wav)
+        # Resize the data to the target shape with the help of PIL.Image
+        if configs['resize']:
+            resize_height = spec_out.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
+            resize_width = spec_out.shape[1] if configs['resize_width'] < 0 else configs['resize_width']
+            spec_out = torch.unsqueeze(spec_out, 0)
+            resize_func = torchvision.transforms.Resize((resize_height, resize_width),
+                                                        interpolation=InterpolationMode.BICUBIC)
+            spec_out = resize_func(spec_out)
+        if use_argumentation:
+            if len(spec_out.shape) != 3:
+                spec_out = torch.unsqueeze(spec_out, dim=0)
+            if random.random() > 0.5:
+                time_masking = torchaudio.transforms.TimeMasking(
+                    int(spec_out.shape[2] * (random.random() + 0.01) * 0.2))
+                spec_out = time_masking(spec_out)
+            if random.random() > 0.5:
+                frequency_masking = torchaudio.transforms.FrequencyMasking(
+                    int(spec_out.shape[1] * (random.random() + 0.01) * 0.2))
+                spec_out = frequency_masking(spec_out)
+        if expand_dim:
+            # Expand dimension to 3 to process it as the image
+            if len(spec_out.shape) != 3:
+                spec_out = torch.unsqueeze(spec_out, dim=0)
+        return spec_out
+
+    @staticmethod
+    def melspec(input_wav: torch.Tensor, sr: int, configs: Dict, normalized: bool = True,
+                expand_dim: bool = True, use_argumentation: bool = True) -> torch.Tensor:
+        """
+        Generate the Mel-Spectrogram of the given audio
+        :param expand_dim: bool, whether to expand the dim
+        :param input_wav: torch.Tensor, the audio files
+        :param sr: int, sample rate
+        :param configs: Dict, the configs
+        :param normalized: bool, whether to normalized the audio with mean equals 0 and std equals 1
+        :return: torch.Tensor, the Mel-Spectrogram data
+        """
+        n_fft = configs['n_fft']
+        n_mels = configs['n_mels']
+        hop_length = configs['hop_length']
+        # Compute a mel-scaled spectrogram
+        melspec = torchaudio.transforms.MelSpectrogram(
+            sample_rate=sr, n_fft=n_fft, n_mels=n_mels, hop_length=hop_length, normalized=normalized
+        )
+        melspec_out = melspec(input_wav)
+        # Resize the data to the target shape with the help of PIL.Image
+        if configs['resize']:
+            resize_height = melspec_out.shape[0] if configs['resize_height'] < 0 else configs['resize_height']
+            resize_width = melspec_out.shape[1] if configs['resize_width'] < 0 else configs['resize_width']
+            melspec_out = torch.unsqueeze(melspec_out, 0)
+            resize_func = torchvision.transforms.Resize((resize_height, resize_width),
+                                                        interpolation=InterpolationMode.BICUBIC)
+            melspec_out = resize_func(melspec_out)
+        if use_argumentation:
+            if len(melspec_out.shape) != 3:
+                melspec_out = torch.unsqueeze(melspec_out, dim=0)
+            if random.random() > 0.5:
+                time_masking = torchaudio.transforms.TimeMasking(
+                    int(melspec_out.shape[2] * (random.random() + 0.01) * 0.2))
+                melspec_out = time_masking(melspec_out)
+            if random.random() > 0.5:
+                frequency_masking = torchaudio.transforms.FrequencyMasking(
+                    int(melspec_out.shape[1] * (random.random() + 0.01) * 0.2))
+                melspec_out = frequency_masking(melspec_out)
+        if expand_dim:
+            # Expand dimension to 3 to process it as the image
+            if len(melspec_out.shape) != 3:
+                melspec_out = torch.unsqueeze(melspec_out, dim=0)
+        return melspec_out
