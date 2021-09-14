@@ -343,7 +343,7 @@ if __name__ == '__main__':
     state_dict = model_zoo.load_url('https://download.pytorch.org/models/vgg19-dcbb9e9d.pth')
     model.load_state_dict(state_dict, strict=False)
     backbone = list(
-        [model.features, model.avgpool]
+        [model.features]
     )
     model = nn.Sequential(*backbone)
     # print("ss")
