@@ -67,8 +67,8 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 # Init the criterion, CE by default
                 criterion = nn.CrossEntropyLoss()
                 # Init the optimizer, SGD by default
-                optimizer = optim.AdamW(model.parameters(), lr=2e-4)
-                scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=2e-4, epochs=train_specific_epoch,
+                optimizer = optim.AdamW(model.parameters(), lr=1e-3)
+                scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=1e-3, epochs=train_specific_epoch,
                                                                 steps_per_epoch=len(train_dataloader),
                                                                 anneal_strategy="linear")
 
@@ -221,8 +221,8 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
             # Init the criterion, CE by default
             criterion = nn.CrossEntropyLoss()
             # Init the optimizer, SGD by default
-            optimizer = optim.AdamW(model.parameters(), lr=2e-4)
-            scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=2e-4, epochs=train_general_epoch,
+            optimizer = optim.AdamW(model.parameters(), lr=1e-3)
+            scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=1e-3, epochs=train_general_epoch,
                                                             steps_per_epoch=len(train_dataloader),
                                                             anneal_strategy="linear")
 
@@ -422,8 +422,8 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
             # Init the criterion, CE by default
             criterion = nn.CrossEntropyLoss()
             # Init the optimizer, SGD by default
-            optimizer = optim.AdamW(model.parameters(), lr=2e-4)
-            scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=2e-4, epochs=train_general_epoch,
+            optimizer = optim.AdamW(model.parameters(), lr=1e-3)
+            scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=1e-3, epochs=train_general_epoch,
                                                             steps_per_epoch=len(train_dataloader),
                                                             anneal_strategy="linear")
 

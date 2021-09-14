@@ -14,7 +14,8 @@ dataset:
   use_vad: true     # whether to generate the vad features, true by default
   random_disruption: true # whether to randomize, notice that this will not change the file for k-fold and is safe, true by default
   batch_size: 16     # batch size, 16 by default
-  balance: true # balance the dataset, true by default
+  balance: false # balance the dataset, true by default
+  use_argumentation: false
 
   process:
     sr: 16000     # sample rate, 16000 by default

@@ -23,7 +23,7 @@ if __name__ == '__main__':
     # Get the logger
     logger = GlobalLogger().get_logger()
     # Whether to show the images
-    show_img = True
+    show_img = False
     # Init the features to use
     use_features = prepare_feature(configs['features'])
     # use_features = [AudioFeatures.MFCC]
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     count = 0
     # Get the dataloader from the generator
     for dataloader in prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN, k_fold=0,
-                                         dataset_func=AldsTorchDataset,
+                                         dataset_func=AldsDataset,
                                          use_argumentation=False):
         logger.info("Using config:" + json.dumps(configs['dataset']['process'], ensure_ascii=False))
         # Calculate the process time

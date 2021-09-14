@@ -47,8 +47,8 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
         # Init the criterion, CE by default
         criterion = nn.CrossEntropyLoss()
         # Init the optimizer, SGD by default
-        optimizer = optim.AdamW(model.parameters(), lr=2e-4)
-        scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=2e-4, epochs=epoch,
+        optimizer = optim.AdamW(model.parameters(), lr=1e-3)
+        scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=1e-3, epochs=epoch,
                                                         steps_per_epoch=len(train_dataloader), anneal_strategy="linear")
 
         for current_epoch in range(1, epoch + 1):
@@ -194,4 +194,4 @@ if __name__ == '__main__':
     logger.info("Training with model {}.".format(model_name))
     train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS,
                            model_name, input_shape=(1, 128, 782), input_channels=1, dataset_func=datasets,
-                           use_argumentation=True)
+                           use_argumentation=False, balance=False)
