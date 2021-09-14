@@ -4,7 +4,7 @@ from torch.utils.data.dataloader import DataLoader
 from configs.types import AudioFeatures, DatasetMode
 from util.log_util.logger import GlobalLogger
 from util.tools.files_util import create_dir
-from util.train_util.data_loader import AldsDataset
+from util.train_util.data_loader import AldsDataset, AldsTorchDataset
 import numpy as np
 import re
 
@@ -48,6 +48,7 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
         'balance']
     use_argumentation = configs['use_argumentation'] if 'use_argumentation' not in kwargs.keys() else kwargs[
         'use_argumentation']
+
     if k_fold != 0:
         # Generate the k_fold dataloader
         for fold in range(k_fold):
@@ -56,7 +57,8 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
                                    current_fold=fold, random_disruption=random_disruption,
                                    run_for=run_for, balance=balance, use_argumentation=use_argumentation)
 
-            dataloader = DataLoader(dataset, batch_size=batch_size)
+            dataloader = DataLoader(dataset, batch_size=batch_size,
+                                    num_workers=2 if dataset_func == AldsTorchDataset else 0)
             yield dataloader
     else:
         # Generate the single dataloader
@@ -66,7 +68,8 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
                                    random_disruption=random_disruption,
                                    run_for=run_for, balance=balance, use_argumentation=use_argumentation)
 
-            dataloader = DataLoader(dataset, batch_size=batch_size)
+            dataloader = DataLoader(dataset, batch_size=batch_size,
+                                    num_workers=4 if dataset_func == AldsTorchDataset else 0)
             yield dataloader
 
 
