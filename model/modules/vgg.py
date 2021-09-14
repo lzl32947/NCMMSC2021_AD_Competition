@@ -23,8 +23,8 @@ model_urls = {
 class VggNetBackbone(nn.Module):
     def __init__(self, num_layers=19):
         super().__init__()
-        if num_layers not in [11, 13, 16, 19]:
-            raise RuntimeError("Layers should be in 11, 13, 16, 19")
+        if num_layers not in ['11', '13', '16', '19', '19_bn']:
+            raise RuntimeError("Layers should be in 11, 13, 16, 19, 19_bn")
         model = None
         if num_layers == 11:
             model = torchvision.models.vgg11()
@@ -38,9 +38,13 @@ class VggNetBackbone(nn.Module):
             model = torchvision.models.vgg16()
             state_dict = model_zoo.load_url('https://download.pytorch.org/models/vgg16-397923af.pth')
             model.load_state_dict(state_dict, strict=False)
+        elif num_layers == 19:
+            model = torchvision.models.vgg16()
+            state_dict = model_zoo.load_url('https://download.pytorch.org/models/vgg19-dcbb9e9d.pt')
+            model.load_state_dict(state_dict, strict=False)
         else:
             model = torchvision.models.vgg19()
-            state_dict = model_zoo.load_url('https://download.pytorch.org/models/vgg19-dcbb9e9d.pth')
+            state_dict = model_zoo.load_url('https://download.pytorch.org/models/vgg19_bn-c79401a0.pth')
             model.load_state_dict(state_dict, strict=False)
 
         backbone = list(
