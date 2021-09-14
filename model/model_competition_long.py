@@ -192,17 +192,13 @@ class SpecificTrainVggNet19BackboneLongModel(BaseModel):
     def __init__(self, input_shape: Tuple):
         super(SpecificTrainVggNet19BackboneLongModel, self).__init__()
         self.extractor = Registers.module["VggNetBackbone"](19)
-        self.avg_pool = nn.AdaptiveAvgPool2d((1, None))
         self.fc = nn.Linear(512*7*7, 512)
         self.fc2 = nn.Linear(512, 64)
         self.fc3 = nn.Linear(64, 3)
 
     def forward(self, input_tensor: torch.Tensor):
         batch_size = input_tensor.shape[0]
-        # print(batch_size)
         output = self.extractor(input_tensor)
-        # print(output.shape)
-        # output = self.avg_pool(output)
         long_out = output.view(batch_size, -1)
         long_out = self.fc(long_out)
         long_out2 = func.relu(long_out)
