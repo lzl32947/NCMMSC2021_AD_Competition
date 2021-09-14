@@ -61,7 +61,7 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
                 if input_channels != 1:
                     feature = torch.cat([feature] * input_channels, dim=1)
 
-                predicted_file.append(name.numpy())
+                predicted_file.append(name)
 
                 feature = feature.cuda()
                 # Running the model

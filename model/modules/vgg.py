@@ -236,7 +236,8 @@ def vgg19_bn(pretrained=False, in_channels=3, **kwargs):
 
 
 if __name__ == '__main__':
+    import torchinfo
 
-    print(torchvision.models.vgg19())
-    print(torchvision.models.resnet18())
-
+    model = torchvision.models.vgg19()
+    model = model.cuda()
+    torchinfo.summary(model, (2, 3, 128, 157))

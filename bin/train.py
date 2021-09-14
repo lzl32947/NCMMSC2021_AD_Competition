@@ -142,7 +142,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
         logger.info("Training general models.")
         for train_dataloader in prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN):
             # Send the model to GPU
-            model = Registers.model[model_name](input_shape=(128, 157))
+            model = Registers.model[model_name]()
             model.cuda()
             # Init the criterion, CE by default
             criterion = nn.CrossEntropyLoss()
@@ -274,7 +274,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
         for train_dataloader in prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN):
 
             # Send the model to GPU
-            model = Registers.model[model_name](input_shape=(128, 157))
+            model = Registers.model[model_name]()
             model.cuda()
 
             # Init the criterion, CE by default
@@ -403,6 +403,9 @@ if __name__ == '__main__':
     logger.info("Training with model {}.".format(model_name))
     train_joint(configs, time_identifier, model_name, base_model_name,
                 use_features=[AudioFeatures.MFCC, AudioFeatures.SPECS, AudioFeatures.MELSPECS],
-                train_specific=True, train_specific_epoch=20,
+                train_specific=False, train_specific_epoch=20,
+                specific_weight={AudioFeatures.MFCC: "competition_20210914_154830",
+                                 AudioFeatures.SPECS: "competition_20210914_154830",
+                                 AudioFeatures.MELSPECS: "competition_20210914_154830"},
                 train_general=True, train_general_epoch=20,
                 fine_tune=True, fine_tune_epoch=20, input_channels=1)
