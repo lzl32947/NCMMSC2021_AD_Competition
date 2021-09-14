@@ -167,6 +167,7 @@ class CompetitionSpecificTrainVggNet19BNBackboneModel(BaseModel):
         return long_out4
 
 
+
 if __name__ == "__main__":
     import torchinfo
 
