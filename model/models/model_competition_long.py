@@ -187,12 +187,13 @@ class ResNet18ConcatModel(nn.Module):
         output = self.linear_2(output)
         return output
 
+
 @Registers.model.register
 class SpecificTrainVggNet19BackboneLongModel(BaseModel):
     def __init__(self, input_shape: Tuple):
         super(SpecificTrainVggNet19BackboneLongModel, self).__init__()
         self.extractor = Registers.module["VggNetBackbone"](19)
-        self.fc = nn.Linear(512*7*7, 512)
+        self.fc = nn.Linear(512 * 7 * 7, 512)
         self.fc2 = nn.Linear(512, 64)
         self.fc3 = nn.Linear(64, 3)
 
@@ -206,6 +207,43 @@ class SpecificTrainVggNet19BackboneLongModel(BaseModel):
         long_out3 = func.relu(long_out2)
         long_out3 = self.fc3(long_out3)
         return long_out3
+
+
+@Registers.model.register
+class CompetitionSpecificTrainVggNet19BNBackboneLongModel(BaseModel):
+    def __init__(self):
+        super(CompetitionSpecificTrainVggNet19BNBackboneLongModel, self).__init__()
+        # self.extractor = Registers.module["VggNetBackbone"]("19_bn")
+        self.extractor = Registers.module
+        self.conv1 = nn.Conv2d(512, 1024, (3, 3))
+        self.pooling = nn.AdaptiveAvgPool2d((1, 1))
+        self.fc = nn.Linear(512, 1024)
+        self.dropout1 = nn.Dropout(0.3)
+        self.fc2 = nn.Linear(1024, 256)
+        self.dropout2 = nn.Dropout(0.3)
+        self.fc3 = nn.Linear(256, 64)
+        self.dropout3 = nn.Dropout(0.3)
+        self.fc4 = nn.Linear(64, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        output = self.conv1(output)
+        output = func.relu(output)
+        output = self.pooling(output)
+        long_out = output.view(batch_size, -1)
+        long_out = self.fc(long_out)
+        long_out2 = func.relu(long_out)
+        long_out2 = self.dropout1(long_out2)
+        long_out2 = self.fc2(long_out2)
+        long_out3 = func.relu(long_out2)
+        long_out3 = self.dropout2(long_out3)
+        long_out3 = self.fc3(long_out3)
+        long_out4 = func.relu(long_out3)
+        long_out4 = self.dropout3(long_out4)
+        long_out4 = self.fc4(long_out4)
+        return long_out4
+
 
 @Registers.model.register
 class SpecificTrainVggNet19_bnBackboneLongModel(BaseModel):
@@ -213,7 +251,7 @@ class SpecificTrainVggNet19_bnBackboneLongModel(BaseModel):
         super(SpecificTrainVggNet19_bnBackboneLongModel, self).__init__()
         self.extractor = Registers.module["VggNetBackbone"](21)
         self.avg_pool = nn.AdaptiveAvgPool2d((1, None))
-        self.fc = nn.Linear(512*7*7, 512)
+        self.fc = nn.Linear(512 * 7 * 7, 512)
         self.fc2 = nn.Linear(512, 64)
         self.fc3 = nn.Linear(64, 3)
 
@@ -227,6 +265,7 @@ class SpecificTrainVggNet19_bnBackboneLongModel(BaseModel):
         long_out3 = func.relu(long_out2)
         long_out3 = self.fc3(long_out3)
         return long_out3
+
 
 if __name__ == "__main__":
     import torchinfo
