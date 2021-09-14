@@ -200,7 +200,7 @@ if __name__ == "__main__":
 
     model = SpecificTrainVggNet19BackboneLongModel(input_shape=())
     model.cuda()
-    torchinfo.summary(model, ((4, 3, 128, 782), (4, 3, 128, 782), (4, 3, 128, 782)))
+    torchinfo.summary(model, (4, 3, 128, 782))
     # model = SpecificTrainResNet34BackboneLongModel(input_shape=())
     # # model.cuda()
     # torchinfo.summary(model, (4, 1, 128, 782))
