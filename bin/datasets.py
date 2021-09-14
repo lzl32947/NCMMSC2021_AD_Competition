@@ -23,19 +23,17 @@ if __name__ == '__main__':
     # Get the logger
     logger = GlobalLogger().get_logger()
     # Whether to show the images
-    show_img = False
+    show_img = True
     # Init the features to use
     use_features = prepare_feature(configs['features'])
     # use_features = [AudioFeatures.MFCC]
-
+    dataset_mode = DatasetMode.EVAL5
     # Save image to output
     save = False
     output_dir = os.path.join(configs["output"]["output_dir"], time_identifier)
     count = 0
     # Get the dataloader from the generator
-    for dataloader in prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN, k_fold=0,
-                                         dataset_func=AldsDataset,
-                                         use_argumentation=False):
+    for dataloader in prepare_dataloader(use_features, configs["dataset"], dataset_mode):
         logger.info("Using config:" + json.dumps(configs['dataset']['process'], ensure_ascii=False))
         # Calculate the process time
         now_time = time.time()
@@ -46,12 +44,13 @@ if __name__ == '__main__':
             logging_str = ""
             for index, features in enumerate(use_features):
                 logging_str = logging_str + ("{}->{}\t".format(use_features[index].value, item[features].shape))
-            logging_str = logging_str + "label: {}\t".format(item[AudioFeatures.LABEL])
+            if dataset_mode != DatasetMode.EVAL5 and dataset_mode != DatasetMode.EVAL30:
+                logging_str = logging_str + "label: {}\t".format(item[AudioFeatures.LABEL])
             logging_str = logging_str + "time use: {:<.2f}".format(current_time - now_time)
             logger.info(logging_str)
             if show_img:
                 # Get the batch
-                batch_size = item[AudioFeatures.LABEL].shape[0]
+                batch_size = len(item[AudioFeatures.NAME])
                 for batch_num in range(batch_size):
                     # Plot the data in each figure
                     fig = plt.figure()
@@ -60,9 +59,14 @@ if __name__ == '__main__':
                         # Ignore the label
                         if features == AudioFeatures.LABEL:
                             continue
-
+                        if features == AudioFeatures.NAME:
+                            fig.suptitle(str(item[AudioFeatures.NAME][batch_num]))
+                            continue
                         # Add the subplot to figure
-                        ax = fig.add_subplot(len(item.keys()) - 1, 1, plot_position)
+                        if dataset_mode == DatasetMode.EVAL5 or dataset_mode == DatasetMode.EVAL30:
+                            ax = fig.add_subplot(len(item.keys()) - 1, 1, plot_position)
+                        else:
+                            ax = fig.add_subplot(len(item.keys()) - 2, 1, plot_position)
                         plot_position += 1
 
                         # If in format of Mat(2 dimension) then use the matshow()
@@ -80,7 +84,7 @@ if __name__ == '__main__':
                     # Plot the image
                     plt.tight_layout()
                     if save:
-                        fig.savefig(os.path.join(output_dir, "{}-{}.png".format(count,batch_num)))
+                        fig.savefig(os.path.join(output_dir, "{}-{}.png".format(count, batch_num)))
                     else:
                         fig.show()
                     plt.close(fig)

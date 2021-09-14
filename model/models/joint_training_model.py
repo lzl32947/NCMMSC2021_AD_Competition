@@ -141,12 +141,10 @@ class FusionDenseModel(nn.Module):
 
 @Registers.model.register
 class SpecificTrainModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super().__init__()
         self.extractor = ExtractionModel()
         self.dense = DenseModel()
-        self.set_expected_input(input_shape)
-        self.set_description("Specific 2D Train Model")
 
     def forward(self, input_tensor: torch.Tensor):
         output = self.extractor(input_tensor)
@@ -156,13 +154,11 @@ class SpecificTrainModel(BaseModel):
 
 @Registers.model.register
 class SpecificTrainLongModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super().__init__()
         self.extractor = ExtractionModel()
         self.dense = DenseModel()
         self.pool = nn.AdaptiveAvgPool2d((13, 15))
-        self.set_expected_input(input_shape)
-        self.set_description("Specific 2D Train Model")
 
     def forward(self, input_tensor: torch.Tensor):
         output = self.extractor(input_tensor)
@@ -173,7 +169,7 @@ class SpecificTrainLongModel(BaseModel):
 
 @Registers.model.register
 class SpecificTrainLongLSTMModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super().__init__()
         self.extractor = ExtractionModel()
         self.layer_dim = 2
@@ -193,8 +189,6 @@ class SpecificTrainLongLSTMModel(BaseModel):
 
         )
 
-        self.set_expected_input(input_shape)
-        self.set_description("Specific 2D Train Model")
 
     def forward(self, input_tensor: torch.Tensor):
         batch_size = input_tensor.shape[0]
@@ -211,7 +205,7 @@ class SpecificTrainLongLSTMModel(BaseModel):
 
 @Registers.model.register
 class SpecificTrainLongTransformerEncoderModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super().__init__()
         self.extractor = ExtractionModel()
 
@@ -231,8 +225,6 @@ class SpecificTrainLongTransformerEncoderModel(BaseModel):
 
         )
 
-        self.set_expected_input(input_shape)
-        self.set_description("Specific 2D Train Model")
 
     def forward(self, input_tensor: torch.Tensor):
         batch_size = input_tensor.shape[0]
@@ -249,7 +241,7 @@ class SpecificTrainLongTransformerEncoderModel(BaseModel):
 
 @Registers.model.register
 class MSMJointConcatFineTuneLongModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super().__init__()
         self.extractor_mfcc = ExtractionModel()
         self.extractor_spec = ExtractionModel()
@@ -258,8 +250,6 @@ class MSMJointConcatFineTuneLongModel(BaseModel):
         self.pool2 = nn.AdaptiveAvgPool2d((13, 15))
         self.pool3 = nn.AdaptiveAvgPool2d((13, 15))
         self.dense = ConcatModel()
-        self.set_expected_input(input_shape)
-        self.set_description("MFCC SPEC MELSPEC Joint 2D Fine-tune Model")
 
     def forward(self, input_mfcc: torch.Tensor, input_spec: torch.Tensor, input_mel: torch.Tensor):
         output_mfcc = self.extractor_mfcc(input_mfcc)
@@ -275,14 +265,12 @@ class MSMJointConcatFineTuneLongModel(BaseModel):
 
 @Registers.model.register
 class MSMJointConcatFineTuneModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super().__init__()
         self.extractor_mfcc = ExtractionModel()
         self.extractor_spec = ExtractionModel()
         self.extractor_mel = ExtractionModel()
         self.dense = ConcatModel()
-        self.set_expected_input(input_shape)
-        self.set_description("MFCC SPEC MELSPEC Joint 2D Fine-tune Model")
 
     def forward(self, input_mfcc: torch.Tensor, input_spec: torch.Tensor, input_mel: torch.Tensor):
         output_mfcc = self.extractor_mfcc(input_mfcc)
@@ -295,7 +283,7 @@ class MSMJointConcatFineTuneModel(BaseModel):
 
 @Registers.model.register
 class MSMJointFusionFineTuneModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super().__init__()
         self.extractor_mfcc = ExtractionModel()
         self.extractor_spec = ExtractionModel()
@@ -304,8 +292,6 @@ class MSMJointFusionFineTuneModel(BaseModel):
         self.fusion_mfcc_melspec = Registers.module["IAFFFusion"]((13, 15), 32, 4)
         self.fusion_specs = Registers.module["IAFFFusion"]((13, 15), 32, 4)
         self.dense = FusionDenseModel()
-        self.set_expected_input(input_shape)
-        self.set_description("MFCC SPEC MELSPEC Joint 2D Fusion Fine-tune Model")
 
     def forward(self, input_mfcc: torch.Tensor, input_spec: torch.Tensor, input_mel: torch.Tensor):
         output_mfcc = self.extractor_mfcc(input_mfcc)

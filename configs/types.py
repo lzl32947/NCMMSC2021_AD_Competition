@@ -1,4 +1,4 @@
-#-*- coding: UTF-8 -*-
+# -*- coding: UTF-8 -*-
 from enum import Enum
 
 
@@ -28,9 +28,12 @@ class AudioFeatures(Enum):
     # Audio
     RAW = "RAW"
     VAD = "VAD"
+    # Name
+    NAME = "NAME"
 
 
 class DatasetMode(Enum):
     TRAIN = "train"
     TEST = "test"
-    VALID = "valid"
+    EVAL5 = "eval5"
+    EVAL30 = "eval30"

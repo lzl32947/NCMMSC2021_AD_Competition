@@ -1,6 +1,6 @@
 import os
 import time
-from typing import Dict, Optional, List, Callable
+from typing import Dict, Optional, List
 import torch.nn.functional as func
 from torch import optim, nn
 from tqdm import tqdm
@@ -8,17 +8,16 @@ from configs.types import AudioFeatures, DatasetMode
 from model.manager import Registers
 from util.log_util.logger import GlobalLogger
 from util.tools.files_util import global_init, create_dir
-from util.train_util.data_loader import AldsTorchDataset, AldsDataset
-from util.train_util.trainer_util import prepare_feature, prepare_dataloader, read_weight, get_best_acc_weight
 import torch
 
+from util.train_util.trainer_util import prepare_dataloader, get_best_loss_weight
 
-def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model_name: str, dataset_func: Callable,
-                train_specific: bool = True,
+
+def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model_name: str,
+                use_features: List[AudioFeatures], train_specific: bool = True,
                 train_specific_epoch: int = 20, train_general_epoch: int = 40, specific_weight: Optional[Dict] = None,
                 general_weight: Optional[str] = None, train_general: bool = False,
-                fine_tune: bool = True, fine_tune_epoch: int = 20, input_channels: int = 1,
-                use_argumentation: bool = True, **kwargs) -> None:
+                fine_tune: bool = True, fine_tune_epoch: int = 20, input_channels: int = 1, **kwargs) -> None:
     """
     This is the trainer of training with joint-features.
     :param input_channels: int, the input channels of the model, default is 1
@@ -38,9 +37,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
     """
     # Init the logger
     logger = GlobalLogger().get_logger()
-    logger.info("Training the general model.")
-    use_features = [AudioFeatures.MFCC, AudioFeatures.SPECS, AudioFeatures.MELSPECS]
-    total_fold = configs['dataset']['k_fold']
+    logger.info("Training the general model for competition.")
     # Train the specific model, this usually happens when there is no previous training
 
     if train_specific:
@@ -52,26 +49,20 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
             # Init the weight saving directory
             save_dir = os.path.join(configs['weight']['weight_dir'], time_identifier, specific_feature.value)
             create_dir(save_dir)
-            # Get fold
 
-            for current_fold, (train_dataloader, test_dataloader) in enumerate(
-                    zip(prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TRAIN, dataset_func,
-                                           use_argumentation=use_argumentation),
-                        prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TEST, dataset_func,
-                                           use_argumentation=use_argumentation))):
+            for train_dataloader in prepare_dataloader(use_features=[specific_feature], configs=configs["dataset"],
+                                                       run_for=DatasetMode.TRAIN):
 
                 # If not running on GPU
-                model = Registers.model[base_model_name](input_shape=(128, 157))
+                model = Registers.model[base_model_name]()
                 model = model.cuda()
-
                 # Init the criterion, CE by default
                 criterion = nn.CrossEntropyLoss()
                 # Init the optimizer, SGD by default
-                optimizer = optim.AdamW(model.parameters(), lr=1e-3)
-                scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=1e-3, epochs=train_specific_epoch,
+                optimizer = optim.AdamW(model.parameters(), lr=2e-4)
+                scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=2e-4, epochs=train_specific_epoch,
                                                                 steps_per_epoch=len(train_dataloader),
                                                                 anneal_strategy="linear")
-
                 for current_epoch in range(1, train_specific_epoch + 1):
                     # Setting the model to train mode
                     model.train()
@@ -84,16 +75,13 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     # Create the tqdm bar
                     bar = tqdm(range(length))
                     bar.set_description(
-                        "Training using feature {}, for fold {}/{}, epoch {}".format(specific_feature, current_fold,
-                                                                                     total_fold,
-                                                                                     current_epoch))
+                        "Training using feature {}, epoch {}".format(specific_feature,
+                                                                     current_epoch))
                     # Running one batch
                     for iteration, data in enumerate(train_dataloader):
                         feature, label = data[specific_feature], data[AudioFeatures.LABEL]
-
                         if input_channels != 1:
                             feature = torch.cat([feature] * input_channels, dim=1)
-
                         # Get features and set them to cuda
                         feature = feature.cuda()
                         label = label.cuda()
@@ -123,81 +111,25 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     now_time = time.time()
                     # Write logs
                     logger.info(
-                        "Finish training feature {}, for fold {}/{}, epoch {}, time cost {:.2f}s ,with loss {:.5f}".format(
+                        "Finish training feature {}, epoch {}, time cost {:.2f}s ,with loss {:.5f}".format(
                             specific_feature,
-                            current_fold,
-                            total_fold,
+
                             current_epoch,
                             now_time - current_time,
                             losses))
                     # Re-init the timer
                     current_time = time.time()
-                    # Going into eval mode
-                    correct = 0
-                    total = 0
-                    # Get the length of the test dataloader
-                    length = len(test_dataloader)
-                    # Init the bar
-                    bar_test = tqdm(range(length))
-                    bar_test.set_description(
-                        "Testing using feature {}, for fold {}/{}, epoch {}".format(specific_feature, current_fold,
-                                                                                    total_fold,
-                                                                                    current_epoch))
-                    # Set the model to evaluation mode
-                    model.eval()
-                    # Do not record the gradiant
-                    with torch.no_grad():
-                        # Running one batch
-                        for data in test_dataloader:
-                            # Get the features
-                            feature, label = data[specific_feature], data[AudioFeatures.LABEL]
 
-                            if input_channels != 1:
-                                feature = torch.cat([feature] * input_channels, dim=1)
-
-                            feature = feature.cuda()
-                            label = label.cuda()
-                            # Running the model
-                            output = model(feature)
-                            # Normalize the output to one-hot mode
-                            _, predicted = torch.max(func.softmax(output, dim=1), 1)
-                            # Record the size
-                            total += label.size(0)
-                            # Record the correct output
-                            correct += (predicted == label).sum().item()
-                            # Calculate the accuracy
-                            acc = correct / total
-                            # Visualize the accuracy
-                            bar_test.set_postfix(acc=acc)
-                            # Update the bar
-                            bar_test.update(1)
-                    # Calculate the accuracy
-                    final = correct / total
-                    # Close the bar
-                    bar_test.close()
                     # Time the timer
                     now_time = time.time()
-                    # Write the log
-                    logger.info(
-                        "Finish testing feature {}, for fold {}/{}, epoch {}, time cost {:.2f}s ,with acc {:.2f}%".format(
-                            specific_feature,
-                            current_fold,
-                            total_fold,
-                            current_epoch,
-                            now_time - current_time,
-                            final * 100))
                     # Save the weight to the directory
-                    save_name = os.path.join(save_dir, "fold{}_{}-epoch{}-loss{}-acc{}.pth").format(current_fold,
-                                                                                                    total_fold,
-                                                                                                    current_epoch,
-                                                                                                    losses,
-                                                                                                    final)
+                    save_name = os.path.join(save_dir, "epoch{}-loss{}.pth").format(
+                        current_epoch,
+                        losses)
                     torch.save(model.state_dict(), save_name)
                     # Write the log
                     logger.info("Saving weight to {}".format(save_name))
-
-                logger.info("Finish training for fold {} of {}.".format(current_fold, specific_feature.name))
-            logger.info("Finish training for feature {}.".format(specific_feature.name))
+                logger.info("Finish training for feature {}.".format(specific_feature.name))
         logger.info("Finishing training for all features.")
 
     else:
@@ -208,31 +140,24 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
         save_dir = os.path.join(configs['weight']['weight_dir'], time_identifier, "General")
         create_dir(save_dir)
         logger.info("Training general models.")
-        # Getting the dataloader from the generator
-        for current_fold, (train_dataloader, test_dataloader) in enumerate(
-                zip(prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN, dataset_func,
-                                       use_argumentation=use_argumentation),
-                    prepare_dataloader(use_features, configs["dataset"], DatasetMode.TEST, dataset_func,
-                                       use_argumentation=use_argumentation))):
+        for train_dataloader in prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN):
             # Send the model to GPU
             model = Registers.model[model_name](input_shape=(128, 157))
             model.cuda()
-
             # Init the criterion, CE by default
             criterion = nn.CrossEntropyLoss()
             # Init the optimizer, SGD by default
-            optimizer = optim.AdamW(model.parameters(), lr=1e-3)
-            scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=1e-3, epochs=train_general_epoch,
+            optimizer = optim.AdamW(model.parameters(), lr=2e-4)
+            scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=2e-4, epochs=train_general_epoch,
                                                             steps_per_epoch=len(train_dataloader),
                                                             anneal_strategy="linear")
-
             # Load weight
             if train_specific:
                 # Load weight from all separated directories
                 for specific_feature in use_features:
                     # By default the bast accuracy weight is used
-                    weight_file = get_best_acc_weight(os.path.join(configs['weight']['weight_dir'], time_identifier),
-                                                      total_fold, current_fold, specific_feature)
+                    weight_file = get_best_loss_weight(os.path.join(configs['weight']['weight_dir'], time_identifier),
+                                                       specific_feature)
                     # Load weights
                     if specific_feature == AudioFeatures.SPECS:
                         model.extractor_spec.load_state_dict(torch.load(weight_file), strict=False)
@@ -250,9 +175,9 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 # Load weight from all separated directories
                 for specific_feature in use_features:
                     # By default the bast accuracy weight is used
-                    weight_file = get_best_acc_weight(
+                    weight_file = get_best_loss_weight(
                         os.path.join(configs['weight']['weight_dir'], specific_weight[specific_feature]),
-                        total_fold, current_fold, specific_feature)
+                        specific_feature)
                     # Load weights
                     if specific_feature == AudioFeatures.SPECS:
                         model.extractor_spec.load_state_dict(torch.load(weight_file), strict=False)
@@ -270,7 +195,6 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
             for params in model.extractor_mel.parameters():
                 params.requires_grad = False
             logger.info("In mode training, freeze the extractor layers.")
-
             # Running epoch
             for current_epoch in range(1, train_general_epoch + 1):
                 # Setting the model to train mode
@@ -284,20 +208,17 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 # Create the tqdm bar
                 bar = tqdm(range(length))
                 bar.set_description(
-                    "Training general model for fold {}/{}, epoch {}".format(current_fold,
-                                                                             total_fold,
-                                                                             current_epoch))
+                    "Training general model epoch {}".format(
+                        current_epoch))
                 # Running one batch
                 for iteration, data in enumerate(train_dataloader):
                     # Get features and set them to cuda
                     spec, mel, mfcc, label = data[AudioFeatures.SPECS], data[AudioFeatures.MELSPECS], data[
                         AudioFeatures.MFCC], data[AudioFeatures.LABEL]
-
                     if input_channels != 1:
                         spec = torch.cat([spec] * input_channels, dim=1)
                         mel = torch.cat([mel] * input_channels, dim=1)
                         mfcc = torch.cat([mfcc] * input_channels, dim=1)
-
                     spec = spec.cuda()
                     mel = mel.cuda()
                     mfcc = mfcc.cuda()
@@ -328,79 +249,20 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 now_time = time.time()
                 # Write logs
                 logger.info(
-                    "Finish training general model, for fold {}/{}, epoch {}, time cost {:.2f}s ,with loss {:.5f}".format(
-                        current_fold,
-                        total_fold,
+                    "Finish training general model, epoch {}, time cost {:.2f}s ,with loss {:.5f}".format(
+
                         current_epoch,
                         now_time - current_time,
                         losses))
                 # Re-init the timer
                 current_time = time.time()
-                # Going into eval mode
-                correct = 0
-                total = 0
-                # Get the length of the test dataloader
-                length = len(test_dataloader)
-                # Init the bar
-                bar_test = tqdm(range(length))
-                bar_test.set_description(
-                    "Testing general model for fold {}/{}, epoch {}".format(current_fold,
-                                                                            total_fold,
-                                                                            current_epoch))
-                # Set the model to evaluation mode
-                model.eval()
-                # Do not record the gradiant
-                with torch.no_grad():
-                    # Running one batch
-                    for data in test_dataloader:
-                        # Get the features
-                        spec, mel, mfcc, label = data[AudioFeatures.SPECS], data[AudioFeatures.MELSPECS], data[
-                            AudioFeatures.MFCC], data[AudioFeatures.LABEL]
-                        if input_channels != 1:
-                            spec = torch.cat([spec] * input_channels, dim=1)
-                            mel = torch.cat([mel] * input_channels, dim=1)
-                            mfcc = torch.cat([mfcc] * input_channels, dim=1)
-                        spec = spec.cuda()
-                        mel = mel.cuda()
-                        mfcc = mfcc.cuda()
-                        label = label.cuda()
-                        # Running the model
-                        output = model(mfcc, spec, mel)
-                        # Normalize the output to one-hot mode
-                        _, predicted = torch.max(func.softmax(output, dim=1), 1)
-                        # Record the size
-                        total += label.size(0)
-                        # Record the correct output
-                        correct += (predicted == label).sum().item()
-                        # Calculate the accuracy
-                        acc = correct / total
-                        # Visualize the accuracy
-                        bar_test.set_postfix(acc=acc)
-                        # Update the bar
-                        bar_test.update(1)
-                # Calculate the accuracy
-                final = correct / total
-                # Close the bar
-                bar_test.close()
-                # Time the timer
-                now_time = time.time()
-                # Write the log
-                logger.info(
-                    "Finish testing general model, for fold {}/{}, epoch {}, time cost {:.2f}s ,with acc {:.2f}%".format(
-                        current_fold,
-                        total_fold,
-                        current_epoch,
-                        now_time - current_time,
-                        final * 100))
                 # Save the weight to the directory
-                save_name = os.path.join(save_dir, "fold{}_{}-epoch{}-loss{}-acc{}.pth").format(current_fold,
-                                                                                                total_fold,
-                                                                                                current_epoch, losses,
-                                                                                                final)
+                save_name = os.path.join(save_dir, "epoch{}-loss{}.pth").format(
+                    current_epoch, losses,
+                )
                 torch.save(model.state_dict(), save_name)
                 # Write the log
                 logger.info("Saving weight to {}".format(save_name))
-            logger.info("Finish training the general model for fold {}.".format(current_fold))
     else:
         logger.info("Skip training the general model.")
     if fine_tune:
@@ -409,12 +271,8 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
         create_dir(save_dir)
         logger.info("Fine-tune general models.")
 
-        # Getting the dataloader from the generator
-        for current_fold, (train_dataloader, test_dataloader) in enumerate(
-                zip(prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN, dataset_func,
-                                       use_argumentation=use_argumentation),
-                    prepare_dataloader(use_features, configs["dataset"], DatasetMode.TEST, dataset_func,
-                                       use_argumentation=use_argumentation))):
+        for train_dataloader in prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN):
+
             # Send the model to GPU
             model = Registers.model[model_name](input_shape=(128, 157))
             model.cuda()
@@ -422,16 +280,16 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
             # Init the criterion, CE by default
             criterion = nn.CrossEntropyLoss()
             # Init the optimizer, SGD by default
-            optimizer = optim.AdamW(model.parameters(), lr=1e-3)
-            scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=1e-3, epochs=train_general_epoch,
+            optimizer = optim.AdamW(model.parameters(), lr=2e-4)
+            scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=2e-4, epochs=train_general_epoch,
                                                             steps_per_epoch=len(train_dataloader),
                                                             anneal_strategy="linear")
 
             if train_general:
 
                 # By default the bast accuracy weight is used
-                weight_file = get_best_acc_weight(os.path.join(configs['weight']['weight_dir'], time_identifier),
-                                                  total_fold, current_fold, "General")
+                weight_file = get_best_loss_weight(os.path.join(configs['weight']['weight_dir'], time_identifier),
+                                                   "General")
                 # Load weights
                 model.load_state_dict(torch.load(weight_file), strict=True)
                 # Write the logs
@@ -439,8 +297,8 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
             else:
                 assert general_weight is not None
                 # By default the bast accuracy weight is used
-                weight_file = get_best_acc_weight(os.path.join(configs['weight']['weight_dir'], general_weight),
-                                                  total_fold, current_fold, "General")
+                weight_file = get_best_loss_weight(os.path.join(configs['weight']['weight_dir'], general_weight),
+                                                   "General")
                 # Load weights
                 model.load_state_dict(torch.load(weight_file), strict=True)
                 # Write the logs
@@ -468,8 +326,8 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 # Create the tqdm bar
                 bar = tqdm(range(length))
                 bar.set_description(
-                    "Fine-tuning general model, for fold {}/{}, epoch {}".format(current_fold, total_fold,
-                                                                                 current_epoch))
+                    "Fine-tuning general model, epoch {}".format(
+                        current_epoch))
                 # Running one batch
                 for iteration, data in enumerate(train_dataloader):
                     # Get features and set them to cuda
@@ -512,82 +370,22 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 now_time = time.time()
                 # Write logs
                 logger.info(
-                    "Finish fine-tune general model, for fold {}/{}, epoch {}, time cost {:.2f}s ,with loss {:.5f}".format(
-                        current_fold,
-                        total_fold,
+                    "Finish fine-tune general model, epoch {}, time cost {:.2f}s ,with loss {:.5f}".format(
+
                         current_epoch,
                         now_time - current_time,
                         losses))
                 # Re-init the timer
                 current_time = time.time()
-                # Going into eval mode
-                correct = 0
-                total = 0
-                # Get the length of the test dataloader
-                length = len(test_dataloader)
-                # Init the bar
-                bar_test = tqdm(range(length))
-                bar_test.set_description(
-                    "Testing general model, for fold {}/{}, epoch {}".format(current_fold,
-                                                                             total_fold,
-                                                                             current_epoch))
-                # Set the model to evaluation mode
-                model.eval()
-                # Do not record the gradiant
-                with torch.no_grad():
-                    # Running one batch
-                    for data in test_dataloader:
-                        # Get the features
-                        spec, mel, mfcc, label = data[AudioFeatures.SPECS], data[AudioFeatures.MELSPECS], data[
-                            AudioFeatures.MFCC], data[AudioFeatures.LABEL]
 
-                        if input_channels != 1:
-                            spec = torch.cat([spec] * input_channels, dim=1)
-                            mel = torch.cat([mel] * input_channels, dim=1)
-                            mfcc = torch.cat([mfcc] * input_channels, dim=1)
-
-                        spec = spec.cuda()
-                        mel = mel.cuda()
-                        mfcc = mfcc.cuda()
-                        label = label.cuda()
-                        # Running the model
-                        output = model(mfcc, spec, mel)
-                        # Normalize the output to one-hot mode
-                        _, predicted = torch.max(func.softmax(output, dim=1), 1)
-                        # Record the size
-                        total += label.size(0)
-                        # Record the correct output
-                        correct += (predicted == label).sum().item()
-                        # Calculate the accuracy
-                        acc = correct / total
-                        # Visualize the accuracy
-                        bar_test.set_postfix(acc=acc)
-                        # Update the bar
-                        bar_test.update(1)
-                # Calculate the accuracy
-                final = correct / total
-                # Close the bar
-                bar_test.close()
-                # Time the timer
-                now_time = time.time()
-                # Write the log
-                logger.info(
-                    "Finish testing general model, for fold {}/{}, epoch {}, time cost {:.2f}s ,with acc {:.2f}%".format(
-                        current_fold,
-                        total_fold,
-                        current_epoch,
-                        now_time - current_time,
-                        final * 100))
                 # Save the weight to the directory
-                save_name = os.path.join(save_dir, "fold{}_{}-epoch{}-loss{}-acc{}.pth").format(current_fold,
-                                                                                                total_fold,
-                                                                                                current_epoch, losses,
-                                                                                                final)
+                save_name = os.path.join(save_dir, "epoch{}-loss{}.pth").format(
+                    current_epoch, losses
+                )
                 torch.save(model.state_dict(), save_name)
                 # Write the log
                 logger.info("Saving weight to {}".format(save_name))
-            logger.info("Finish fine-tuning fold {}.".format(current_fold))
-        logger.info("Finish fine-tuning the model.")
+            logger.info("Finish fine-tuning the model.")
     else:
         logger.info("Skip fine-tune the model.")
 
@@ -597,19 +395,14 @@ if __name__ == '__main__':
     This is a template for joint-features training
     """
     # Init the global environment
-    time_identifier, configs = global_init()
+    time_identifier, configs = global_init(for_competition=True)
     logger = GlobalLogger().get_logger()
-    # Dataset selection
-    datasets = AldsTorchDataset
-    if datasets != AldsDataset:
-        logger.info("Using {} for training!".format(datasets.__name__))
     # Train the general model
-    model_name = "MSMJointConcatFineTuneResNet18BackboneLongModel"
-    base_model_name = "SpecificTrainResNet18BackboneLongModel"
+    model_name = "MSMJointConcatFineTuneLongModel"
+    base_model_name = "SpecificTrainLongModel"
     logger.info("Training with model {}.".format(model_name))
-    train_joint(configs, time_identifier, model_name, base_model_name,datasets,
+    train_joint(configs, time_identifier, model_name, base_model_name,
+                use_features=[AudioFeatures.MFCC, AudioFeatures.SPECS, AudioFeatures.MELSPECS],
                 train_specific=True, train_specific_epoch=20,
-                specific_weight={AudioFeatures.SPECS: "20210905_133648", AudioFeatures.MFCC: "20210905_133648",
-                                 AudioFeatures.MELSPECS: "20210905_133648"},
                 train_general=True, train_general_epoch=20,
-                fine_tune=True, fine_tune_epoch=20, input_channels=3)
+                fine_tune=True, fine_tune_epoch=20, input_channels=1)

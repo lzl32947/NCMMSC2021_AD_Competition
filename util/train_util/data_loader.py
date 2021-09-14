@@ -15,6 +15,7 @@ import librosa
 from torchvision.transforms import InterpolationMode
 
 from configs.types import ADType, AudioFeatures, DatasetMode
+from util.log_util.logger import GlobalLogger
 
 
 class BaseDataset(Dataset, ABC):
@@ -25,7 +26,7 @@ class BaseDataset(Dataset, ABC):
     def __init__(self, use_features: List[AudioFeatures], use_merge: bool = True, use_vad: bool = False,
                  repeat_times: int = 1, random_disruption: bool = False, configs: Dict = None, k_fold: int = 0,
                  current_fold: Optional[int] = None, run_for: Optional[DatasetMode] = DatasetMode.TRAIN,
-                 balance: bool = True, use_argumentation: bool = False) -> None:
+                 balance: bool = False, use_argumentation: bool = False) -> None:
         """
         Init the Dataset with the given parameters
         :param use_features: List[AudioFeatures], the features to use and to be processed in this dataset
@@ -45,22 +46,31 @@ class BaseDataset(Dataset, ABC):
         for t in ADType:
             item = t.value
             self.target_dic[item] = []
+        self.train_list = []
         # Init the files and set the count of the files
         self.count = 0
+        self.run_for = run_for
         self.init_files(use_merge)
         # Assert the repeat_times should be larger than zero
         assert repeat_times > 0
         self.repeat_times = repeat_times
         self.use_merge = use_merge
         self.use_vad = use_vad
-        self.sample_length = configs['crop_length']
+        if self.run_for == DatasetMode.EVAL5:
+            self.sample_length = 5
+            GlobalLogger().get_logger().info("Overwrite the sample length by 5s!")
+        elif self.run_for == DatasetMode.EVAL30:
+            self.sample_length = 25
+            GlobalLogger().get_logger().info("Overwrite the sample length by 25s!")
+        else:
+            self.sample_length = configs['crop_length']
         # Transform the dict to list
         data, label = self.dict2list(k_fold, current_fold, run_for)
-        self.run_for = run_for
-        if balance:
-            data, label = self.balance_data(data, label)
-        if random_disruption:
-            data, label = self.random_disruption(data, label)
+        if self.run_for == DatasetMode.TRAIN:
+            if balance:
+                data, label = self.balance_data(data, label)
+            if random_disruption:
+                data, label = self.random_disruption(data, label)
         self.train_list = data
         self.label_list = label
         self.sr = configs['sr']
@@ -107,20 +117,32 @@ class BaseDataset(Dataset, ABC):
         :param use_merge: bool, whether to use the merge audio files
         """
         # Merge files should be set to 'dataset/merge' by default and original files should be set to 'dataset/raw'
-        if use_merge:
-            data_dir = os.path.join("dataset", "merge")
-        else:
-            data_dir = os.path.join("dataset", "raw")
-        count = 0
-        # Traverse the ADType to collect all the files and calculate the count of the files
-        for t in ADType:
-            item = t.value
-            target_path = os.path.join(data_dir, item)
-            for files in os.listdir(target_path):
-                # Save the file names to the target_dic
-                self.target_dic[item].append(os.path.join(target_path, files))
-                count += 1
-        self.count = count
+        if self.run_for != DatasetMode.EVAL5 and self.run_for != DatasetMode.EVAL30:
+            if use_merge:
+                data_dir = os.path.join("dataset", "merge")
+            else:
+                data_dir = os.path.join("dataset", "raw")
+
+            count = 0
+            # Traverse the ADType to collect all the files and calculate the count of the files
+            for t in ADType:
+                item = t.value
+                target_path = os.path.join(data_dir, item)
+                for files in os.listdir(target_path):
+                    # Save the file names to the target_dic
+                    self.target_dic[item].append(os.path.join(target_path, files))
+                    count += 1
+            self.count = count
+        elif self.run_for == DatasetMode.EVAL5:
+            data_dir = os.path.join("dataset", "eval", "5")
+            for files in os.listdir(data_dir):
+                self.train_list.append(os.path.join(data_dir, files))
+            self.count = len(self.train_list)
+        elif self.run_for == DatasetMode.EVAL30:
+            data_dir = os.path.join("dataset", "eval", "30")
+            for files in os.listdir(data_dir):
+                self.train_list.append(os.path.join(data_dir, files))
+            self.count = len(self.train_list)
 
     def dict2list(self, k_fold: int, current_fold: Optional[int], run_for: DatasetMode) -> [int, List,
                                                                                             List]:
@@ -133,44 +155,47 @@ class BaseDataset(Dataset, ABC):
             If DatasetMode.Test is set, keep only the data which have the congruence relation with current fold
         :return: (int, List, List), mean the count of the selected files, the file names and their labels
         """
-        target_file_list = []
-        label = []
-        current_label = 0
-        # Flat the dict to list
-        for key in self.target_dic.keys():
-            file_list = self.target_dic[key]
-            for files in file_list:
-                target_file_list.append(files)
-                label.append(current_label)
-            current_label += 1
-        assert len(target_file_list) == len(label)
-        assert len(label) == self.count
+        if run_for != DatasetMode.EVAL5 and run_for != DatasetMode.EVAL30:
+            target_file_list = []
+            label = []
+            current_label = 0
+            # Flat the dict to list
+            for key in self.target_dic.keys():
+                file_list = self.target_dic[key]
+                for files in file_list:
+                    target_file_list.append(files)
+                    label.append(current_label)
+                current_label += 1
+            assert len(target_file_list) == len(label)
+            assert len(label) == self.count
 
-        # The k_fold is used
-        if k_fold != 0:
-            assert current_fold is not None
-            assert current_fold < k_fold
-            assert run_for is not None
-            if run_for == DatasetMode.TRAIN:
-                # Keep the data without the congruence relation with current fold
-                target_file_list = [item for index, item in enumerate(target_file_list) if
-                                    index % k_fold != current_fold]
-                label = [item for index, item in enumerate(label) if
-                         index % k_fold != current_fold]
-                assert len(target_file_list) == len(label)
-                count = len(label)
-            elif run_for == DatasetMode.TEST:
-                # Keep the data with the congruence relation with current fold
-                target_file_list = [item for index, item in enumerate(target_file_list) if
-                                    index % k_fold == current_fold]
-                label = [item for index, item in enumerate(label) if
-                         index % k_fold == current_fold]
-                assert len(target_file_list) == len(label)
-                count = len(label)
-            else:
-                raise RuntimeError()
-            self.count = count
-        return target_file_list, label
+            # The k_fold is used
+            if k_fold != 0:
+                assert current_fold is not None
+                assert current_fold < k_fold
+                assert run_for is not None
+                if run_for == DatasetMode.TRAIN:
+                    # Keep the data without the congruence relation with current fold
+                    target_file_list = [item for index, item in enumerate(target_file_list) if
+                                        index % k_fold != current_fold]
+                    label = [item for index, item in enumerate(label) if
+                             index % k_fold != current_fold]
+                    assert len(target_file_list) == len(label)
+                    count = len(label)
+                elif run_for == DatasetMode.TEST:
+                    # Keep the data with the congruence relation with current fold
+                    target_file_list = [item for index, item in enumerate(target_file_list) if
+                                        index % k_fold == current_fold]
+                    label = [item for index, item in enumerate(label) if
+                             index % k_fold == current_fold]
+                    assert len(target_file_list) == len(label)
+                    count = len(label)
+                else:
+                    raise RuntimeError("Dataset in EVAL mode can not be split!")
+                self.count = count
+            return target_file_list, label
+        else:
+            return self.train_list, []
 
     @staticmethod
     def random_disruption(data: List, label: List) -> (List, List):
@@ -205,7 +230,10 @@ class AldsDataset(BaseDataset):
                  balance: bool = True, use_argumentation: bool = False):
         super().__init__(use_features, use_merge, use_vad, repeat_times, random_disruption, configs, k_fold,
                          current_fold, run_for, balance, use_argumentation)
-        self.argumentation = self.generate_argumentation(configs['argumentation'])
+        if use_argumentation:
+            self.argumentation = self.generate_argumentation(configs['argumentation'])
+        else:
+            self.argumentation = None
 
     @staticmethod
     def generate_argumentation(config: Dict):
@@ -426,15 +454,14 @@ class AldsDataset(BaseDataset):
         processed_wav = sample_output * input_wav
         return processed_wav
 
-    def __getitem__(self, item: int) -> T_co:
+    def __getitem__(self, order: int) -> T_co:
         """
         Get one item from the dataset
-        :param item: int, the order of the given data
+        :param order: int, the order of the given data
         :return: Dict, the data
         """
         # Get the file and the label
-        file = self.train_list[item % self.count]
-        label = self.label_list[item % self.count]
+        file = self.train_list[order % self.count]
         output_dict = {}
         # Read and crop the audio
         if self.use_vad:
@@ -486,14 +513,17 @@ class AldsDataset(BaseDataset):
                     melspec_out = self.melspec(output_vad, self.sr, self.configs['melspecs'],
                                                normalized=self.configs['normalized'], expand_dim=self.expand_dim)
                     output_dict[AudioFeatures.MELSPECS_VAD] = melspec_out
-
-        # Add the label to output
-        output_dict[AudioFeatures.LABEL] = label
+        if self.run_for == DatasetMode.TRAIN or self.run_for == DatasetMode.TEST:
+            label = self.label_list[order % self.count]
+            # Add the label to output
+            output_dict[AudioFeatures.LABEL] = label
         # Add raw audio to output
         output_dict[AudioFeatures.RAW] = output_wav
         # Add vad audio to output
         if self.use_vad:
             output_dict[AudioFeatures.VAD] = output_vad
+        # Add name to output
+        output_dict[AudioFeatures.NAME] = file
         return output_dict
 
 
@@ -529,15 +559,15 @@ class AldsTorchDataset(BaseDataset):
         else:
             return cropped
 
-    def __getitem__(self, item: int) -> T_co:
+    def __getitem__(self, order: int) -> T_co:
         """
         Get one item from the dataset
-        :param item: int, the order of the given data
+        :param order: int, the order of the given data
         :return: Dict, the data
         """
         # Get the file and the label
-        file = self.train_list[item % self.count]
-        label = self.label_list[item % self.count]
+        file = self.train_list[order % self.count]
+
         output_dict = {}
         # Read and crop the audio
         if self.use_vad:
@@ -587,14 +617,17 @@ class AldsTorchDataset(BaseDataset):
                                                normalized=self.configs['normalized'], expand_dim=self.expand_dim,
                                                use_argumentation=self.use_argumentation and self.run_for == DatasetMode.TRAIN)
                     output_dict[AudioFeatures.MELSPECS_VAD] = melspec_out
-
-        # Add the label to output
-        output_dict[AudioFeatures.LABEL] = label
+        if self.run_for == DatasetMode.TRAIN or self.run_for == DatasetMode.TEST:
+            label = self.label_list[order % self.count]
+            # Add the label to output
+            output_dict[AudioFeatures.LABEL] = label
         # Add raw audio to output
         output_dict[AudioFeatures.RAW] = output_wav
         # Add vad audio to output
         if self.use_vad:
             output_dict[AudioFeatures.VAD] = output_vad
+        # Add name to output
+        output_dict[AudioFeatures.NAME] = file
         return output_dict
 
     @staticmethod

@@ -24,8 +24,7 @@ def prepare_feature(feature_list: List[str]) -> List[AudioFeatures]:
     return use_features
 
 
-def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for: DatasetMode,
-                       dataset_func: Callable = AldsDataset, **kwargs):
+def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for: DatasetMode, **kwargs):
     """
     This function returns the generator of dataloader.
     Considering the k-fold is used in the program so the function is design to be the generator.
@@ -51,29 +50,27 @@ def prepare_dataloader(use_features: List[AudioFeatures], configs: Dict, run_for
     if k_fold != 0:
         # Generate the k_fold dataloader
         for fold in range(k_fold):
-            dataset = dataset_func(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
-                                   repeat_times=repeat_times, configs=configs['process'], k_fold=k_fold,
-                                   current_fold=fold, random_disruption=random_disruption,
-                                   run_for=run_for, balance=balance, use_argumentation=use_argumentation)
+            dataset = AldsDataset(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
+                                  repeat_times=repeat_times, configs=configs['process'], k_fold=k_fold,
+                                  current_fold=fold, random_disruption=random_disruption,
+                                  run_for=run_for, balance=balance, use_argumentation=use_argumentation)
 
             dataloader = DataLoader(dataset, batch_size=batch_size,
-                                    num_workers=4 if dataset_func == AldsTorchDataset else 0)
+                                    num_workers=0)
             yield dataloader
     else:
         # Generate the single dataloader
-        for fold in range(1):
-            dataset = dataset_func(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
-                                   repeat_times=repeat_times, configs=configs['process'],
-                                   random_disruption=random_disruption,
-                                   run_for=run_for, balance=balance, use_argumentation=use_argumentation)
-
-            dataloader = DataLoader(dataset, batch_size=batch_size,
-                                    num_workers=4 if dataset_func == AldsTorchDataset else 0)
-            yield dataloader
+        dataset = AldsDataset(use_features=use_features, use_merge=use_merge, use_vad=use_vad,
+                              repeat_times=repeat_times, configs=configs['process'],
+                              random_disruption=random_disruption,
+                              run_for=run_for, balance=balance, use_argumentation=use_argumentation)
+        dataloader = DataLoader(dataset, batch_size=batch_size,
+                                num_workers=0)
+        yield dataloader
 
 
 def read_weight(weight_dir: str, specific_feature: Union[AudioFeatures, str]) -> (
-        List[str], List[str], List[str], List[str], List[str], List[str]):
+        List[str], List[str], List[str]):
     """
     Load all the weight files to the separated lists.
     :param weight_dir: str, the path to the weight directory, NOTICE that this directory is the direct directory that contains the features directory
@@ -87,82 +84,52 @@ def read_weight(weight_dir: str, specific_feature: Union[AudioFeatures, str]) ->
     else:
         directory = os.path.join(weight_dir, specific_feature)
     # Init the list
-    file_list, current_list, total_list, epoch_list, loss_list, acc_list = [], [], [], [], [], []
+    file_list, epoch_list, loss_list = [], [], []
     # Traverse the directory
     for files in os.listdir(directory):
         file_list.append(os.path.join(directory, files))
         # Split the file name
         filename = files.split(".pth")[0]
         # Use re to split the fold, epoch, loss and accuracy
-        matches = re.match(r'^fold(.*)_(.*)-epoch(.*)-loss(.*)-acc(.*)', filename, re.M | re.I)
+        matches = re.match(r'^epoch(.*)-loss(.*)', filename, re.M | re.I)
 
-        current_fold, fold, epoch, loss, acc = matches.group(1), matches.group(2), matches.group(3), matches.group(
-            4), matches.group(5)
+        epoch, loss = matches.group(1), matches.group(2)
         # Append the list
-        current_list.append(int(current_fold))
-        total_list.append(int(fold))
         epoch_list.append(int(epoch))
         loss_list.append(float(loss))
-        acc_list.append(float(acc))
     # Return the lists
-    return file_list, current_list, total_list, epoch_list, loss_list, acc_list
+    return file_list, epoch_list, loss_list
 
 
-def get_best_acc_weight(weight_dir: str, fold: int, current_fold: int,
-                        specific_feature: Union[AudioFeatures, str]) -> str:
+def get_best_loss_weight(weight_dir: str, specific_feature: Union[AudioFeatures, str]) -> str:
     """
-    Get the weight file that has the best accuracy in this fold
+    Get the weight file that has the least loss
     :param weight_dir: str, the path to the weight directory, NOTICE that this directory is the direct directory that contains the features directory
-    :param fold: int, the total fold
-    :param current_fold: int, the current fold
     :param specific_feature: AudioFeatures of str, AudioFeatures will be cast to AudioFeatures.value and should be the directory name of weight
     :return: str, the path to weight file
     """
     # Read the information from the weight directory
-    file_list, current_list, total_list, epoch_list, loss_list, acc_list = read_weight(weight_dir, specific_feature)
-    # Transform the folds into np.ndarray for comparing
-    total_list = np.array(total_list)
-    # ALL THE FOLD SHOULD BE THE SAME
-    assert fold == total_list.mean()
-    # Get the current list and transform to np.ndarray
-    current_list = np.array(current_list)
-    acc_list = np.array(acc_list)
-    # Get the index of the best accuracy file
-    max_acc = 0
-    acc_index = None
-    for index, acc in enumerate(acc_list):
-        if current_list[index] == current_fold and acc >= max_acc:
-            max_acc = acc
-            acc_index = index
-    # Return the path to that file
-    return file_list[acc_index]
-
-
-def get_best_loss_weight(weight_dir: str, fold: int, current_fold: int,
-                         specific_feature: Union[AudioFeatures, str]) -> str:
-    """
-    Get the weight file that has the least loss in this fold
-    :param weight_dir: str, the path to the weight directory, NOTICE that this directory is the direct directory that contains the features directory
-    :param fold: int, the total fold
-    :param current_fold: int, the current fold
-    :param specific_feature: AudioFeatures of str, AudioFeatures will be cast to AudioFeatures.value and should be the directory name of weight
-    :return: str, the path to weight file
-    """
-    # Read the information from the weight directory
-    file_list, current_list, total_list, epoch_list, loss_list, acc_list = read_weight(weight_dir, specific_feature)
-    # Transform the folds into np.ndarray for comparing
-    total_list = np.array(total_list)
-    # ALL THE FOLD SHOULD BE THE SAME
-    assert fold == total_list.mean()
-    # Get the current list and transform to np.ndarray
-    current_list = np.array(current_list)
+    file_list, epoch_list, loss_list = read_weight(weight_dir, specific_feature)
     loss_list = np.array(loss_list)
     # Get the index of the best accuracy file
     min_loss = 1e9
     loss_index = None
     for index, losses in enumerate(loss_list):
-        if current_list[index] == current_fold and losses <= min_loss:
+        if losses <= min_loss:
             min_loss = losses
             loss_index = index
     # Return the path to that file
     return file_list[loss_index]
+
+
+def get_last_epoch(weight_dir: str, specific_feature: Union[AudioFeatures, str]) -> str:
+    """
+    Get the weight file that is the last epoch
+    :param weight_dir: str, the path to the weight directory, NOTICE that this directory is the direct directory that contains the features directory
+    :param specific_feature: AudioFeatures of str, AudioFeatures will be cast to AudioFeatures.value and should be the directory name of weight
+    :return: str, the path to weight file
+    """
+    # Read the information from the weight directory
+    file_list, epoch_list, loss_list = read_weight(weight_dir, specific_feature)
+    # Return the path to that file
+    return file_list[-1]

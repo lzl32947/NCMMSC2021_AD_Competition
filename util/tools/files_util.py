@@ -72,7 +72,7 @@ def check_dir(configs: Dict) -> None:
     create_dir(configs["output"]["output_dir"])
 
 
-def global_init(for_evaluate: bool = False) -> (str, Dict):
+def global_init(for_evaluate: bool = False, for_competition: bool = False) -> (str, Dict):
     """
     NOTICE: THIS FUNCTION SHOULD BE RUNNING AS THE FIRST FUNCTION FOR EACH RUNNABLE.
     :param for_evaluate: bool, whether to create the directories according to evaluation, default is False
@@ -82,6 +82,8 @@ def global_init(for_evaluate: bool = False) -> (str, Dict):
     set_working_dir("./..")
     # Generate the runtime identifier, mainly used for recording the log and weights
     run_time = time.strftime("%Y%m%d_%H%M%S", time.localtime())
+    if for_competition:
+        run_time = "competition_{}".format(run_time)
     # Read the configs from the config directories, and should be in directory 'configs/config.yaml'
     config = read_config(os.path.join("configs", "config.yaml"))
     # Check and create the necessary directories
