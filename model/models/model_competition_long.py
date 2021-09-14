@@ -186,3 +186,54 @@ class ResNet18ConcatModel(nn.Module):
         output = self.dropout_1(output)
         output = self.linear_2(output)
         return output
+
+@Registers.model.register
+class SpecificTrainVggNet19BackboneLongModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super(SpecificTrainVggNet19BackboneLongModel, self).__init__()
+        self.extractor = Registers.module["VggNetBackbone"](19)
+        self.fc = nn.Linear(512*7*7, 512)
+        self.fc2 = nn.Linear(512, 64)
+        self.fc3 = nn.Linear(64, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        long_out = output.view(batch_size, -1)
+        long_out = self.fc(long_out)
+        long_out2 = func.relu(long_out)
+        long_out2 = self.fc2(long_out2)
+        long_out3 = func.relu(long_out2)
+        long_out3 = self.fc3(long_out3)
+        return long_out3
+
+@Registers.model.register
+class SpecificTrainVggNet19_bnBackboneLongModel(BaseModel):
+    def __init__(self):
+        super(SpecificTrainVggNet19_bnBackboneLongModel, self).__init__()
+        self.extractor = Registers.module["VggNetBackbone"](21)
+        self.avg_pool = nn.AdaptiveAvgPool2d((1, None))
+        self.fc = nn.Linear(512*7*7, 512)
+        self.fc2 = nn.Linear(512, 64)
+        self.fc3 = nn.Linear(64, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        long_out = output.view(batch_size, -1)
+        long_out = self.fc(long_out)
+        long_out2 = func.relu(long_out)
+        long_out2 = self.fc2(long_out2)
+        long_out3 = func.relu(long_out2)
+        long_out3 = self.fc3(long_out3)
+        return long_out3
+
+if __name__ == "__main__":
+    import torchinfo
+
+    model = SpecificTrainVggNet19BackboneLongModel(input_shape=())
+    model.cuda()
+    torchinfo.summary(model, (4, 3, 128, 157))
+    # model = SpecificTrainResNet34BackboneLongModel(input_shape=())
+    # # model.cuda()
+    # torchinfo.summary(model, (4, 1, 128, 782))
