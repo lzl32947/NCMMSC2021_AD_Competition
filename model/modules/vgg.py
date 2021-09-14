@@ -38,13 +38,14 @@ class VggNetBackbone(nn.Module):
             model = torchvision.models.vgg16()
             state_dict = model_zoo.load_url('https://download.pytorch.org/models/vgg16-397923af.pth')
             model.load_state_dict(state_dict, strict=False)
+
         else:
             model = torchvision.models.vgg19()
             state_dict = model_zoo.load_url('https://download.pytorch.org/models/vgg19-dcbb9e9d.pth')
             model.load_state_dict(state_dict, strict=False)
 
         backbone = list(
-            [model.features, model.avgpool]
+            [model.features ]
         )
         self.model = nn.Sequential(*backbone)
 

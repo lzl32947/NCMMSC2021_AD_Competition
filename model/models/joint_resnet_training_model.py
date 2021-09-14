@@ -347,4 +347,4 @@ if __name__ == '__main__':
     )
     model = nn.Sequential(*backbone)
     # print("ss")
-    torchinfo.summary(model, (4, 3, 128, 782))
+    torchinfo.summary(model, (4, 3, 128, 157))
