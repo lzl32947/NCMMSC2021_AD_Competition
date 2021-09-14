@@ -1,6 +1,6 @@
 import os
 import time
-from typing import Dict, Optional, List
+from typing import Dict, Optional, List, Callable
 import torch.nn.functional as func
 from torch import optim, nn
 from tqdm import tqdm
@@ -8,14 +8,16 @@ from configs.types import AudioFeatures, DatasetMode
 from model.manager import Registers
 from util.log_util.logger import GlobalLogger
 from util.tools.files_util import global_init, create_dir
+from util.train_util.data_loader import AldsTorchDataset, AldsDataset
 from util.train_util.trainer_util import prepare_feature, prepare_dataloader, read_weight, get_best_acc_weight
 import torch
 
 
-def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model_name: str, train_specific: bool = True,
+def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model_name: str, dataset_func: Callable,
+                train_specific: bool = True,
                 train_specific_epoch: int = 20, train_general_epoch: int = 40, specific_weight: Optional[Dict] = None,
                 general_weight: Optional[str] = None, train_general: bool = False,
-                fine_tune: bool = True, fine_tune_epoch: int = 20) -> None:
+                fine_tune: bool = True, fine_tune_epoch: int = 20, use_argumentation: bool = True) -> None:
     """
     This is the trainer of training with joint-features.
     :param base_model_name: str, the name of base model (extraction model)
@@ -51,8 +53,10 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
             # Get fold
 
             for current_fold, (train_dataloader, test_dataloader) in enumerate(
-                    zip(prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TRAIN),
-                        prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TEST))):
+                    zip(prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TRAIN, dataset_func,
+                                           use_argumentation=use_argumentation),
+                        prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TEST, dataset_func,
+                                           use_argumentation=use_argumentation))):
 
                 # If not running on GPU
                 model = Registers.model[base_model_name](input_shape=(128, 157))
@@ -61,7 +65,10 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 # Init the criterion, CE by default
                 criterion = nn.CrossEntropyLoss()
                 # Init the optimizer, SGD by default
-                optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+                optimizer = optim.AdamW(model.parameters(), lr=2e-4)
+                scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=2e-4, epochs=train_specific_epoch,
+                                                                steps_per_epoch=len(train_dataloader),
+                                                                anneal_strategy="linear")
 
                 for current_epoch in range(1, train_specific_epoch + 1):
                     # Setting the model to train mode
@@ -94,6 +101,8 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                         loss.backward()
                         # Update the optimizer
                         optimizer.step()
+                        # Update the scheduler
+                        scheduler.step()
                         # Sum up the losses
                         running_loss += loss.item()
                         # Visualize the loss
@@ -108,7 +117,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     now_time = time.time()
                     # Write logs
                     logger.info(
-                        "Finish training feature {}, for fold {}/{}, epoch {}, time cost {}s ,with loss {}".format(
+                        "Finish training feature {}, for fold {}/{}, epoch {}, time cost {.2f}s ,with loss {:.5f}".format(
                             specific_feature,
                             current_fold,
                             total_fold,
@@ -160,13 +169,13 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     now_time = time.time()
                     # Write the log
                     logger.info(
-                        "Finish testing feature {}, for fold {}/{}, epoch {}, time cost {}s ,with acc {}".format(
+                        "Finish testing feature {}, for fold {}/{}, epoch {}, time cost {.2f}s ,with acc {:.2f}%".format(
                             specific_feature,
                             current_fold,
                             total_fold,
                             current_epoch,
                             now_time - current_time,
-                            final))
+                            final * 100))
                     # Save the weight to the directory
                     save_name = os.path.join(save_dir, "fold{}_{}-epoch{}-loss{}-acc{}.pth").format(current_fold,
                                                                                                     total_fold,
@@ -191,8 +200,10 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
         logger.info("Training general models.")
         # Getting the dataloader from the generator
         for current_fold, (train_dataloader, test_dataloader) in enumerate(
-                zip(prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN),
-                    prepare_dataloader(use_features, configs["dataset"], DatasetMode.TEST))):
+                zip(prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN, dataset_func,
+                                       use_argumentation=use_argumentation),
+                    prepare_dataloader(use_features, configs["dataset"], DatasetMode.TEST, dataset_func,
+                                       use_argumentation=use_argumentation))):
             # Send the model to GPU
             model = Registers.model[model_name](input_shape=(128, 157))
             model.cuda()
@@ -200,7 +211,10 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
             # Init the criterion, CE by default
             criterion = nn.CrossEntropyLoss()
             # Init the optimizer, SGD by default
-            optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+            optimizer = optim.AdamW(model.parameters(), lr=2e-4)
+            scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=2e-4, epochs=train_general_epoch,
+                                                            steps_per_epoch=len(train_dataloader),
+                                                            anneal_strategy="linear")
 
             # Load weight
             if train_specific:
@@ -282,6 +296,8 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     loss.backward()
                     # Update the optimizer
                     optimizer.step()
+                    # Update the scheduler
+                    scheduler.step()
                     # Sum up the losses
                     running_loss += loss.item()
                     # Visualize the loss
@@ -296,7 +312,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 now_time = time.time()
                 # Write logs
                 logger.info(
-                    "Finish training general model, for fold {}/{}, epoch {}, time cost {}s ,with loss {}".format(
+                    "Finish training general model, for fold {}/{}, epoch {}, time cost {.2f}s ,with loss {:.5f}".format(
                         current_fold,
                         total_fold,
                         current_epoch,
@@ -350,12 +366,12 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 now_time = time.time()
                 # Write the log
                 logger.info(
-                    "Finish testing general model, for fold {}/{}, epoch {}, time cost {}s ,with acc {}".format(
+                    "Finish testing general model, for fold {}/{}, epoch {}, time cost {.2f}s ,with acc {:.2f}%".format(
                         current_fold,
                         total_fold,
                         current_epoch,
                         now_time - current_time,
-                        final))
+                        final * 100))
                 # Save the weight to the directory
                 save_name = os.path.join(save_dir, "fold{}_{}-epoch{}-loss{}-acc{}.pth").format(current_fold,
                                                                                                 total_fold,
@@ -375,8 +391,10 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
 
         # Getting the dataloader from the generator
         for current_fold, (train_dataloader, test_dataloader) in enumerate(
-                zip(prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN),
-                    prepare_dataloader(use_features, configs["dataset"], DatasetMode.TEST))):
+                zip(prepare_dataloader(use_features, configs["dataset"], DatasetMode.TRAIN, dataset_func,
+                                       use_argumentation=use_argumentation),
+                    prepare_dataloader(use_features, configs["dataset"], DatasetMode.TEST, dataset_func,
+                                       use_argumentation=use_argumentation))):
             # Send the model to GPU
             model = Registers.model[model_name](input_shape=(128, 157))
             model.cuda()
@@ -384,7 +402,10 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
             # Init the criterion, CE by default
             criterion = nn.CrossEntropyLoss()
             # Init the optimizer, SGD by default
-            optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
+            optimizer = optim.AdamW(model.parameters(), lr=2e-4)
+            scheduler = torch.optim.lr_scheduler.OneCycleLR(optimizer, max_lr=2e-4, epochs=train_general_epoch,
+                                                            steps_per_epoch=len(train_dataloader),
+                                                            anneal_strategy="linear")
 
             if train_general:
 
@@ -448,6 +469,8 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     loss.backward()
                     # Update the optimizer
                     optimizer.step()
+                    # Update the scheduler
+                    scheduler.step()
                     # Sum up the losses
                     running_loss += loss.item()
                     # Visualize the loss
@@ -462,7 +485,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 now_time = time.time()
                 # Write logs
                 logger.info(
-                    "Finish fine-tune general model, for fold {}/{}, epoch {}, time cost {}s ,with loss {}".format(
+                    "Finish fine-tune general model, for fold {}/{}, epoch {}, time cost {.2f}s ,with loss {:.5f}".format(
                         current_fold,
                         total_fold,
                         current_epoch,
@@ -516,12 +539,12 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 now_time = time.time()
                 # Write the log
                 logger.info(
-                    "Finish testing general model, for fold {}/{}, epoch {}, time cost {}s ,with acc {}".format(
+                    "Finish testing general model, for fold {}/{}, epoch {}, time cost {.2f}s ,with acc {:.2f}%".format(
                         current_fold,
                         total_fold,
                         current_epoch,
                         now_time - current_time,
-                        final))
+                        final * 100))
                 # Save the weight to the directory
                 save_name = os.path.join(save_dir, "fold{}_{}-epoch{}-loss{}-acc{}.pth").format(current_fold,
                                                                                                 total_fold,
@@ -543,11 +566,15 @@ if __name__ == '__main__':
     # Init the global environment
     time_identifier, configs = global_init()
     logger = GlobalLogger().get_logger()
+    # Dataset selection
+    datasets = AldsTorchDataset
+    if datasets != AldsDataset:
+        logger.info("Using {} for training!".format(datasets.__name__))
     # Train the general model
     model_name = "MSMJointConcatFineTuneLongModel"
     base_model_name = "SpecificTrainLongModel"
     logger.info("Training with model {}.".format(model_name))
-    train_joint(configs, time_identifier, model_name, base_model_name,
+    train_joint(configs, time_identifier, model_name, base_model_name, datasets,
                 train_specific=True, train_specific_epoch=20,
                 train_general=True, train_general_epoch=20,
                 fine_tune=True, fine_tune_epoch=20)
