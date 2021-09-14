@@ -137,9 +137,9 @@ class CompetitionMSMJointConcatFineTuneModel(BaseModel):
 
 @Registers.model.register
 class SpecificTrainVggNet19BackboneLongModel(BaseModel):
-    def __init__(self):
+    def __init__(self, input_shape: Tuple):
         super(SpecificTrainVggNet19BackboneLongModel, self).__init__()
-        self.extractor = Registers.module["VggNetBackbone"]('19')
+        self.extractor = Registers.module["VggNetBackbone"](19)
         self.fc = nn.Linear(512 * 4 * 4, 1024)
         self.dropout1 = nn.Dropout(0.3)
         self.fc2 = nn.Linear(1024, 256)
@@ -167,9 +167,9 @@ class SpecificTrainVggNet19BackboneLongModel(BaseModel):
 
 @Registers.model.register
 class SpecificTrainVggNet19_bnBackboneLongModel(BaseModel):
-    def __init__(self):
+    def __init__(self, input_shape: Tuple):
         super(SpecificTrainVggNet19_bnBackboneLongModel, self).__init__()
-        self.extractor = Registers.module["VggNetBackbone"]('19_bn')
+        self.extractor = Registers.module["VggNetBackbone"](20)
         self.fc = nn.Linear(512 * 4 * 4, 1024)
         self.dropout1 = nn.Dropout(0.3)
         self.fc2 = nn.Linear(1024, 256)
@@ -199,8 +199,8 @@ if __name__ == "__main__":
     import torchinfo
 
     model = SpecificTrainVggNet19BackboneLongModel(input_shape=())
-    model.cuda()
-    torchinfo.summary(model, (4, 3, 128, 782))
+    # model.cuda()
+    torchinfo.summary(model, (4, 3, 128, 157))
     # model = SpecificTrainResNet34BackboneLongModel(input_shape=())
     # # model.cuda()
     # torchinfo.summary(model, (4, 1, 128, 782))

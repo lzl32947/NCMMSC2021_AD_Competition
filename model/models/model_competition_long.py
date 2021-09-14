@@ -227,3 +227,13 @@ class SpecificTrainVggNet19_bnBackboneLongModel(BaseModel):
         long_out3 = func.relu(long_out2)
         long_out3 = self.fc3(long_out3)
         return long_out3
+
+if __name__ == "__main__":
+    import torchinfo
+
+    model = SpecificTrainVggNet19BackboneLongModel(input_shape=())
+    model.cuda()
+    torchinfo.summary(model, (4, 3, 128, 157))
+    # model = SpecificTrainResNet34BackboneLongModel(input_shape=())
+    # # model.cuda()
+    # torchinfo.summary(model, (4, 1, 128, 782))
