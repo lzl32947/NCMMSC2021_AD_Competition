@@ -14,7 +14,6 @@ from util.train_util.data_loader import AldsDataset
 from util.train_util.trainer_util import prepare_dataloader, get_best_acc_weight
 from tqdm import tqdm
 import numpy as np
-import pickle
 
 
 def evaluate_specific(identifier: str, config: Dict, model_name: str, use_feature: Union[AudioFeatures, str],

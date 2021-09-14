@@ -8,6 +8,11 @@ from torch.utils import model_zoo
 
 from model.base_model import BaseModel
 from model.manager import Register, Registers
+from torch.autograd import Variable
+import math
+from torch.nn import functional as F
+
+# from model.modules.resnet import ResNet
 
 
 @Registers.model.register
@@ -121,6 +126,106 @@ class SpecificTrainResNet18BackboneLongModel(BaseModel):
 
 
 @Registers.model.register
+class SpecificTrainVggNet19BackboneLongModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super(SpecificTrainVggNet19BackboneLongModel, self).__init__()
+        self.extractor = Registers.module["VggNetBackbone"](19)
+        self.avg_pool = nn.AdaptiveAvgPool2d((1, None))
+        self.fc = nn.Linear(512*7*7, 512)
+        self.fc2 = nn.Linear(512, 64)
+        self.fc3 = nn.Linear(64, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        # print(batch_size)
+        output = self.extractor(input_tensor)
+        # print(output.shape)
+        # output = self.avg_pool(output)
+        long_out = output.view(batch_size, -1)
+        long_out = self.fc(long_out)
+        long_out2 = func.relu(long_out)
+        long_out2 = self.fc2(long_out2)
+        long_out3 = func.relu(long_out2)
+        long_out3 = self.fc3(long_out3)
+        return long_out3
+
+@Registers.model.register
+class SpecificTrainVggNet19BackboneAttentionLSTMModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super(SpecificTrainVggNet19BackboneAttentionLSTMModel, self).__init__()
+        self.extractor = Registers.module["VggNetBackbone"](19)
+        self.avg_pool = nn.AdaptiveAvgPool2d((1, None))
+        self.layer_dim = 2
+        self.hidden_dim = 600
+        self.lstm = nn.LSTM(input_size=512, hidden_size=self.hidden_dim, num_layers=self.layer_dim, bidirectional=True
+                            , batch_first=True)
+        self.fc = nn.Linear(self.hidden_dim * 2, 3)
+        self.dropout = nn.Dropout(0.5)
+        # self.fc = nn.Linear(2401, 3)
+
+    def attention_net(self, input_tensor: torch.Tensor, query, mask=None):  # 软性注意力机制（key=value=x）
+
+
+
+        batch_size = input_tensor.shape[0]
+
+        d_k = query.size(-1)  # d_k为query的维度
+
+        scores = torch.matmul(query, input_tensor.transpose(1, 2)) / math.sqrt(d_k)  # 打分机制  scores:[batch, seq_len, seq_len]
+        p_attn = F.softmax(scores, dim=-1)  # 对最后一个维度归一化得分
+        context = torch.matmul(p_attn, input_tensor).sum(1)  # 对权重化的x求和，[batch, seq_len, hidden_dim*2]->[batch, hidden_dim*2]
+        return context, p_attn
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        output = self.avg_pool(output)
+        # print("this"+str(output.shape))
+        # output = self.conv_layers(output)
+
+        length = output.shape[3]
+        channel = output.shape[1]*output.shape[2]
+        output = output.permute((0, 3, 1, 2))
+
+        output = output.view(batch_size, length, channel)
+        # print(output.shape)
+        h0 = Variable(torch.zeros(self.layer_dim * 2, batch_size, self.hidden_dim).cuda())
+        c0 = Variable(torch.zeros(self.layer_dim * 2, batch_size, self.hidden_dim).cuda())
+        lstm_out, (h_n, c_n) = self.lstm(output, (h0, c0))
+        # print(lstm_out.shape)
+
+        query = self.dropout(lstm_out)
+        attn_output, attention = self.attention_net(lstm_out, query)
+        # print(attn_output.shape)
+
+        lstm_out = self.fc(attn_output)
+        return lstm_out
+
+@Registers.model.register
+class SpecificTrainResNet34BackboneLongModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super(SpecificTrainResNet34BackboneLongModel, self).__init__()
+        # self.extractor = ResNet(34)
+        self.extractor = Registers.module["ResNetBackbone"](34)
+        self.avg_pool = nn.AdaptiveAvgPool2d((1, 6))
+        self.fc = nn.Linear(512 * 6, 512)
+        self.fc2 = nn.Linear(512, 64)
+        self.fc3 = nn.Linear(64, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        output = self.avg_pool(output)
+        long_out = output.view(batch_size, -1)
+        long_out = self.fc(long_out)
+        long_out2 = func.relu(long_out)
+        long_out2 = self.fc2(long_out2)
+        long_out3 = func.relu(long_out2)
+        long_out3 = self.fc3(long_out3)
+        return long_out3
+
+
+@Registers.model.register
 class MSMJointConcatFineTuneResNet18BackboneLongModel(BaseModel):
     def __init__(self, input_shape: Tuple):
         super().__init__()
@@ -148,7 +253,7 @@ class ResNet18ConcatModel(nn.Module):
 
         self.maxpooling_2 = nn.MaxPool2d((2, 2))
 
-        self.linear_1 = nn.Linear(512*11, 512)
+        self.linear_1 = nn.Linear(512 * 11, 512)
         self.dropout_1 = nn.Dropout(0.3)
         self.linear_2 = nn.Linear(512, 3)
 
@@ -228,15 +333,18 @@ if __name__ == '__main__':
     import torchinfo
 
     #
-    model = MSMJointConcatFineTuneResNet18BackboneLongModel(input_shape=())
-    model.cuda()
-    torchinfo.summary(model,((4, 3, 128, 782),(4, 3, 128, 782),(4, 3, 128, 782)))
-    # model = torchvision.models.resnet18(pretrained=True)
-    # state_dict = model_zoo.load_url('https://download.pytorch.org/models/resnet18-f37072fd.pth')
-    # model.load_state_dict(state_dict, strict=False)
-    # backbone = list(
-    #     [model.conv1, model.bn1, model.relu, model.maxpool, model.layer1, model.layer2, model.layer3, model.layer4,
-    #      model.avgpool]
-    # )
-    # model = nn.Sequential(*backbone)
-    # torchinfo.summary(model.cuda(), (4, 3, 128, 782))
+    # model = SpecificTrainResNet34BackboneLongModel(input_shape=())
+    # model.cuda()
+    # torchinfo.summary(model,((4, 3, 128, 782),(4, 3, 128, 782),(4, 3, 128, 782)))
+    # model = SpecificTrainResNet34BackboneLongModel(input_shape=())
+    # # model.cuda()
+    # torchinfo.summary(model, (4, 1, 128, 782))
+    model = torchvision.models.vgg19(pretrained=True)
+    state_dict = model_zoo.load_url('https://download.pytorch.org/models/vgg19-dcbb9e9d.pth')
+    model.load_state_dict(state_dict, strict=False)
+    backbone = list(
+        [model.features, model.avgpool]
+    )
+    model = nn.Sequential(*backbone)
+    # print("ss")
+    torchinfo.summary(model, (4, 3, 128, 782))
