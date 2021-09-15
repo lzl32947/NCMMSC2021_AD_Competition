@@ -10,15 +10,18 @@ from configs.types import AudioFeatures, DatasetMode, ADType
 from model.manager import Registers
 from util.log_util.logger import GlobalLogger
 from util.tools.files_util import global_init
-from util.train_util.data_loader import AldsTorchDataset
+from util.train_util.data_loader import AldsDataset
 from util.train_util.trainer_util import prepare_dataloader, get_best_acc_weight
 from tqdm import tqdm
 import numpy as np
 import pickle
+import torch.multiprocessing
+
+torch.multiprocessing.set_sharing_strategy('file_system')
 
 
 def evaluate_specific(identifier: str, config: Dict, model_name: str, use_feature: Union[AudioFeatures, str],
-                      weight_identifier: str,dataset_func:Callable, input_channels: int = 1, **kwargs):
+                      weight_identifier: str, dataset_func: Callable, input_channels: int = 1, **kwargs):
     correct_label = []
     predicted_label = []
     total = 0
@@ -106,7 +109,8 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
 
 
 def evaluate_joint(identifier: str, config: Dict, model_name: str, use_feature: List[AudioFeatures],
-                   weight_identifier: str, weight_description: str, dataset_func:Callable,input_channels: int = 1, **kwargs):
+                   weight_identifier: str, weight_description: str, dataset_func: Callable, input_channels: int = 1,
+                   **kwargs):
     correct_label = []
     predicted_label = []
     total = 0
@@ -117,7 +121,7 @@ def evaluate_joint(identifier: str, config: Dict, model_name: str, use_feature: 
     logger = GlobalLogger().get_logger()
     logger.info("Evaluate the model {}.".format(model_name))
     for current_fold, test_dataloader in enumerate(
-            prepare_dataloader(use_feature, config["dataset"], DatasetMode.TEST,dataset_func=dataset_func,
+            prepare_dataloader(use_feature, config["dataset"], DatasetMode.TEST, dataset_func=dataset_func,
                                repeat_times=5 * config["dataset"]["repeat_times"])):
         # Get model and send to GPU
         model = Registers.model[model_name](**kwargs)
@@ -274,11 +278,11 @@ if __name__ == '__main__':
     time_identifier, configs = global_init(True)
     logger = GlobalLogger().get_logger()
     model_name = "CompetitionSpecificTrainVggNet19BNBackboneModel"
-    weight_identifier = "20210915_093218"
+    weight_identifier = "20210915_184216"
     # c, p = evaluate_joint(time_identifier, configs, model_name,
     #                       [AudioFeatures.MFCC, AudioFeatures.SPECS, AudioFeatures.MELSPECS], weight_identifier,
     #                       "Fine_tune", input_shape=())
     c, p = evaluate_specific(time_identifier, configs, model_name,
-                             AudioFeatures.SPECS, weight_identifier,AldsTorchDataset,input_channels=3)
+                             AudioFeatures.MFCC, weight_identifier, AldsDataset, input_channels=3)
     logger.info("Analysis results for {} with {}".format(model_name, weight_identifier))
     analysis_result(time_identifier, configs, c, p, model_name)

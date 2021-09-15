@@ -54,6 +54,6 @@ if __name__ == '__main__':
     time_identifier, configs = global_init()
     logger = GlobalLogger().get_logger()
 
-    target_directory = "20210914_221835"
-    feature_name = AudioFeatures.MELSPECS.value
+    target_directory = "20210915_184216"
+    feature_name = AudioFeatures.MFCC.value
     get_acc_for_log(configs, target_directory, feature_name)
