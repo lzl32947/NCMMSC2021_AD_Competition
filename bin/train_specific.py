@@ -41,7 +41,7 @@ def train_specific_feature(configs: Dict, time_identifier: str, specific_feature
                 prepare_dataloader([specific_feature], configs["dataset"], DatasetMode.TEST, dataset_func, **kwargs))):
 
         # If not running on GPU
-        model = Registers.model[model_name](input_shape=())
+        model = Registers.model[model_name]()
         model = model.cuda()
 
         # Init the criterion, CE by default
@@ -190,8 +190,8 @@ if __name__ == '__main__':
     if datasets != AldsDataset:
         logger.info("Using {} for training!".format(datasets.__name__))
     # Train the general model
-    model_name = "SpecificTrainLongModel"
+    model_name = "CompetitionSpecificTrainVggNet19BNBackboneModel"
     logger.info("Training with model {}.".format(model_name))
-    train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS,
-                           model_name, input_shape=(1, 128, 782), input_channels=1, dataset_func=datasets,
+    train_specific_feature(configs, time_identifier, AudioFeatures.SPECS,
+                           model_name, input_channels=3, dataset_func=datasets,
                            use_argumentation=True)

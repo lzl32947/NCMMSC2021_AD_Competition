@@ -10,7 +10,7 @@ from configs.types import AudioFeatures, DatasetMode, ADType
 from model.manager import Registers
 from util.log_util.logger import GlobalLogger
 from util.tools.files_util import global_init
-from util.train_util.data_loader import AldsDataset, AldsTorchDataset
+from util.train_util.data_loader import AldsTorchDataset
 from util.train_util.trainer_util import prepare_dataloader, get_best_acc_weight
 from tqdm import tqdm
 import numpy as np
@@ -18,7 +18,7 @@ import pickle
 
 
 def evaluate_specific(identifier: str, config: Dict, model_name: str, use_feature: Union[AudioFeatures, str],
-                      weight_identifier: str, dataset_func: Callable, input_channels: int = 1, **kwargs):
+                      weight_identifier: str,dataset_func:Callable, input_channels: int = 1, **kwargs):
     correct_label = []
     predicted_label = []
     total = 0
@@ -28,19 +28,9 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
     total_fold = config['dataset']['k_fold']
     logger = GlobalLogger().get_logger()
     logger.info("Evaluate the model {}.".format(model_name))
-
-    dataloader_1 = prepare_dataloader([use_feature], config["dataset"], DatasetMode.TEST, dataset_func=dataset_func,
-                                      repeat_times=5 * config["dataset"]["repeat_times"], use_argumentation=False,
-                                      random_disruption=False)
-    dataloader_2 = prepare_dataloader([use_feature], config["dataset"], DatasetMode.TEST, dataset_func=dataset_func,
-                                      repeat_times=5 * config["dataset"]["repeat_times"], use_argumentation=False,
-                                      random_disruption=False)
-    dataloader_3 = prepare_dataloader([use_feature], config["dataset"], DatasetMode.TEST, dataset_func=dataset_func,
-                                      repeat_times=5 * config["dataset"]["repeat_times"], use_argumentation=False,
-                                      random_disruption=False)
-
-    for current_fold, (dataloader1, dataloader2, dataloader3) in enumerate(
-            zip(dataloader_1, dataloader_2, dataloader_3)):
+    for current_fold, test_dataloader in enumerate(
+            prepare_dataloader([use_feature], config["dataset"], DatasetMode.TEST,
+                               repeat_times=5 * config["dataset"]["repeat_times"], dataset_func=dataset_func)):
         # Get model and send to GPU
         model = Registers.model[model_name](**kwargs)
         model = model.cuda()
@@ -54,7 +44,7 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
         model.eval()
 
         # Get the length of the test dataloader
-        length = len(dataloader1)
+        length = len(test_dataloader)
 
         # Init the bar
         bar_test = tqdm(range(length))
@@ -70,10 +60,10 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
 
         with torch.no_grad():
             # Running one batch
-            for data0, data1, data2 in zip(dataloader1, dataloader2, dataloader3):
+            for data in test_dataloader:
                 # Get the features
 
-                feature, label = data0[use_feature], data0[AudioFeatures.LABEL]
+                feature, label = data[use_feature], data[AudioFeatures.LABEL]
 
                 if input_channels != 1:
                     feature = torch.cat([feature] * input_channels, dim=1)
@@ -81,35 +71,9 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
                 correct_label_fold.append(label.numpy())
 
                 feature = feature.cuda()
-                label_cpy = label
                 label = label.cuda()
                 # Running the model
                 output = model(feature)
-
-                feature, label = data1[use_feature], data1[AudioFeatures.LABEL]
-
-                if input_channels != 1:
-                    feature = torch.cat([feature] * input_channels, dim=1)
-                feature = feature.cuda()
-                assert torch.equal(label_cpy,label)
-                label_cpy = label
-                label = label.cuda()
-                # Running the model
-                output_ = model(feature)
-                output += output_
-
-                feature, label = data2[use_feature], data2[AudioFeatures.LABEL]
-                if input_channels != 1:
-                    feature = torch.cat([feature] * input_channels, dim=1)
-                feature = feature.cuda()
-                assert torch.equal(label_cpy,label)
-                label_cpy = label
-                label = label.cuda()
-                # Running the model
-                output_ = model(feature)
-                output += output_
-
-                output = output / 3
                 # Normalize the output to one-hot mode
                 _, predicted = torch.max(func.softmax(output, dim=1), 1)
 
@@ -142,8 +106,7 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
 
 
 def evaluate_joint(identifier: str, config: Dict, model_name: str, use_feature: List[AudioFeatures],
-                   weight_identifier: str, weight_description: str, dataset_func: Callable, input_channels: int = 1,
-                   **kwargs):
+                   weight_identifier: str, weight_description: str, dataset_func:Callable,input_channels: int = 1, **kwargs):
     correct_label = []
     predicted_label = []
     total = 0
@@ -154,7 +117,7 @@ def evaluate_joint(identifier: str, config: Dict, model_name: str, use_feature: 
     logger = GlobalLogger().get_logger()
     logger.info("Evaluate the model {}.".format(model_name))
     for current_fold, test_dataloader in enumerate(
-            prepare_dataloader(use_feature, config["dataset"], DatasetMode.TEST, dataset_func=dataset_func,
+            prepare_dataloader(use_feature, config["dataset"], DatasetMode.TEST,dataset_func=dataset_func,
                                repeat_times=5 * config["dataset"]["repeat_times"])):
         # Get model and send to GPU
         model = Registers.model[model_name](**kwargs)
@@ -276,10 +239,6 @@ def plot_image(identifier, config, cm, classes, title: str, cmap=plt.cm.Blues):
                 ax.text(j, i, format(int(cm[i, j] * 100 + 0.5), fmt) + '%',
                         ha="center", va="center",
                         color="white" if cm[i, j] > thresh else "black")
-            else:
-                ax.text(j, i, format(0, fmt) + '%',
-                        ha="center", va="center",
-                        color="white" if cm[i, j] > thresh else "black")
     fig.tight_layout()
     fig.savefig(os.path.join(config["image"]["image_dir"], identifier,
                              "{}.png".format(title.replace(" ", "_").replace("\n", "_"))),
@@ -314,14 +273,12 @@ def analysis_result(identifier, config, correct_label, predicted_label, model_na
 if __name__ == '__main__':
     time_identifier, configs = global_init(True)
     logger = GlobalLogger().get_logger()
-    model_name = "SpecificTrainLongModel"
-    weight_identifier = "20210914_111449"
+    model_name = "CompetitionSpecificTrainVggNet19BNBackboneModel"
+    weight_identifier = "20210915_093218"
     # c, p = evaluate_joint(time_identifier, configs, model_name,
-    #                       [AudioFeatures.MFCC_VAD, AudioFeatures.SPECS_VAD, AudioFeatures.MELSPECS_VAD],
-    #                       weight_identifier,
+    #                       [AudioFeatures.MFCC, AudioFeatures.SPECS, AudioFeatures.MELSPECS], weight_identifier,
     #                       "Fine_tune", input_shape=())
     c, p = evaluate_specific(time_identifier, configs, model_name,
-                             AudioFeatures.MELSPECS, weight_identifier, input_shape=(), dataset_func=AldsTorchDataset,
-                             input_channels=1)
+                             AudioFeatures.SPECS, weight_identifier,AldsTorchDataset,input_channels=3)
     logger.info("Analysis results for {} with {}".format(model_name, weight_identifier))
     analysis_result(time_identifier, configs, c, p, model_name)

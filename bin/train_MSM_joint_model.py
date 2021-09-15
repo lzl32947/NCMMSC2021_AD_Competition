@@ -609,7 +609,7 @@ if __name__ == '__main__':
     logger.info("Training with model {}.".format(model_name))
     train_joint(configs, time_identifier, model_name, base_model_name,datasets,
                 train_specific=True, train_specific_epoch=20,
-                specific_weight={AudioFeatures.SPECS: "20210905_133648", AudioFeatures.MFCC: "20210905_133648",
-                                 AudioFeatures.MELSPECS: "20210905_133648"},
+                specific_weight={AudioFeatures.SPECS: "20210915_093218", AudioFeatures.MFCC: "20210915_012356",
+                                 AudioFeatures.MELSPECS: "20210914_221835"},
                 train_general=True, train_general_epoch=20,
                 fine_tune=True, fine_tune_epoch=20, input_channels=3)
