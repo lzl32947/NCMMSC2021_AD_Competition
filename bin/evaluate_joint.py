@@ -107,6 +107,7 @@ if __name__ == '__main__':
     output = os.path.join(configs["output"]["output_dir"], time_identifier,
                           "{}_{}.txt".format(model_name, dataset_mode.value))
     mapping_dict = {0: "AD", 1: "HC", 2: "MCI"}
+    standard_dict = {"AD": 1, "MCI": 2, "HC": 3}
     with open(output, "w", encoding="utf-8") as fout:
         for item in d.keys():
             file_name = item.split("/")[-1] if "/" in item else item.split("\\")[-1]
