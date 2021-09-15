@@ -166,6 +166,55 @@ class CompetitionSpecificTrainVggNet19BNBackboneModel(BaseModel):
         long_out4 = self.fc4(long_out4)
         return long_out4
 
+@Registers.model.register
+class CompetitionMSMJointTrainVggNet19BNBackboneModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super().__init__()
+        self.extractor_mfcc = Registers.module["VggNetBackbone"]("19_bn")
+        self.extractor_spec = Registers.module["VggNetBackbone"]("19_bn")
+        self.extractor_mel = Registers.module["VggNetBackbone"]("19_bn")
+        self.pooling = nn.AdaptiveAvgPool2d((1, 1))
+        self.dense = VggNet19BNConcatModel()
+        self.set_expected_input(input_shape)
+        self.set_description("MFCC SPEC MELSPEC Joint 2D Fine-tune Model")
+
+    def forward(self, input_mfcc: torch.Tensor, input_spec: torch.Tensor, input_mel: torch.Tensor):
+        output_mfcc = self.extractor_mfcc(input_mfcc)
+        output_mfcc = self.pooling(output_mfcc)
+        output_spec = self.extractor_spec(input_spec)
+        output_spec = self.pooling(output_spec)
+        output_mel = self.extractor_mel(input_mel)
+        output_mel = self.pooling(output_mel)
+        concat_output = torch.cat([output_spec, output_mel, output_mfcc], dim=1)
+        output = self.dense(concat_output)
+        return output
+
+
+class VggNet19BNConcatModel(nn.Module):
+
+    def __init__(self):
+        super().__init__()
+        self.conv_layer_1 = nn.Conv2d(512 * 3, 512, (3, 3))
+
+        self.maxpooling_2 = nn.MaxPool2d((2, 2))
+
+        self.linear_1 = nn.Linear(512 * 11, 512)
+        self.dropout_1 = nn.Dropout(0.3)
+        self.linear_2 = nn.Linear(512, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+
+        output = self.conv_layer_1(input_tensor)
+        output = func.relu(output)
+
+        output = self.maxpooling_2(output)
+
+        output = output.view((batch_size, -1))
+        output = self.linear_1(output)
+        output = self.dropout_1(output)
+        output = self.linear_2(output)
+        return output
 
 if __name__ == "__main__":
     import torchinfo
