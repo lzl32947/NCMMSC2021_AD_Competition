@@ -46,7 +46,6 @@ def evaluate_joint(identifier: str, config: Dict, model_name: str, use_feature: 
         bar_test.set_description(
             "Testing {}".format(weight_description))
 
-
         # Re-init the timer
         current_time = time.time()
 
@@ -99,10 +98,20 @@ def evaluate_joint(identifier: str, config: Dict, model_name: str, use_feature: 
 if __name__ == '__main__':
     time_identifier, configs = global_init(for_evaluate=True, for_competition=True)
     logger = GlobalLogger().get_logger()
-    model_name = "CompetitionMSMJointConcatFineTuneLongModel"
+    model_name = "MSMJointConcatFineTuneLongModel"
     weight_identifier = "competition_20210914_172301"
+    dataset_mode = DatasetMode.EVAL30
     d = evaluate_joint(time_identifier, configs, model_name,
                        [AudioFeatures.MFCC, AudioFeatures.SPECS, AudioFeatures.MELSPECS],
-                       weight_identifier, "General", DatasetMode.EVAL30)
-    print(d)
+                       weight_identifier, "General", dataset_mode)
+    output = os.path.join(configs["output"]["output_dir"], time_identifier,
+                          "{}_{}.txt".format(model_name, dataset_mode.value))
+    mapping_dict = {0: "AD", 1: "HC", 2: "MCI"}
+    with open(output, "w", encoding="utf-8") as fout:
+        for item in d.keys():
+            file_name = item.split("/")[-1] if "/" in item else item.split("\\")[-1]
+            prediction = int(np.argmax(d[item]))
+            write_line = "{} {} {}\n".format(file_name, mapping_dict[prediction], float(d[item][prediction]))
+            fout.write(write_line)
+    logger.info("Saving results to {}".format(output))
     logger.info("Analysis results for {} with {}".format(model_name, weight_identifier))
