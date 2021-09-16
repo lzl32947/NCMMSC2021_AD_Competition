@@ -266,7 +266,7 @@ class CompetitionMSMJointTrainVggNet19BNBackboneModel(BaseModel):
 
 
 class VggNet19BNConcatModel(nn.Module):
-
+    
     def __init__(self):
         super().__init__()
         self.conv_layer_1 = nn.Conv2d(512 * 3, 512, (3, 3))
