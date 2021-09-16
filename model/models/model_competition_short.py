@@ -167,6 +167,58 @@ class CompetitionSpecificTrainVggNet19BNBackboneModel(BaseModel):
         return long_out4
 
 @Registers.model.register
+class SpecificTrainVggNet19BackboneAttentionLSTMModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super(SpecificTrainVggNet19BackboneAttentionLSTMModel, self).__init__()
+        self.extractor = Registers.module["VggNetBackbone"](19)
+        self.avg_pool = nn.AdaptiveAvgPool2d((1, None))
+        self.layer_dim = 2
+        self.hidden_dim = 600
+        self.lstm = nn.LSTM(input_size=512, hidden_size=self.hidden_dim, num_layers=self.layer_dim, bidirectional=True
+                            , batch_first=True)
+        self.fc = nn.Linear(self.hidden_dim * 2, 3)
+        self.dropout = nn.Dropout(0.5)
+        # self.fc = nn.Linear(2401, 3)
+
+    def attention_net(self, input_tensor: torch.Tensor, query, mask=None):  # 软性注意力机制（key=value=x）
+
+
+
+        batch_size = input_tensor.shape[0]
+
+        d_k = query.size(-1)  # d_k为query的维度
+
+        scores = torch.matmul(query, input_tensor.transpose(1, 2)) / math.sqrt(d_k)  # 打分机制  scores:[batch, seq_len, seq_len]
+        p_attn = F.softmax(scores, dim=-1)  # 对最后一个维度归一化得分
+        context = torch.matmul(p_attn, input_tensor).sum(1)  # 对权重化的x求和，[batch, seq_len, hidden_dim*2]->[batch, hidden_dim*2]
+        return context, p_attn
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        output = self.avg_pool(output)
+        # print("this"+str(output.shape))
+        # output = self.conv_layers(output)
+
+        length = output.shape[3]
+        channel = output.shape[1]*output.shape[2]
+        output = output.permute((0, 3, 1, 2))
+
+        output = output.view(batch_size, length, channel)
+        # print(output.shape)
+        h0 = Variable(torch.zeros(self.layer_dim * 2, batch_size, self.hidden_dim).cuda())
+        c0 = Variable(torch.zeros(self.layer_dim * 2, batch_size, self.hidden_dim).cuda())
+        lstm_out, (h_n, c_n) = self.lstm(output, (h0, c0))
+        # print(lstm_out.shape)
+
+        query = self.dropout(lstm_out)
+        attn_output, attention = self.attention_net(lstm_out, query)
+        # print(attn_output.shape)
+
+        lstm_out = self.fc(attn_output)
+        return lstm_out
+
+@Registers.model.register
 class CompetitionMSMJointTrainVggNet19BNBackboneModel(BaseModel):
     def __init__(self, input_shape: Tuple):
         super().__init__()
