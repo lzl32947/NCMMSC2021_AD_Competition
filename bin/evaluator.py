@@ -1,10 +1,14 @@
 import os
 import time
 from typing import Dict, Union, List, Callable
+
 import matplotlib.pyplot as plt
+import numpy as np
 import torch
+import torch.multiprocessing
 import torch.nn.functional as func
 from sklearn.metrics import confusion_matrix
+from tqdm import tqdm
 
 from configs.types import AudioFeatures, DatasetMode, ADType
 from model.manager import Registers
@@ -12,16 +16,12 @@ from util.log_util.logger import GlobalLogger
 from util.tools.files_util import global_init
 from util.train_util.data_loader import AldsDataset
 from util.train_util.trainer_util import prepare_dataloader, get_best_acc_weight
-from tqdm import tqdm
-import numpy as np
-import pickle
-import torch.multiprocessing
 
 torch.multiprocessing.set_sharing_strategy('file_system')
 
 
-def evaluate_specific_joint(identifier: str, config: Dict, model_name: str, use_feature: List[AudioFeatures],
-                            weight_identifier: str, dataset_func: Callable, input_channels: int = 1, **kwargs):
+def evaluate_specific_joint(identifier: str, config: Dict, model_name: str, use_feature_and_weight: Dict,
+                            dataset_func: Callable, input_channels: int = 1, **kwargs):
     # Get the fold
     total_fold = config['dataset']['k_fold']
     logger = GlobalLogger().get_logger()
@@ -32,7 +32,7 @@ def evaluate_specific_joint(identifier: str, config: Dict, model_name: str, use_
     output_all_source = dict()
 
     dict_output = {}
-    for feature in use_feature:
+    for feature in use_feature_and_weight.keys():
         logger.info("Running the feature :{}".format(feature))
 
         output_feature_predict = []
@@ -58,7 +58,7 @@ def evaluate_specific_joint(identifier: str, config: Dict, model_name: str, use_
             model = model.cuda()
             # Load weight file into model
             weight_file = get_best_acc_weight(
-                os.path.join(config['weight']['weight_dir'], weight_identifier),
+                os.path.join(config['weight']['weight_dir'], use_feature_and_weight[feature]),
                 total_fold, current_fold, feature.value if isinstance(feature, AudioFeatures) else feature)
             logger.info("Using weight {}".format(weight_file))
             model.load_state_dict(torch.load(weight_file), strict=True)
@@ -134,7 +134,7 @@ def evaluate_specific_joint(identifier: str, config: Dict, model_name: str, use_
     output_list = []
     label_list = []
     feature_list = []
-    for feature in use_feature:
+    for feature in use_feature_and_weight.keys():
         output_dict, label_dict = analysis_output(identifier, config, output_all_correct[feature],
                                                   output_all_predict[feature],
                                                   output_all_data[feature], output_all_source[feature],
@@ -473,8 +473,8 @@ def analysis_result(identifier, config, correct_label, predicted_label, extra_in
 if __name__ == '__main__':
     time_identifier, configs = global_init(True)
     logger = GlobalLogger().get_logger()
-    model_name = "SpecificTrainLongModel"
-    weight_identifier = "20210905_133648"
+    # model_name = "SpecificTrainLongModel"
+    # weight_identifier = "20210905_133648"
     # c, p = evaluate_joint(time_identifier, configs, model_name,
     #                       [AudioFeatures.MFCC, AudioFeatures.SPECS, AudioFeatures.MELSPECS], weight_identifier,
     #                       "Fine_tune", input_shape=())
@@ -482,6 +482,10 @@ if __name__ == '__main__':
     #                          AudioFeatures.MFCC, weight_identifier, AldsDataset, input_channels=3)
     # logger.info("Analysis results for {} with {}".format(model_name, weight_identifier))
     # analysis_result(time_identifier, configs, c, p, model_name)
+    model_name = "CompetitionSpecificTrainVggNet19BNBackboneModel"
+    # weight_identifier = "20210905_133648"
     evaluate_specific_joint(time_identifier, configs, model_name,
-                            [AudioFeatures.MFCC, AudioFeatures.MELSPECS, AudioFeatures.SPECS], weight_identifier,
-                            AldsDataset)
+                            {AudioFeatures.MFCC: "20210915_184216"
+                                , AudioFeatures.MELSPECS: "20210915_183611"
+                                , AudioFeatures.SPECS: "20210915_183922"},
+                            AldsDataset, input_shape=(), input_channels=3)
