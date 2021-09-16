@@ -170,7 +170,7 @@ class CompetitionSpecificTrainVggNet19BNBackboneModel(BaseModel):
 
 @Registers.model.register
 class SpecificTrainVggNet19BNBackboneAttentionLSTMModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super(SpecificTrainVggNet19BNBackboneAttentionLSTMModel, self).__init__()
         self.extractor = Registers.module["VggNetBackbone"]("19_bn")
         self.pooling = nn.AdaptiveAvgPool2d((1, 1))

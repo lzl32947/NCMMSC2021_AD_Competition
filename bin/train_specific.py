@@ -192,6 +192,6 @@ if __name__ == '__main__':
     # Train the general model
     model_name = "SpecificTrainVggNet19BNBackboneAttentionLSTMModel"
     logger.info("Training with model {}.".format(model_name))
-    train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS,
+    train_specific_feature(configs, time_identifier, AudioFeatures.MFCC,
                            model_name, input_channels=3, dataset_func=datasets,
                            use_argumentation=False)
