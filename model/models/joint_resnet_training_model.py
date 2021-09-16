@@ -228,9 +228,9 @@ if __name__ == '__main__':
     import torchinfo
 
     #
-    model = MSMJointConcatFineTuneResNet18BackboneLongModel(input_shape=())
-    model.cuda()
-    torchinfo.summary(model,((4, 3, 128, 782),(4, 3, 128, 782),(4, 3, 128, 782)))
+    # model = MSMJointConcatFineTuneResNet18BackboneLongModel(input_shape=())
+    # model.cuda()
+    # torchinfo.summary(model,((4, 3, 128, 782),(4, 3, 128, 782),(4, 3, 128, 782)))
     # model = torchvision.models.resnet18(pretrained=True)
     # state_dict = model_zoo.load_url('https://download.pytorch.org/models/resnet18-f37072fd.pth')
     # model.load_state_dict(state_dict, strict=False)
