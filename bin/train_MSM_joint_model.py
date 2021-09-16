@@ -18,7 +18,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                 train_specific_epoch: int = 20, train_general_epoch: int = 40, specific_weight: Optional[Dict] = None,
                 general_weight: Optional[str] = None, train_general: bool = False,
                 fine_tune: bool = True, fine_tune_epoch: int = 20, input_channels: int = 1,
-                use_argumentation: bool = True, **kwargs) -> None:
+                use_argumentation: bool = False, **kwargs) -> None:
     """
     This is the trainer of training with joint-features.
     :param input_channels: int, the input channels of the model, default is 1
@@ -61,7 +61,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                                            use_argumentation=use_argumentation))):
 
                 # If not running on GPU
-                model = Registers.model[base_model_name](input_shape=(128, 157))
+                model = Registers.model[base_model_name]()
                 model = model.cuda()
 
                 # Init the criterion, CE by default
@@ -215,7 +215,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     prepare_dataloader(use_features, configs["dataset"], DatasetMode.TEST, dataset_func,
                                        use_argumentation=use_argumentation))):
             # Send the model to GPU
-            model = Registers.model[model_name](input_shape=(128, 157))
+            model = Registers.model[model_name]()
             model.cuda()
 
             # Init the criterion, CE by default
@@ -416,7 +416,7 @@ def train_joint(configs: Dict, time_identifier: str, model_name: str, base_model
                     prepare_dataloader(use_features, configs["dataset"], DatasetMode.TEST, dataset_func,
                                        use_argumentation=use_argumentation))):
             # Send the model to GPU
-            model = Registers.model[model_name](input_shape=(128, 157))
+            model = Registers.model[model_name]()
             model.cuda()
 
             # Init the criterion, CE by default
@@ -604,7 +604,7 @@ if __name__ == '__main__':
     if datasets != AldsDataset:
         logger.info("Using {} for training!".format(datasets.__name__))
     # Train the general model
-    model_name = "MSMJointConcatFineTuneResNet18BackboneLongModel"
+    model_name = "CompetitionMSMJointTrainVggNet19BNBackboneModel"
     base_model_name = "CompetitionSpecificTrainVggNet19BNBackboneModel"
     logger.info("Training with model {}.".format(model_name))
     train_joint(configs, time_identifier, model_name, base_model_name, datasets,
@@ -612,4 +612,4 @@ if __name__ == '__main__':
                 specific_weight={AudioFeatures.SPECS: "20210915_183922", AudioFeatures.MFCC: "20210915_184216",
                                  AudioFeatures.MELSPECS: "20210915_183611"},
                 train_general=True, train_general_epoch=20,
-                fine_tune=True, fine_tune_epoch=20, input_channels=3)
+                fine_tune=True, fine_tune_epoch=20, input_channels=3, use_argumentation=False)
