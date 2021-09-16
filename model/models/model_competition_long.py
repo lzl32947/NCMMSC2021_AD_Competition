@@ -218,13 +218,11 @@ class CompetitionSpecificTrainVggNet19BNBackboneLongModel(BaseModel):
         self.conv1 = nn.Conv2d(512, 1024, (3, 3))
         self.max_pooling = nn.MaxPool2d((2, 2), stride=2)
         self.pooling = nn.AdaptiveAvgPool2d((1, 1))
-        self.fc = nn.Linear(512, 1024)
+        self.fc = nn.Linear(1024, 256)
         self.dropout1 = nn.Dropout(0.3)
-        self.fc2 = nn.Linear(1024, 256)
+        self.fc2 = nn.Linear(256, 64)
         self.dropout2 = nn.Dropout(0.3)
-        self.fc3 = nn.Linear(256, 64)
-        self.dropout3 = nn.Dropout(0.3)
-        self.fc4 = nn.Linear(64, 3)
+        self.fc3 = nn.Linear(64, 3)
 
     def forward(self, input_tensor: torch.Tensor):
         batch_size = input_tensor.shape[0]
@@ -234,6 +232,7 @@ class CompetitionSpecificTrainVggNet19BNBackboneLongModel(BaseModel):
         output = self.max_pooling(output)
         output = self.pooling(output)
         long_out = output.view(batch_size, -1)
+
         long_out = self.fc(long_out)
         long_out2 = func.relu(long_out)
         long_out2 = self.dropout1(long_out2)
@@ -241,10 +240,7 @@ class CompetitionSpecificTrainVggNet19BNBackboneLongModel(BaseModel):
         long_out3 = func.relu(long_out2)
         long_out3 = self.dropout2(long_out3)
         long_out3 = self.fc3(long_out3)
-        long_out4 = func.relu(long_out3)
-        long_out4 = self.dropout3(long_out4)
-        long_out4 = self.fc4(long_out4)
-        return long_out4
+        return long_out3
 
 
 
