@@ -25,7 +25,7 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
     logger = GlobalLogger().get_logger()
     logger.info("Evaluate the model {}".format(model_name))
     for test_dataloader in prepare_dataloader([use_feature], config["dataset"], run_for,
-                                              repeat_times=5, k_fold=0):
+                                              repeat_times=100, k_fold=0):
         # Get model and send to GPU
         model = Registers.model[model_name]()
         model = model.cuda()
@@ -87,7 +87,7 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
     assert len(predicted_label) == len(predicted_file)
     output_dict = {}
     for item in set(predicted_file):
-        average_output = np.average(predicted_label[predicted_file == item], axis=1)
+        average_output = np.average(predicted_label[predicted_file == item], axis=0)
         output_dict[str(item)] = average_output
 
     return output_dict
@@ -96,20 +96,31 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
 if __name__ == '__main__':
     time_identifier, configs = global_init(for_evaluate=True, for_competition=True)
     logger = GlobalLogger().get_logger()
-    model_name = "SpecificTrainLongModel"
-    weight_identifier = "20210905_133648"
-    dataset_mode = DatasetMode.EVAL30
+    model_name = "SpecificTrainModel"
+    weight_identifier = "competition_20210914_203903"
+    result_only = False
+    for_post = True
+    dataset_mode = DatasetMode.EVAL5
     d = evaluate_specific(time_identifier, configs, model_name,
-                          AudioFeatures.MELSPECS, weight_identifier, DatasetMode.EVAL5, input_channels=1)
+                          AudioFeatures.SPECS, weight_identifier, dataset_mode, input_channels=1)
     output = os.path.join(configs["output"]["output_dir"], time_identifier,
                           "{}_{}.txt".format(model_name, dataset_mode.value))
     mapping_dict = {0: "AD", 1: "HC", 2: "MCI"}
     standard_dict = {"AD": 1, "MCI": 2, "HC": 3}
+    keys = list(d.keys())
+    list.sort(keys)
     with open(output, "w", encoding="utf-8") as fout:
-        for item in d.keys():
+        if for_post:
+            fout.write("ID Prediction\n")
+        for item in keys:
             file_name = item.split("/")[-1] if "/" in item else item.split("\\")[-1]
             prediction = int(np.argmax(d[item]))
-            write_line = "{} {} {}\n".format(file_name, mapping_dict[prediction], float(d[item][prediction]))
+            if result_only and not for_post:
+                write_line = "{} {}\n".format(file_name, mapping_dict[prediction])
+            elif not for_post:
+                write_line = "{} {} {}\n".format(file_name, mapping_dict[prediction], float(d[item][prediction]))
+            else:
+                write_line = "{} {}\n".format(file_name, standard_dict[mapping_dict[prediction]])
             fout.write(write_line)
     logger.info("Saving results to {}".format(output))
     logger.info("Analysis results for {} with {}".format(model_name, weight_identifier))

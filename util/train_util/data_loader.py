@@ -250,9 +250,10 @@ class AldsDataset(BaseDataset):
 
     @staticmethod
     def resample_wav(file_path: str, sample_length: int, sr: int, use_vad: bool, use_argumentation: bool,
-                     argumentation_func: Callable) -> Union[Tuple[Any, np.ndarray], Any]:
+                     argumentation_func: Callable, for_eval: bool = False) -> Union[Tuple[Any, np.ndarray], Any]:
         """
         Crop part of the audio and return
+        :param for_eval: bool
         :param use_argumentation: bool, whether to use the argumentation functions
         :param argumentation_func: Callable, the argumentation function to use
         :param use_vad: bool, if True, extra audio will be return
@@ -264,7 +265,6 @@ class AldsDataset(BaseDataset):
         waveform, sample_rate = librosa.load(file_path, sr=sr)
         if use_argumentation and argumentation_func is not None:
             waveform = argumentation_func(samples=waveform, sample_rate=sample_rate)
-
         start = int(random.random() * (len(waveform) - sample_length * sample_rate))
         cropped = waveform[start: start + sample_length * sample_rate]
         if use_vad:
@@ -467,13 +467,15 @@ class AldsDataset(BaseDataset):
         if self.use_vad:
 
             cropped_wav, vad_cropped = self.resample_wav(file, self.sample_length, self.sr, self.use_vad,
-                                                         self.use_argumentation, self.argumentation)
+                                                         self.use_argumentation, self.argumentation, for_eval=(
+                        self.run_for == DatasetMode.EVAL5 or self.run_for == DatasetMode.EVAL30))
             # Pre-emphasis the audio
             output_wav = self.pre_emphasis(cropped_wav, self.configs['pre_emphasis'])
             output_vad = self.pre_emphasis(vad_cropped, self.configs['pre_emphasis'])
         else:
             cropped_wav: np.ndarray = self.resample_wav(file, self.sample_length, self.sr, self.use_vad,
-                                                        self.use_argumentation, self.argumentation)
+                                                        self.use_argumentation, self.argumentation, for_eval=(
+                        self.run_for == DatasetMode.EVAL5 or self.run_for == DatasetMode.EVAL30))
             # Pre-emphasis the audio
             output_wav = self.pre_emphasis(cropped_wav, self.configs['pre_emphasis'])
             output_vad = None
