@@ -185,6 +185,7 @@ class ResNetBackbone(nn.Module):
 if __name__ == '__main__':
     import torchinfo
 
-    models = ResNet(50)
-    models.cuda(0)
-    torchinfo.summary(models, (4, 1, 128, 157))
+    models = torchvision.models.resnet18()
+    print(torchvision.models.resnet18())
+    # models.cuda(0)
+    torchinfo.summary(models, (4, 3, 128, 157))

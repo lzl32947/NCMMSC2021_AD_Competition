@@ -190,7 +190,7 @@ if __name__ == '__main__':
     if datasets != AldsDataset:
         logger.info("Using {} for training!".format(datasets.__name__))
     # Train the general model
-    model_name = "CompetitionSpecificTrainVggNet19BNBackboneLongModel"
+    model_name = "CompetitionSpecificTrainResNet18BackboneModel"
     logger.info("Training with model {}.".format(model_name))
     train_specific_feature(configs, time_identifier, AudioFeatures.MELSPECS,
                            model_name, input_channels=3, dataset_func=datasets,

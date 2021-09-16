@@ -189,27 +189,6 @@ class ResNet18ConcatModel(nn.Module):
 
 
 @Registers.model.register
-class SpecificTrainVggNet19BackboneLongModel(BaseModel):
-    def __init__(self):
-        super(SpecificTrainVggNet19BackboneLongModel, self).__init__()
-        self.extractor = Registers.module["VggNetBackbone"](19)
-        self.fc = nn.Linear(512 * 7 * 7, 512)
-        self.fc2 = nn.Linear(512, 64)
-        self.fc3 = nn.Linear(64, 3)
-
-    def forward(self, input_tensor: torch.Tensor):
-        batch_size = input_tensor.shape[0]
-        output = self.extractor(input_tensor)
-        long_out = output.view(batch_size, -1)
-        long_out = self.fc(long_out)
-        long_out2 = func.relu(long_out)
-        long_out2 = self.fc2(long_out2)
-        long_out3 = func.relu(long_out2)
-        long_out3 = self.fc3(long_out3)
-        return long_out3
-
-
-@Registers.model.register
 class CompetitionSpecificTrainVggNet19BNBackboneLongModel(BaseModel):
     def __init__(self):
         super(CompetitionSpecificTrainVggNet19BNBackboneLongModel, self).__init__()

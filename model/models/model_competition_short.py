@@ -1,16 +1,16 @@
+import math
 from typing import Tuple
 
-import torchvision.models
-from torch import nn
 import torch
 import torch.nn.functional as func
-from torch.utils import model_zoo
+from torch import nn
+from torch.autograd import Variable
+from torch.nn import functional as F
 
 from model.base_model import BaseModel
-from model.manager import Register, Registers
-from torch.autograd import Variable
-import math
-from torch.nn import functional as F
+from model.manager import Registers
+from model.modules.resnet import ResNetBackbone
+
 
 class DenseModel(nn.Module):
     def __init__(self, input_unit=6240):
@@ -168,6 +168,44 @@ class CompetitionSpecificTrainVggNet19BNBackboneModel(BaseModel):
         long_out4 = self.fc4(long_out4)
         return long_out4
 
+
+@Registers.model.register
+class CompetitionSpecificTrainResNet18BackboneModel(BaseModel):
+    def __init__(self):
+        super(CompetitionSpecificTrainResNet18BackboneModel, self).__init__()
+        # self.extractor = Registers.module["ResNetBackbone"](18)
+        self.extractor = ResNetBackbone(18)
+        self.avg_pool = nn.AdaptiveAvgPool2d((4, 4))
+        self.fc = nn.Linear(512 * 16, 1024)
+        self.dropout1 = nn.Dropout(0.3)
+        self.fc2 = nn.Linear(1024, 256)
+        self.dropout2 = nn.Dropout(0.3)
+        self.fc3 = nn.Linear(256, 64)
+        self.dropout3 = nn.Dropout(0.3)
+        self.fc4 = nn.Linear(64, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        output = self.avg_pool(output)
+        long_out = output.view(batch_size, -1)
+        long_out = self.fc(long_out)
+        long_out2 = func.relu(long_out)
+        long_out2 = self.dropout1(long_out2)
+
+        long_out2 = self.fc2(long_out2)
+        long_out3 = func.relu(long_out2)
+        long_out3 = self.dropout2(long_out3)
+
+        long_out3 = self.fc3(long_out3)
+        long_out4 = func.relu(long_out3)
+        long_out4 = self.dropout3(long_out4)
+        long_out4 = self.fc4(long_out4)
+
+
+        return long_out4
+
+
 @Registers.model.register
 class CompetitionSpecificTrainVggNet16BNBackboneModel(BaseModel):
     def __init__(self):
@@ -199,6 +237,7 @@ class CompetitionSpecificTrainVggNet16BNBackboneModel(BaseModel):
         long_out4 = self.fc4(long_out4)
         return long_out4
 
+
 @Registers.model.register
 class SpecificTrainVggNet19BNBackboneAttentionLSTMModel(BaseModel):
     def __init__(self):
@@ -207,7 +246,7 @@ class SpecificTrainVggNet19BNBackboneAttentionLSTMModel(BaseModel):
         self.pooling = nn.AdaptiveAvgPool2d((1, 1))
         self.layer_dim = 2
         self.hidden_dim = 600
-        self.lstm = nn.LSTM(input_size=512, hidden_size=self.hidden_dim, num_layers=self.layer_dim, bidirectional=True
+        self.lstm = nn.LSTM(input_size=512, hidden_size=self.hidden_dim, num_layers=self.layer_dim, bidirectional=4
                             , batch_first=True)
         self.fc = nn.Linear(self.hidden_dim * 2, 3)
         self.dropout = nn.Dropout(0.5)
@@ -216,9 +255,11 @@ class SpecificTrainVggNet19BNBackboneAttentionLSTMModel(BaseModel):
 
         batch_size = input_tensor.shape[0]
         d_k = query.size(-1)  # d_k为query的维度
-        scores = torch.matmul(query, input_tensor.transpose(1, 2)) / math.sqrt(d_k)  # 打分机制  scores:[batch, seq_len, seq_len]
+        scores = torch.matmul(query, input_tensor.transpose(1, 2)) / math.sqrt(
+            d_k)  # 打分机制  scores:[batch, seq_len, seq_len]
         p_attn = F.softmax(scores, dim=-1)  # 对最后一个维度归一化得分
-        context = torch.matmul(p_attn, input_tensor).sum(1)  # 对权重化的x求和，[batch, seq_len, hidden_dim*2]->[batch, hidden_dim*2]
+        context = torch.matmul(p_attn, input_tensor).sum(
+            1)  # 对权重化的x求和，[batch, seq_len, hidden_dim*2]->[batch, hidden_dim*2]
         return context, p_attn
 
     def forward(self, input_tensor: torch.Tensor):
@@ -227,7 +268,7 @@ class SpecificTrainVggNet19BNBackboneAttentionLSTMModel(BaseModel):
         output = self.pooling(output)
 
         length = output.shape[3]
-        channel = output.shape[1]*output.shape[2]
+        channel = output.shape[1] * output.shape[2]
         output = output.permute((0, 3, 1, 2))
 
         output = output.view(batch_size, length, channel)
@@ -240,6 +281,7 @@ class SpecificTrainVggNet19BNBackboneAttentionLSTMModel(BaseModel):
 
         lstm_out = self.fc(attn_output)
         return lstm_out
+
 
 @Registers.model.register
 class CompetitionMSMJointTrainVggNet19BNBackboneModel(BaseModel):
@@ -291,10 +333,11 @@ class VggNet19BNConcatModel(nn.Module):
         output = self.linear_2(output)
         return output
 
+
 if __name__ == "__main__":
     import torchinfo
 
-    model = CompetitionSpecificTrainVggNet19BNBackboneModel()
+    model = CompetitionSpecificTrainResNet18BackboneModel()
     # model.cuda()
     torchinfo.summary(model, (4, 3, 128, 157))
     # model = SpecificTrainResNet34BackboneLongModel(input_shape=())

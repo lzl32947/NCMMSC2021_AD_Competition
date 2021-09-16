@@ -63,6 +63,8 @@ class VggNetBackbone(nn.Module):
 if __name__ == '__main__':
     import torchinfo
 
-    model = torchvision.models.vgg16_bn()
-    model = model.cuda()
+    model = torchvision.models.vgg19_bn()
+    # model = model.cuda()
     torchinfo.summary(model, (16, 3, 128, 157))
+    print(torchvision.models.vgg19())
+    print(torchvision.models.vgg19_bn())
