@@ -190,7 +190,7 @@ class ResNet18ConcatModel(nn.Module):
 
 @Registers.model.register
 class SpecificTrainVggNet19BackboneLongModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super(SpecificTrainVggNet19BackboneLongModel, self).__init__()
         self.extractor = Registers.module["VggNetBackbone"](19)
         self.fc = nn.Linear(512 * 7 * 7, 512)

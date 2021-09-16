@@ -36,7 +36,7 @@ class BaseModel(nn.Module):
         """
         self.expected_input = shape
 
-    def check_input(self, input_shape: Tuple) -> bool:
+    def check_input(self) -> bool:
         """
         Check the input whether equals to the target shape
         :param input_shape: tuple, the input shape

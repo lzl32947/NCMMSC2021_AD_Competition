@@ -12,7 +12,7 @@ from model.manager import Register, Registers
 
 @Registers.model.register
 class SpecificTrainResNetModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super(SpecificTrainResNetModel, self).__init__()
         self.extractor = Registers.module["ResNet"](50)
         self.avg_pool = nn.AdaptiveAvgPool2d((1, 1))
@@ -29,7 +29,7 @@ class SpecificTrainResNetModel(BaseModel):
 
 @Registers.model.register
 class SpecificTrainResNetLongLSTMModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super(SpecificTrainResNetLongLSTMModel, self).__init__()
         self.extractor = Registers.module["ResNet"](50)
         self.avg_pool = nn.AdaptiveAvgPool2d((1, None))
@@ -54,7 +54,7 @@ class SpecificTrainResNetLongLSTMModel(BaseModel):
 
 @Registers.model.register
 class SpecificTrainResNet18BackboneLongLSTMModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super(SpecificTrainResNet18BackboneLongLSTMModel, self).__init__()
         self.extractor = Registers.module["ResNetBackbone"](18)
         self.avg_pool = nn.AdaptiveAvgPool2d((1, None))
@@ -76,7 +76,7 @@ class SpecificTrainResNet18BackboneLongLSTMModel(BaseModel):
 
 @Registers.model.register
 class SpecificTrainResNetLongModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super(SpecificTrainResNetLongModel, self).__init__()
         self.extractor = Registers.module["ResNet"](50)
         self.avg_pool = nn.AdaptiveAvgPool2d((1, 6))
@@ -99,7 +99,7 @@ class SpecificTrainResNetLongModel(BaseModel):
 
 @Registers.model.register
 class SpecificTrainResNet18BackboneLongModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super(SpecificTrainResNet18BackboneLongModel, self).__init__()
         self.extractor = Registers.module["ResNetBackbone"](18)
         self.avg_pool = nn.AdaptiveAvgPool2d((1, 6))
@@ -122,13 +122,13 @@ class SpecificTrainResNet18BackboneLongModel(BaseModel):
 
 @Registers.model.register
 class MSMJointConcatFineTuneResNet18BackboneLongModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super().__init__()
         self.extractor_mfcc = Registers.module["ResNetBackbone"](18)
         self.extractor_spec = Registers.module["ResNetBackbone"](18)
         self.extractor_mel = Registers.module["ResNetBackbone"](18)
         self.dense = ResNet18ConcatModel()
-        self.set_expected_input(input_shape)
+        
         self.set_description("MFCC SPEC MELSPEC Joint 2D Fine-tune Model")
 
     def forward(self, input_mfcc: torch.Tensor, input_spec: torch.Tensor, input_mel: torch.Tensor):
@@ -206,13 +206,13 @@ class ConcatModel(nn.Module):
 
 @Registers.model.register
 class MSMJointConcatFineTuneResNetModel(BaseModel):
-    def __init__(self, input_shape: Tuple):
+    def __init__(self):
         super(MSMJointConcatFineTuneResNetModel, self).__init__()
         self.extractor_mfcc = Registers.module["ResNet"](50)
         self.extractor_spec = Registers.module["ResNet"](50)
         self.extractor_mel = Registers.module["ResNet"](50)
         self.dense = ConcatModel()
-        self.set_expected_input(input_shape)
+        
         self.set_description("MFCC SPEC MELSPEC ResNet Joint 2D Fine-tune Model")
 
     def forward(self, input_mfcc: torch.Tensor, input_spec: torch.Tensor, input_mel: torch.Tensor):

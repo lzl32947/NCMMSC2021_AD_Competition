@@ -434,6 +434,7 @@ class AldsDataset(BaseDataset):
         """
         # Get the file and the label
         file = self.train_list[item % self.count]
+        file_name = file
         label = self.label_list[item % self.count]
         output_dict = {}
         # Read and crop the audio
@@ -491,6 +492,8 @@ class AldsDataset(BaseDataset):
         output_dict[AudioFeatures.LABEL] = label
         # Add raw audio to output
         output_dict[AudioFeatures.RAW] = output_wav
+        # Add the file name
+        output_dict[AudioFeatures.NAME] = file_name
         # Add vad audio to output
         if self.use_vad:
             output_dict[AudioFeatures.VAD] = output_vad
@@ -537,6 +540,7 @@ class AldsTorchDataset(BaseDataset):
         """
         # Get the file and the label
         file = self.train_list[item % self.count]
+        file_name = file
         label = self.label_list[item % self.count]
         output_dict = {}
         # Read and crop the audio
@@ -592,6 +596,8 @@ class AldsTorchDataset(BaseDataset):
         output_dict[AudioFeatures.LABEL] = label
         # Add raw audio to output
         output_dict[AudioFeatures.RAW] = output_wav
+        # Add the file name
+        output_dict[AudioFeatures.NAME] = file_name
         # Add vad audio to output
         if self.use_vad:
             output_dict[AudioFeatures.VAD] = output_vad

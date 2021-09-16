@@ -28,6 +28,8 @@ class AudioFeatures(Enum):
     # Audio
     RAW = "RAW"
     VAD = "VAD"
+    # Name
+    NAME = "NAME"
 
 
 class DatasetMode(Enum):
