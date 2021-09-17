@@ -52,7 +52,7 @@ def evaluate_multi_joint(identifier: str, config: Dict, model_list: List[Dict], 
 
         logger.info("Evaluate the model {}.".format(model_name))
         for current_fold, test_dataloader in enumerate(
-                prepare_dataloader([use_features], config["dataset"], DatasetMode.TEST,
+                prepare_dataloader([use_features] if isinstance(use_features,AudioFeatures) else use_features, config["dataset"], DatasetMode.TEST,
                                    # repeat_times=5 * config["dataset"]["repeat_times"]
                                    repeat_times=1
                     , dataset_func=dataset_func)):
@@ -659,23 +659,23 @@ if __name__ == '__main__':
     #                             , AudioFeatures.SPECS: "20210915_183922"},
     #                         AldsDataset, input_shape=(), input_channels=3)
     model_list = [
-        {"model_name": "CompetitionSpecificTrainVggNet19BNBackboneModel",
+        {"model_name": "SpecificTrainLongModel",
          "use_features": AudioFeatures.MFCC,
-         "weight_identifier": "20210915_184216",
-         "input_channels": 3,
+         "weight_identifier": "20210905_133648",
+         "input_channels": 1,
          "joint": False,
          "dataset_func": AldsDataset,
          "weight_description": ""},
-        {"model_name": "CompetitionSpecificTrainVggNet19BNBackboneModel",
+        {"model_name": "SpecificTrainLongModel",
          "use_features": AudioFeatures.MELSPECS,
-         "weight_identifier": "20210915_183611",
-         "input_channels": 3,
+         "weight_identifier": "20210905_133648",
+         "input_channels": 1,
          "joint": False,
          "dataset_func": AldsDataset,
          "weight_description": ""},
-        {"model_name": "MSMJointConcatFineTuneModel",
-         "use_features": [AudioFeatures.SPECS, AudioFeatures.MELSPECS, AudioFeatures.MFCC],
-         "weight_identifier": "20210904_141710",
+        {"model_name": "MSMJointConcatFineTuneLongModel",
+         "use_features": [AudioFeatures.MFCC, AudioFeatures.SPECS, AudioFeatures.MELSPECS],
+         "weight_identifier": "20210907_230640",
          "input_channels": 1,
          "joint": True,
          "dataset_func": AldsDataset,
