@@ -98,8 +98,8 @@ if __name__ == '__main__':
     logger = GlobalLogger().get_logger()
     model_name = "CompetitionSpecificTrainVggNet19BNBackboneModel"
     weight_identifier = "competition_20210916_170133"
-    result_only = False
-    for_post = False
+    result_only = True
+    for_post = True
     dataset_mode = DatasetMode.EVAL5
     feature_list = [AudioFeatures.SPECS, AudioFeatures.MFCC, AudioFeatures.MELSPECS]
     output_list = []

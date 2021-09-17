@@ -399,7 +399,7 @@ if __name__ == '__main__':
     logger = GlobalLogger().get_logger()
     # Train the general model
     model_name = "CompetitionMSMJointConcatFineTuneModel"
-    base_model_name = "CompetitionSpecificTrainVggNet19BNBackboneModel"
+    base_model_name = "CompetitionSpecificTrainVggNet19BNBackboneLongModel"
     logger.info("Training with model {}.".format(model_name))
     train_joint(configs, time_identifier, model_name, base_model_name,
                 use_features=[AudioFeatures.MFCC, AudioFeatures.SPECS, AudioFeatures.MELSPECS],
