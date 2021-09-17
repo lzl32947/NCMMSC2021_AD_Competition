@@ -306,7 +306,7 @@ class CompetitionSpecificTrainWideResNet(nn.Module):
 class CompetitionSpecificTrainResNext(nn.Module):
     def __init__(self):
         super(CompetitionSpecificTrainResNext, self).__init__()
-        self.extractor = WideResNet()
+        self.extractor = CifarResNeXt()
         self.pooling = nn.AdaptiveAvgPool2d((1, 1))
         self.fc = nn.Linear(1024, 256)
         self.dropout = nn.Dropout(0.3)
@@ -320,11 +320,19 @@ class CompetitionSpecificTrainResNext(nn.Module):
         output = self.extractor(input_tensor)
         # print(output.shape)
         output = self.pooling(output)
+        # print(output.shape)
         long_out = output.view(batch_size, -1)
-
         long_out = self.fc(long_out)
+        long_out2 = func.relu(long_out)
+        long_out2 = self.dropout(long_out2)
 
-        return long_out
+        long_out2 = self.fc2(long_out2)
+        long_out3 = func.relu(long_out2)
+        long_out3 = self.dropout2(long_out3)
+
+        long_out4 = self.fc3(long_out3)
+
+        return long_out4
 @Registers.model.register
 class CompetitionMSMJointTrainVggNet19BNBackboneModel(BaseModel):
     def __init__(self, input_shape: Tuple):
@@ -379,7 +387,7 @@ class VggNet19BNConcatModel(nn.Module):
 if __name__ == "__main__":
     import torchinfo
 
-    model = CompetitionSpecificTrainWideResNet()
+    model = CompetitionSpecificTrainResNext()
     # model.cuda()
     torchinfo.summary(model, (4, 3, 128, 157))
     # model = SpecificTrainResNet34BackboneLongModel(input_shape=())

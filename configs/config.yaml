@@ -13,14 +13,14 @@ dataset:
   use_merge: true   # whether to use the merge files, true by default
   use_vad: true     # whether to generate the vad features, true by default
   random_disruption: true # whether to randomize, notice that this will not change the file for k-fold and is safe, true by default
-  batch_size: 16     # batch size, 16 by default
+  batch_size: 4     # batch size, 16 by default
   balance: false # balance the dataset, true by default
   use_argumentation: false
 
   process:
     sr: 16000     # sample rate, 16000 by default
     dim: 3        # dimensions, 3 means expand dims to tuple of shape 4 to process in image-like ways, 2 means not expand and process in test-embedding way, 3 by default
-    crop_length: 25 # sample seconds, 5 by default
+    crop_length: 5 # sample seconds, 5 by default
     normalized: true  # normalized, true by default
 
     argumentation:
