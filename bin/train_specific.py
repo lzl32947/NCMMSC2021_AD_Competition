@@ -192,6 +192,6 @@ if __name__ == '__main__':
     # Train the general model
     model_name = "CompetitionSpecificTrainVggNet16BNBackboneModel"
     logger.info("Training with model {}.".format(model_name))
-    train_specific_feature(configs, time_identifier, AudioFeatures.MFCC,
+    train_specific_feature(configs, time_identifier, AudioFeatures.SPECS,
                            model_name, input_channels=3, dataset_func=datasets,
                            use_argumentation=False)
