@@ -53,8 +53,8 @@ def evaluate_multi_joint(identifier: str, config: Dict, model_list: List[Dict], 
         logger.info("Evaluate the model {}.".format(model_name))
         for current_fold, test_dataloader in enumerate(
                 prepare_dataloader([use_features] if isinstance(use_features,AudioFeatures) else use_features, config["dataset"], DatasetMode.TEST,
-                                   # repeat_times=5 * config["dataset"]["repeat_times"]
-                                   repeat_times=1
+                                   repeat_times=5 * config["dataset"]["repeat_times"]
+                                   # repeat_times=1
                     , dataset_func=dataset_func)):
 
             output_fold_predict = []
