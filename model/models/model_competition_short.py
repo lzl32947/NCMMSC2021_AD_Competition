@@ -167,6 +167,37 @@ class CompetitionSpecificTrainVggNet19BNBackboneModel(BaseModel):
         return long_out4
 
 @Registers.model.register
+class CompetitionSpecificTrainVggNet16BNBackboneModel(BaseModel):
+    def __init__(self):
+        super(CompetitionSpecificTrainVggNet16BNBackboneModel, self).__init__()
+        self.extractor = Registers.module["VggNetBackbone"]("16_bn")
+        self.pooling = nn.AdaptiveAvgPool2d((1, 1))
+        self.fc = nn.Linear(512, 1024)
+        self.dropout1 = nn.Dropout(0.3)
+        self.fc2 = nn.Linear(1024, 256)
+        self.dropout2 = nn.Dropout(0.3)
+        self.fc3 = nn.Linear(256, 64)
+        self.dropout3 = nn.Dropout(0.3)
+        self.fc4 = nn.Linear(64, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        output = self.pooling(output)
+        long_out = output.view(batch_size, -1)
+        long_out = self.fc(long_out)
+        long_out2 = func.relu(long_out)
+        long_out2 = self.dropout1(long_out2)
+        long_out2 = self.fc2(long_out2)
+        long_out3 = func.relu(long_out2)
+        long_out3 = self.dropout2(long_out3)
+        long_out3 = self.fc3(long_out3)
+        long_out4 = func.relu(long_out3)
+        long_out4 = self.dropout3(long_out4)
+        long_out4 = self.fc4(long_out4)
+        return long_out4
+
+@Registers.model.register
 class CompetitionMSMJointTrainVggNet19BNBackboneModel(BaseModel):
     def __init__(self, input_shape: Tuple):
         super().__init__()
