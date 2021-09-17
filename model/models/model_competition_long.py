@@ -243,6 +243,38 @@ class CompetitionSpecificTrainVggNet19BNBackboneLongModel(BaseModel):
         long_out3 = self.fc3(long_out3)
         return long_out3
 
+Registers.model.register
+class CompetitionSpecificTrainVggNet16BNBackboneLongModel(BaseModel):
+    def __init__(self):
+        super(CompetitionSpecificTrainVggNet16BNBackboneLongModel, self).__init__()
+        # self.extractor = Registers.module["VggNetBackbone"]("19_bn")
+        self.extractor = VggNetBackbone("16_bn")
+        self.conv1 = nn.Conv2d(512, 1024, (3, 3))
+        self.max_pooling = nn.MaxPool2d((2, 2), stride=2)
+        self.pooling = nn.AdaptiveAvgPool2d((1, 1))
+        self.fc = nn.Linear(1024, 256)
+        self.dropout1 = nn.Dropout(0.3)
+        self.fc2 = nn.Linear(256, 64)
+        self.dropout2 = nn.Dropout(0.3)
+        self.fc3 = nn.Linear(64, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        output = self.conv1(output)
+        output = func.relu(output)
+        output = self.max_pooling(output)
+        output = self.pooling(output)
+        long_out = output.view(batch_size, -1)
+
+        long_out = self.fc(long_out)
+        long_out2 = func.relu(long_out)
+        long_out2 = self.dropout1(long_out2)
+        long_out2 = self.fc2(long_out2)
+        long_out3 = func.relu(long_out2)
+        long_out3 = self.dropout2(long_out3)
+        long_out3 = self.fc3(long_out3)
+        return long_out3
 
 @Registers.model.register
 class CompetitionMSMJointTrainVggNet19BNBackboneLongModel(BaseModel):
