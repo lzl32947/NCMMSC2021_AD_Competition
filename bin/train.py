@@ -398,11 +398,11 @@ if __name__ == '__main__':
     time_identifier, configs = global_init(for_competition=True)
     logger = GlobalLogger().get_logger()
     # Train the general model
-    model_name = "CompetitionMSMJointConcatFineTuneModel"
-    base_model_name = "CompetitionSpecificTrainVggNet19BNBackboneLongModel"
+    model_name = "CompetitionMSMJointConcatFineTuneLongModel"
+    base_model_name = "CompetitionSpecificTrainLongModel"
     logger.info("Training with model {}.".format(model_name))
     train_joint(configs, time_identifier, model_name, base_model_name,
                 use_features=[AudioFeatures.MFCC, AudioFeatures.SPECS, AudioFeatures.MELSPECS],
                 train_specific=True, train_specific_epoch=20,
-                train_general=False, train_general_epoch=20,
-                fine_tune=False, fine_tune_epoch=20, input_channels=3)
+                train_general=True, train_general_epoch=20,
+                fine_tune=True, fine_tune_epoch=20, input_channels=1)

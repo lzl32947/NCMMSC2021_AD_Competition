@@ -103,7 +103,7 @@ if __name__ == '__main__':
     weight_identifier = "competition_20210914_172301"
     result_only = False
     for_post = True
-    dataset_mode = DatasetMode.EVAL30
+    dataset_mode = DatasetMode.EVAL05
     d = evaluate_joint(time_identifier, configs, model_name,
                        [AudioFeatures.MFCC, AudioFeatures.SPECS, AudioFeatures.MELSPECS],
                        weight_identifier, "Fine_tune", dataset_mode)

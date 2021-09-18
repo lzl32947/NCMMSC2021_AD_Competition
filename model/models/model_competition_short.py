@@ -8,7 +8,7 @@ from torch.utils import model_zoo
 
 from model.base_model import BaseModel
 from model.manager import Register, Registers
-
+from model.modules.vgg import VggNetBackbone
 
 class DenseModel(nn.Module):
     def __init__(self, input_unit=6240):
@@ -170,7 +170,9 @@ class CompetitionSpecificTrainVggNet19BNBackboneModel(BaseModel):
 class CompetitionSpecificTrainVggNet16BNBackboneModel(BaseModel):
     def __init__(self):
         super(CompetitionSpecificTrainVggNet16BNBackboneModel, self).__init__()
+        # self.extractor = Registers.module["VggNetBackbone"]("16_bn")
         self.extractor = Registers.module["VggNetBackbone"]("16_bn")
+        # self.extractor = VggNetBackbone("16_bn")
         self.pooling = nn.AdaptiveAvgPool2d((1, 1))
         self.fc = nn.Linear(512, 1024)
         self.dropout1 = nn.Dropout(0.3)
@@ -250,9 +252,9 @@ class VggNet19BNConcatModel(nn.Module):
 if __name__ == "__main__":
     import torchinfo
 
-    model = CompetitionSpecificTrainVggNet19BNBackboneModel()
-    # model.cuda()
-    torchinfo.summary(model, (4, 3, 128, 157))
+    model = CompetitionSpecificTrainModel()
+    model.cuda()
+    torchinfo.summary(model, (4, 1, 128, 157))
     # model = SpecificTrainResNet34BackboneLongModel(input_shape=())
     # # model.cuda()
     # torchinfo.summary(model, (4, 1, 128, 782))

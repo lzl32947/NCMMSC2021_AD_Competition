@@ -96,8 +96,8 @@ def evaluate_specific(identifier: str, config: Dict, model_name: str, use_featur
 if __name__ == '__main__':
     time_identifier, configs = global_init(for_evaluate=True, for_competition=True)
     logger = GlobalLogger().get_logger()
-    model_name = "CompetitionSpecificTrainVggNet19BNBackboneModel"
-    weight_identifier = "competition_20210916_170133"
+    model_name = "CompetitionSpecificTrainVggNet16BNBackboneModel"
+    weight_identifier = "competition_20210918_104334"
     result_only = True
     for_post = True
     dataset_mode = DatasetMode.EVAL5
