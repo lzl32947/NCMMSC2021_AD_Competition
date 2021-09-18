@@ -28,12 +28,6 @@ if __name__ == '__main__':
          "use_features": feature_list,
          "weight_description": "General",
          "joint": True},
-        {"model_name": "CompetitionMSMJointConcatFineTuneLongModel",
-         "weight_identifier": "competition_20210918_145253",
-         "input_channels": 3,
-         "use_features": feature_list,
-         "weight_description": "Fine_tune",
-         "joint": True},
         {"model_name": "CompetitionSpecificTrainModel",
          "weight_identifier": "competition_20210918_145253",
          "input_channels": 1,
@@ -52,6 +46,13 @@ if __name__ == '__main__':
          "use_features": AudioFeatures.MFCC,
          "weight_description": None,
          "joint": False},
+        {"model_name": "CompetitionMSMJointConcatFineTuneLongModel",
+         "weight_identifier": "competition_20210918_145253",
+         "input_channels": 3,
+         "use_features": feature_list,
+         "weight_description": "Fine_tune",
+         "joint": True},
+
 
         {"model_name": "CompetitionSpecificTrainVggNet16BNBackboneModel",
          "weight_identifier": "competition_20210918_104334",
@@ -93,7 +94,7 @@ if __name__ == '__main__':
     ]
     result_only = True
     for_post = True
-    dataset_mode = DatasetMode.EVAL5
+    dataset_mode = DatasetMode.EVAL30
     output_list = []
 
     for model in model_list:
