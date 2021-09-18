@@ -294,10 +294,8 @@ class CompetitionSpecificTrainWideResNet(nn.Module):
 
         batch_size = input_tensor.shape[0]
         output = self.extractor(input_tensor)
-        # print(output.shape)
         output = self.pooling(output)
         long_out = output.view(batch_size, -1)
-
         long_out = self.fc(long_out)
 
         return long_out
