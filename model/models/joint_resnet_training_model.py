@@ -124,6 +124,27 @@ class SpecificTrainResNet18BackboneLongModel(BaseModel):
         long_out3 = self.fc3(long_out3)
         return long_out3
 
+@Registers.model.register
+class SpecificTrainResNet18BackboneModel(BaseModel):
+    def __init__(self, input_shape: Tuple):
+        super(SpecificTrainResNet18BackboneModel, self).__init__()
+        self.extractor = Registers.module["ResNetBackbone"](18)
+        self.avg_pool = nn.AdaptiveAvgPool2d((1, 6))
+        self.fc = nn.Linear(512 * 6, 512)
+        self.fc2 = nn.Linear(512, 64)
+        self.fc3 = nn.Linear(64, 3)
+
+    def forward(self, input_tensor: torch.Tensor):
+        batch_size = input_tensor.shape[0]
+        output = self.extractor(input_tensor)
+        output = self.avg_pool(output)
+        long_out = output.view(batch_size, -1)
+        long_out = self.fc(long_out)
+        long_out2 = func.relu(long_out)
+        long_out2 = self.fc2(long_out2)
+        long_out3 = func.relu(long_out2)
+        long_out3 = self.fc3(long_out3)
+        return long_out3
 
 @Registers.model.register
 class SpecificTrainVggNet19BackboneLongModel(BaseModel):
