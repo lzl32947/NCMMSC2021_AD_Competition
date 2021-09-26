@@ -243,7 +243,7 @@ class CompetitionSpecificTrainVggNet19BNBackboneLongModel(BaseModel):
         long_out3 = self.fc3(long_out3)
         return long_out3
 
-Registers.model.register
+@Registers.model.register
 class CompetitionSpecificTrainVggNet16BNBackboneLongModel(BaseModel):
     def __init__(self):
         super(CompetitionSpecificTrainVggNet16BNBackboneLongModel, self).__init__()

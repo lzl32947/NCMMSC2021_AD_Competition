@@ -402,7 +402,7 @@ if __name__ == '__main__':
     base_model_name = "CompetitionSpecificTrainVggNet19BNBackboneLongModel"
     logger.info("Training with model {}.".format(model_name))
     train_joint(configs, time_identifier, model_name, base_model_name,
-                use_features=[AudioFeatures.MFCC, AudioFeatures.SPECS, AudioFeatures.MELSPECS],
+                use_features=[AudioFeatures.MELSPECS],
                 train_specific=True, train_specific_epoch=20,
                 train_general=False, train_general_epoch=20,
                 fine_tune=False, fine_tune_epoch=20, input_channels=3)
